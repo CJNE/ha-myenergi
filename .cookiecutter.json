@@ -1,0 +1,10 @@
+{
+  "_template": "gh:oncleben31/cookiecutter-homeassistant-custom-component",
+  "class_name_prefix": "Myenergi",
+  "domain_name": "myenergi",
+  "friendly_name": "MyEnergi",
+  "github_user": "cjne",
+  "project_name": "myenergi",
+  "test_suite": "yes",
+  "version": "0.0.1"
+}

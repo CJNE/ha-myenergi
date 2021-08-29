@@ -1,0 +1,11 @@
+{
+  "domain": "myenergi",
+  "name": "MyEnergi",
+  "version": "0.0.1",
+  "documentation": "https://github.com/cjne/ha-myenergi",
+  "issue_tracker": "https://github.com/cjne/ha-myenergi/issues",
+  "dependencies": [],
+  "config_flow": true,
+  "codeowners": ["@cjne"],
+  "requirements": []
+}
