@@ -21,7 +21,7 @@ This is a very early release, will add more documentations soon!
 
 | Platform        | Description                                                               |
 | --------------- | ------------------------------------------------------------------------- |
-| `sensor`        | Show info from [MyEnergi API.](myenergi_library)|
+| `sensor`        | Show info from [MyEnergi API.](https://github.com/cjne/pymyenergi)|
 
 ![example][logo]
 
