@@ -1,4 +1,4 @@
-"""Global fixtures for MyEnergi integration."""
+"""Global fixtures for myenergi integration."""
 from unittest.mock import patch
 
 import pytest

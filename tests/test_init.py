@@ -1,4 +1,4 @@
-"""Test MyEnergi setup process."""
+"""Test myenergi setup process."""
 import pytest
 from custom_components.myenergi import (
     async_reload_entry,

@@ -1,10 +1,10 @@
-"""Adds config flow for MyEnergi."""
+"""Adds config flow for myenergi."""
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
-from  pymyenergi.client import MyEnergiClient
+from  pymyenergi.client import MyenergiClient
 from  pymyenergi.connection import Connection
 from .const import CONF_PASSWORD
 from .const import CONF_USERNAME
@@ -28,12 +28,12 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self._errors = {}
 
         if user_input is not None:
-            valid = await self._test_credentials(
+            client = await self._test_credentials(
                 user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
             )
-            if valid:
+            if client:
                 return self.async_create_entry(
-                    title="Hub " + user_input[CONF_USERNAME], data=user_input
+                    title=client.site_name, data=user_input
                 )
             self._errors["base"] = "auth"
 
@@ -60,9 +60,9 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Return true if credentials is valid."""
         try:
             conn = Connection(username, password)
-            client = MyEnergiClient(conn)
+            client = MyenergiClient(conn)
             await client.refresh()
-            return True
+            return client
         except Exception:  # pylint: disable=broad-except
             pass
         return False

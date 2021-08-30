@@ -1,1 +1,1 @@
-"""Tests for MyEnergi integration."""
+"""Tests for myenergi integration."""

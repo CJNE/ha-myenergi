@@ -1,4 +1,4 @@
-"""Test MyEnergi config flow."""
+"""Test myenergi config flow."""
 from unittest.mock import patch
 
 import pytest

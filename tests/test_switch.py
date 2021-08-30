@@ -1,4 +1,4 @@
-"""Test MyEnergi switch."""
+"""Test myenergi switch."""
 from unittest.mock import call
 from unittest.mock import patch
 

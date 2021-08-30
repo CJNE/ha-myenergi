@@ -1,6 +1,6 @@
-"""Constants for MyEnergi."""
+"""Constants for myenergi."""
 # Base component constants
-NAME = "MyEnergi"
+NAME = "myenergi"
 DOMAIN = "myenergi"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.1"

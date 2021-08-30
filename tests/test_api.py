@@ -1,4 +1,4 @@
-"""Tests for MyEnergi api."""
+"""Tests for myenergi api."""
 import asyncio
 
 import aiohttp

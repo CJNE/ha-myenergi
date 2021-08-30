@@ -2,10 +2,10 @@
   "config": {
     "step": {
       "user": {
-        "title": "MyEnergi",
-        "description": "If you need help with the configuration have a look here: https://github.com/cjne/myenergi",
+        "title": "myenergi",
+        "description": "If you need help with the configuration have a look here: https://github.com/cjne/ha-myenergi",
         "data": {
-          "username": "Username",
+          "username": "Username / hub serial number",
           "password": "Password"
         }
       }

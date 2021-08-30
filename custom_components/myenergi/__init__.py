@@ -1,5 +1,5 @@
 """
-Custom integration to integrate MyEnergi with Home Assistant.
+Custom integration to integrate myenergi with Home Assistant.
 
 For more details about this integration, please refer to
 https://github.com/cjne/myenergi
@@ -16,12 +16,14 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
-from .api import MyenergiApiClient
 from .const import CONF_PASSWORD
 from .const import CONF_USERNAME
 from .const import DOMAIN
 from .const import PLATFORMS
 from .const import STARTUP_MESSAGE
+
+from pymyenergi.client import MyenergiClient
+from pymyenergi.connection import Connection
 
 SCAN_INTERVAL = timedelta(seconds=30)
 
@@ -42,8 +44,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     username = entry.data.get(CONF_USERNAME)
     password = entry.data.get(CONF_PASSWORD)
 
-    session = async_get_clientsession(hass)
-    client = MyenergiApiClient(username, password, session)
+    conn = Connection(username, password)
+    client = MyenergiClient(conn)
 
     coordinator = MyenergiDataUpdateCoordinator(hass, client=client)
     await coordinator.async_refresh()
@@ -70,7 +72,7 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
     def __init__(
         self,
         hass: HomeAssistant,
-        client: MyenergiApiClient,
+        client: MyenergiClient,
     ) -> None:
         """Initialize."""
         self.api = client
@@ -81,7 +83,7 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Update data via library."""
         try:
-            return await self.api.async_get_data()
+            return await self.api.refresh()
         except Exception as exception:
             raise UpdateFailed() from exception
 

@@ -1,4 +1,4 @@
-"""Binary sensor platform for MyEnergi."""
+"""Binary sensor platform for myenergi."""
 from homeassistant.components.binary_sensor import BinarySensorEntity
 
 from .const import BINARY_SENSOR

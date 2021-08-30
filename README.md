@@ -1,4 +1,4 @@
-# MyEnergi
+# myenergi for Home Assistant
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
@@ -14,14 +14,14 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
-MyEnergi custom component for [Home Assistant](https://home-assistant.io)
+myenergi custom component for [Home Assistant](https://home-assistant.io)
 This is a very early release, will add more documentations soon!
 
 **This component will set up the following platforms.**
 
 | Platform        | Description                                                               |
 | --------------- | ------------------------------------------------------------------------- |
-| `sensor`        | Show info from [MyEnergi API.](https://github.com/cjne/pymyenergi)|
+| `sensor`        | Show info from [myenergi API.](https://github.com/cjne/pymyenergi)|
 
 ![example][logo]
 
@@ -33,7 +33,7 @@ This is a very early release, will add more documentations soon!
 4. Download _all_ the files from the `custom_components/myenergi/` directory (folder) in this repository.
 5. Place the files you downloaded in the new directory (folder) you created.
 6. Restart Home Assistant
-7. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "MyEnergi"
+7. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "myenergi"
 
 Using your HA configuration directory (folder) as a starting point you should now also have this:
 
