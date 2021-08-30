@@ -12,18 +12,16 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
+from pymyenergi.client import MyenergiClient
+from pymyenergi.connection import Connection
 
 from .const import CONF_PASSWORD
 from .const import CONF_USERNAME
 from .const import DOMAIN
 from .const import PLATFORMS
 from .const import STARTUP_MESSAGE
-
-from pymyenergi.client import MyenergiClient
-from pymyenergi.connection import Connection
 
 SCAN_INTERVAL = timedelta(seconds=30)
 

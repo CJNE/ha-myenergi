@@ -19,9 +19,9 @@ This is a very early release, will add more documentations soon!
 
 **This component will set up the following platforms.**
 
-| Platform        | Description                                                               |
-| --------------- | ------------------------------------------------------------------------- |
-| `sensor`        | Show info from [myenergi API.](https://github.com/cjne/pymyenergi)|
+| Platform | Description                                                        |
+| -------- | ------------------------------------------------------------------ |
+| `sensor` | Show info from [myenergi API.](https://github.com/cjne/pymyenergi) |
 
 ![example][logo]
 
