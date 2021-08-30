@@ -21,9 +21,7 @@
     "step": {
       "user": {
         "data": {
-          "binary_sensor": "Binary sensor enabled",
-          "sensor": "Sensor enabled",
-          "switch": "Switch enabled"
+          "scan_interval": "Update interval (seconds)"
         }
       }
     }

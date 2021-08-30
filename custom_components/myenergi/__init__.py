@@ -18,12 +18,13 @@ from pymyenergi.client import MyenergiClient
 from pymyenergi.connection import Connection
 
 from .const import CONF_PASSWORD
+from .const import CONF_SCAN_INTERVAL
 from .const import CONF_USERNAME
 from .const import DOMAIN
 from .const import PLATFORMS
 from .const import STARTUP_MESSAGE
 
-SCAN_INTERVAL = timedelta(seconds=30)
+SCAN_INTERVAL = timedelta(seconds=60)
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -45,7 +46,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     conn = Connection(username, password)
     client = MyenergiClient(conn)
 
-    coordinator = MyenergiDataUpdateCoordinator(hass, client=client)
+    coordinator = MyenergiDataUpdateCoordinator(hass, client=client, entry=entry)
     await coordinator.async_refresh()
 
     if not coordinator.last_update_success:
@@ -67,16 +68,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching data from the API."""
 
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        client: MyenergiClient,
-    ) -> None:
+    def __init__(self, hass: HomeAssistant, client: MyenergiClient, entry) -> None:
         """Initialize."""
         self.api = client
         self.platforms = []
 
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
+        scan_interval = timedelta(
+            seconds=entry.options.get(
+                CONF_SCAN_INTERVAL,
+                entry.data.get(CONF_SCAN_INTERVAL, SCAN_INTERVAL.total_seconds()),
+            )
+        )
+        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=scan_interval)
 
     async def _async_update_data(self):
         """Update data via library."""

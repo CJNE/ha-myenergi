@@ -5,6 +5,7 @@ from homeassistant.core import callback
 from pymyenergi.client import MyenergiClient
 from pymyenergi.connection import Connection
 
+from . import SCAN_INTERVAL
 from .const import CONF_PASSWORD
 from .const import CONF_SCAN_INTERVAL
 from .const import CONF_USERNAME
@@ -83,7 +84,7 @@ class MyenergiOptionsFlowHandler(config_entries.OptionsFlow):
             return await self._update_options()
 
         scan_interval = self.config_entry.options.get(
-            CONF_SCAN_INTERVAL, self.config_entry.data.get(CONF_SCAN_INTERVAL)
+            CONF_SCAN_INTERVAL, SCAN_INTERVAL.total_seconds()
         )
         return self.async_show_form(
             step_id="user",

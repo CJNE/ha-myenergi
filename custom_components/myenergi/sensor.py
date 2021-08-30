@@ -1,4 +1,9 @@
 """Sensor platform for myenergi."""
+import operator
+
+from homeassistant.const import DEVICE_CLASS_POWER
+from homeassistant.const import POWER_WATT
+
 from .const import DOMAIN
 from .entity import MyenergiEntity
 
@@ -20,12 +25,113 @@ async def async_setup_entry(hass, entry, async_add_devices):
     devices = []
     all_devices = await coordinator.api.get_devices()
     for device in all_devices:
+        # Sensors available in all devices
+        devices.append(
+            MyenergiSensor(
+                coordinator,
+                device,
+                entry,
+                create_meta(
+                    f"{device.ct1.name} CT1",
+                    "ct1.power",
+                    DEVICE_CLASS_POWER,
+                    POWER_WATT,
+                    "mdi:flash",
+                ),
+            )
+        )
+        devices.append(
+            MyenergiSensor(
+                coordinator,
+                device,
+                entry,
+                create_meta(
+                    f"{device.ct2.name} CT2",
+                    "ct2.power",
+                    DEVICE_CLASS_POWER,
+                    POWER_WATT,
+                    "mdi:flash",
+                ),
+            )
+        )
+        devices.append(
+            MyenergiSensor(
+                coordinator,
+                device,
+                entry,
+                create_meta(
+                    f"{device.ct3.name} CT3",
+                    "ct3.power",
+                    DEVICE_CLASS_POWER,
+                    POWER_WATT,
+                    "mdi:flash",
+                ),
+            )
+        )
+
+        # Sensors common to Zapi and Eddi
         if device.kind in ["zappi", "eddi"]:
             devices.append(
                 MyenergiSensor(
                     coordinator, device, entry, create_meta("Status", "status")
                 )
             )
+        # Zappi only sensors
+        if device.kind == "zappi":
+            devices.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Plug status", "plug_status"),
+                )
+            )
+
+            if device.ct4.name != "None":
+                devices.append(
+                    MyenergiSensor(
+                        coordinator,
+                        device,
+                        entry,
+                        create_meta(
+                            f"{device.ct4.name} CT4",
+                            "ct4.power",
+                            DEVICE_CLASS_POWER,
+                            POWER_WATT,
+                            "mdi:flash",
+                        ),
+                    )
+                )
+            if device.ct5.name != "None":
+                devices.append(
+                    MyenergiSensor(
+                        coordinator,
+                        device,
+                        entry,
+                        create_meta(
+                            f"{device.ct5.name} CT5",
+                            "ct5.power",
+                            DEVICE_CLASS_POWER,
+                            POWER_WATT,
+                            "mdi:flash",
+                        ),
+                    )
+                )
+            if device.ct6.name != "None":
+                devices.append(
+                    MyenergiSensor(
+                        coordinator,
+                        device,
+                        entry,
+                        create_meta(
+                            f"{device.ct6.name} CT6",
+                            "ct6.power",
+                            DEVICE_CLASS_POWER,
+                            POWER_WATT,
+                            "mdi:flash",
+                        ),
+                    )
+                )
 
     async_add_devices(devices)
 
@@ -50,7 +156,11 @@ class MyenergiSensor(MyenergiEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return getattr(self.device, self.meta["prop_name"])
+        return operator.attrgetter(self.meta["prop_name"])(self.device)
+
+    @property
+    def unit_of_measurement(self):
+        return self.meta["unit"]
 
     @property
     def icon(self):
