@@ -1,15 +1,23 @@
 """Adds config flow for myenergi."""
+import logging
+import traceback
+
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from pymyenergi.client import MyenergiClient
 from pymyenergi.connection import Connection
+from pymyenergi.exceptions import TimeoutException
+from pymyenergi.exceptions import WrongCredentials
 
 from . import SCAN_INTERVAL
 from .const import CONF_PASSWORD
 from .const import CONF_SCAN_INTERVAL
 from .const import CONF_USERNAME
 from .const import DOMAIN
+
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
 class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -27,12 +35,14 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self._errors = {}
 
         if user_input is not None:
-            client = await self._test_credentials(
+            err, client = await self._test_credentials(
                 user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
             )
+            print(err)
+            print(client)
             if client:
                 return self.async_create_entry(title=client.site_name, data=user_input)
-            self._errors["base"] = "auth"
+            self._errors["base"] = err
 
             return await self._show_config_form(user_input)
 
@@ -59,10 +69,22 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             conn = Connection(username, password)
             client = MyenergiClient(conn)
             await client.refresh()
-            return client
-        except Exception:  # pylint: disable=broad-except
-            pass
-        return False
+            return None, client
+        except WrongCredentials:
+            error = "auth"
+        except TimeoutException:
+            _LOGGER.error("Timeout when communicating with myenergi servers")
+            error = "connection_timeout"
+        except Exception as ex:  # pylint: disable=broad-except
+            _LOGGER.error(
+                "".join(
+                    traceback.format_exception(
+                        etype=type(ex), value=ex, tb=ex.__traceback__
+                    )
+                )
+            )
+            error = "connection"
+        return error, None
 
 
 class MyenergiOptionsFlowHandler(config_entries.OptionsFlow):

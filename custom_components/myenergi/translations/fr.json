@@ -11,7 +11,9 @@
       }
     },
     "error": {
-      "auth": "Identifiant ou mot de passe erroné."
+      "auth": "Identifiant ou mot de passe erroné.",
+      "connection": "Could not connect to myenergi, please try again in a while.",
+      "connection_timeout": "Connection timed out, servers might be busy, please try again in a while."
     },
     "abort": {
       "single_instance_allowed": "Une seule instance est autorisée."

@@ -70,7 +70,7 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
 
     def __init__(self, hass: HomeAssistant, client: MyenergiClient, entry) -> None:
         """Initialize."""
-        self.api = client
+        self.client = client
         self.platforms = []
 
         scan_interval = timedelta(
@@ -84,7 +84,7 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Update data via library."""
         try:
-            return await self.api.refresh()
+            return await self.client.refresh()
         except Exception as exception:
             raise UpdateFailed() from exception
 

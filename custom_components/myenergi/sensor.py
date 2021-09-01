@@ -6,6 +6,7 @@ from homeassistant.const import POWER_WATT
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
+from .entity import MyenergiHub
 
 
 def create_meta(name, prop_name, device_class=None, unit=None, icon=None):
@@ -23,7 +24,46 @@ async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
     devices = []
-    all_devices = await coordinator.api.get_devices()
+    all_devices = await coordinator.client.get_devices()
+    devices.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_meta(
+                "Power Grid",
+                "power_grid",
+                DEVICE_CLASS_POWER,
+                POWER_WATT,
+                "mdi:flash",
+            ),
+        )
+    )
+    devices.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_meta(
+                "Power Generation",
+                "power_generation",
+                DEVICE_CLASS_POWER,
+                POWER_WATT,
+                "mdi:flash",
+            ),
+        )
+    )
+    devices.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_meta(
+                "Home Consumpttion",
+                "consumption_home",
+                DEVICE_CLASS_POWER,
+                POWER_WATT,
+                "mdi:flash",
+            ),
+        )
+    )
     for device in all_devices:
         # Sensors available in all devices
         devices.append(
@@ -136,6 +176,43 @@ async def async_setup_entry(hass, entry, async_add_devices):
     async_add_devices(devices)
 
 
+class MyenergiHubSensor(MyenergiHub):
+    """myenergi Sensor class."""
+
+    def __init__(self, coordinator, config_entry, meta):
+        super().__init__(coordinator, config_entry)
+        self.meta = meta
+
+    @property
+    def unique_id(self):
+        """Return a unique ID to use for this entity."""
+        return f"{self.config_entry.entry_id}-{self.coordinator.client.serial_number}-{self.meta['prop_name']}"
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return f"{self.coordinator.client.site_name} {self.meta['name']}"
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        return operator.attrgetter(self.meta["prop_name"])(self.coordinator.client)
+
+    @property
+    def unit_of_measurement(self):
+        return self.meta["unit"]
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return self.meta["icon"]
+
+    @property
+    def device_class(self):
+        """Return de device class of the sensor."""
+        return self.meta["device_class"]
+
+
 class MyenergiSensor(MyenergiEntity):
     """myenergi Sensor class."""
 
@@ -151,7 +228,7 @@ class MyenergiSensor(MyenergiEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return self.meta["name"]
+        return f"{self.device.name} {self.meta['name']}"
 
     @property
     def state(self):
