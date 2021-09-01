@@ -38,8 +38,6 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             err, client = await self._test_credentials(
                 user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
             )
-            print(err)
-            print(client)
             if client:
                 return self.async_create_entry(title=client.site_name, data=user_input)
             self._errors["base"] = err
@@ -55,10 +53,14 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _show_config_form(self, user_input):  # pylint: disable=unused-argument
         """Show the configuration form to edit location data."""
+        defaults = user_input or {CONF_USERNAME: "", CONF_PASSWORD: ""}
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
-                {vol.Required(CONF_USERNAME): str, vol.Required(CONF_PASSWORD): str}
+                {
+                    vol.Required(CONF_USERNAME, default=defaults[CONF_USERNAME]): str,
+                    vol.Required(CONF_PASSWORD, default=defaults[CONF_PASSWORD]): str,
+                }
             ),
             errors=self._errors,
         )
