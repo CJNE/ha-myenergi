@@ -25,7 +25,13 @@ This is a very early release, will add more documentations soon!
 
 ![example][logo]
 
-## Installation
+## HACS Installation
+
+1. Add this repository to "Custom repositories"
+2. Add and search for myenergi in HACS
+3. Install
+
+## Manual Installation
 
 1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
 2. If you do not have a `custom_components` directory (folder) there, you need to create it.
@@ -44,15 +50,11 @@ custom_components/myenergi/translations/nb.json
 custom_components/myenergi/translations/sensor.en.json
 custom_components/myenergi/translations/sensor.fr.json
 custom_components/myenergi/translations/sensor.nb.json
-custom_components/myenergi/translations/sensor.nb.json
 custom_components/myenergi/__init__.py
-custom_components/myenergi/api.py
-custom_components/myenergi/binary_sensor.py
 custom_components/myenergi/config_flow.py
 custom_components/myenergi/const.py
 custom_components/myenergi/manifest.json
 custom_components/myenergi/sensor.py
-custom_components/myenergi/switch.py
 ```
 
 ## Configuration is done in the UI
@@ -76,8 +78,8 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 [black-shield]: https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge
 [buymecoffee]: https://www.buymeacoffee.com/cjne.coffee
 [buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
-[commits-shield]: https://img.shields.io/github/commit-activity/y/cjne/myenergi.svg?style=for-the-badge
-[commits]: https://github.com/cjne/myenergi/commits/main
+[commits-shield]: https://img.shields.io/github/commit-activity/y/cjne/ha-myenergi.svg?style=for-the-badge
+[commits]: https://github.com/cjne/ha-myenergi/commits/main
 [hacs]: https://hacs.xyz
 [hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
 [discord]: https://discord.gg/Qa5fW2R
@@ -89,7 +91,7 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 [maintenance-shield]: https://img.shields.io/badge/maintainer-%40cjne-blue.svg?style=for-the-badge
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [pre-commit-shield]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/cjne/myenergi.svg?style=for-the-badge
-[releases]: https://github.com/cjne/myenergi/releases
+[releases-shield]: https://img.shields.io/github/release/cjne/ha-myenergi.svg?style=for-the-badge
+[releases]: https://github.com/cjne/ha-myenergi/releases
 [user_profile]: https://github.com/cjne
 [myenergi_library]: https://github.com/cjne/pymyenergi
