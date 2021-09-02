@@ -1,16 +1,16 @@
 """MyenergiEntity class"""
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import ATTRIBUTION
 from .const import DOMAIN
 
 
 class MyenergiEntity(CoordinatorEntity):
-    def __init__(self, coordinator, device, config_entry):
+    def __init__(self, coordinator, device, config_entry, meta):
         super().__init__(coordinator)
         self.device = device
         self.coordinator = coordinator
         self.config_entry = config_entry
+        self.meta = meta
 
     @property
     def device_info(self):
@@ -26,17 +26,18 @@ class MyenergiEntity(CoordinatorEntity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        return {
-            "attribution": ATTRIBUTION,
-            # "id": str(self.coordinator.data.get("id")),
+        attrs = {
             "integration": DOMAIN,
         }
+        return {**attrs, **self.meta["attrs"]}
 
 
 class MyenergiHub(CoordinatorEntity):
-    def __init__(self, coordinator, config_entry):
+    def __init__(self, coordinator, config_entry, meta):
         super().__init__(coordinator)
         self.config_entry = config_entry
+        self.coordinator = coordinator
+        self.meta = meta
 
     @property
     def device_info(self):
@@ -50,8 +51,7 @@ class MyenergiHub(CoordinatorEntity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        return {
-            "attribution": ATTRIBUTION,
-            # "id": str(self.coordinator.data.get("id")),
+        attrs = {
             "integration": DOMAIN,
         }
+        return {**attrs, **self.meta["attrs"]}
