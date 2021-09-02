@@ -5,6 +5,8 @@ from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_POWER
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
 from homeassistant.const import POWER_WATT
+from pymyenergi import CT_BATTERY
+from pymyenergi import CT_LOAD
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
@@ -73,12 +75,35 @@ async def async_setup_entry(hass, entry, async_add_devices):
             ),
         )
     )
+    totals = coordinator.client.get_totals()
+    if totals.get(CT_LOAD, None) is not None:
+        devices.append(
+            MyenergiHubSensor(
+                coordinator,
+                entry,
+                create_power_meta(
+                    "Power Charging",
+                    "power_charging",
+                ),
+            )
+        )
+    if totals.get(CT_BATTERY, None) is not None:
+        devices.append(
+            MyenergiHubSensor(
+                coordinator,
+                entry,
+                create_power_meta(
+                    "Power Battery",
+                    "power_battery",
+                ),
+            )
+        )
     devices.append(
         MyenergiHubSensor(
             coordinator,
             entry,
             create_power_meta(
-                "Home Consumpttion",
+                "Home Consumption",
                 "consumption_home",
             ),
         )
@@ -209,7 +234,7 @@ class MyenergiHubSensor(MyenergiHub):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{self.coordinator.client.site_name} {self.meta['name']}"
+        return f"myenergi {self.coordinator.client.site_name} {self.meta['name']}"
 
     @property
     def state(self):
@@ -245,7 +270,7 @@ class MyenergiSensor(MyenergiEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{self.device.name} {self.meta['name']}"
+        return f"myenergi {self.device.name} {self.meta['name']}"
 
     @property
     def state(self):
