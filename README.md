@@ -87,7 +87,7 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 [logo]: logo@2x.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/
-[license-shield]: https://img.shields.io/github/license/cjne/myenergi.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/cjne/ha-myenergi.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/badge/maintainer-%40cjne-blue.svg?style=for-the-badge
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [pre-commit-shield]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=for-the-badge
