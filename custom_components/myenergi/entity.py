@@ -5,12 +5,15 @@ from .const import DOMAIN
 
 
 class MyenergiEntity(CoordinatorEntity):
-    def __init__(self, coordinator, device, config_entry, meta):
+    def __init__(self, coordinator, device, config_entry, meta=None):
         super().__init__(coordinator)
         self.device = device
         self.coordinator = coordinator
         self.config_entry = config_entry
-        self.meta = meta
+        if meta is None:
+            self.meta = {"attrs": {}}
+        else:
+            self.meta = meta
 
     @property
     def device_info(self):

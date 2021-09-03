@@ -59,7 +59,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
         MyenergiHubSensor(
             coordinator,
             entry,
-            create_energy_meta(
+            create_power_meta(
                 "Power Grid",
                 "power_grid",
             ),

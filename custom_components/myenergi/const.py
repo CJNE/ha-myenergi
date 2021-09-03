@@ -3,7 +3,7 @@
 NAME = "myenergi"
 DOMAIN = "myenergi"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.4"
+VERSION = "0.0.5"
 
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
 ISSUE_URL = "https://github.com/cjne/myenergi/issues"
@@ -16,7 +16,9 @@ BINARY_SENSOR_DEVICE_CLASS = "connectivity"
 
 # Platforms
 SENSOR = "sensor"
-PLATFORMS = [SENSOR]
+SELECT = "select"
+NUMBER = "number"
+PLATFORMS = [SENSOR, SELECT, NUMBER]
 
 
 # Configuration and options
