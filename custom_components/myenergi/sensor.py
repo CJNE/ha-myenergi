@@ -4,6 +4,7 @@ import operator
 from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_POWER
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
+from homeassistant.const import ENERGY_WATT_HOUR
 from homeassistant.const import POWER_WATT
 from pymyenergi import CT_BATTERY
 from pymyenergi import CT_LOAD
@@ -50,6 +51,17 @@ def create_energy_meta(name, prop_name):
     }
 
 
+def create_energy_meta_wh(name, prop_name):
+    return {
+        "name": name,
+        "prop_name": prop_name,
+        "device_class": DEVICE_CLASS_ENERGY,
+        "unit": ENERGY_WATT_HOUR,
+        "icon": None,
+        "attrs": {"state_class": "total_increasing"},
+    }
+
+
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
@@ -69,13 +81,53 @@ async def async_setup_entry(hass, entry, async_add_devices):
         MyenergiHubSensor(
             coordinator,
             entry,
+            create_energy_meta_wh(
+                "Grid Import",
+                "energy_imported",
+            ),
+        )
+    )
+    devices.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_energy_meta_wh(
+                "Grid Export",
+                "energy_exported",
+            ),
+        )
+    )
+    devices.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_energy_meta_wh(
+                "Energy Diverted",
+                "energy_diverted",
+            ),
+        )
+    )
+    devices.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_energy_meta_wh(
+                "Energy Generated",
+                "energy_generated",
+            ),
+        )
+    )
+    devices.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
             create_power_meta(
                 "Power Generation",
                 "power_generation",
             ),
         )
     )
-    totals = coordinator.client.get_totals()
+    totals = coordinator.client.get_power_totals()
     if totals.get(CT_LOAD, None) is not None:
         devices.append(
             MyenergiHubSensor(
@@ -275,7 +327,12 @@ class MyenergiSensor(MyenergiEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return operator.attrgetter(self.meta["prop_name"])(self.device)
+        value = operator.attrgetter(self.meta["prop_name"])(self.device)
+        if value is None:
+            return None
+        if self.device_class == DEVICE_CLASS_ENERGY:
+            value = round(float(value), 2)
+        return value
 
     @property
     def unit_of_measurement(self):

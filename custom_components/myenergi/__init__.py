@@ -84,7 +84,8 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Update data via library."""
         try:
-            return await self.client.refresh()
+            await self.client.refresh()
+            await self.client.refresh_history_today()
         except Exception as exception:
             raise UpdateFailed() from exception
 
