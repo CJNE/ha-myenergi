@@ -1,6 +1,9 @@
 """Sensor platform for myenergi."""
 import operator
 
+from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
+from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING
 from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_POWER
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
@@ -36,7 +39,8 @@ def create_power_meta(name, prop_name):
         "device_class": DEVICE_CLASS_POWER,
         "unit": POWER_WATT,
         "icon": "mdi:flash",
-        "attrs": {"state_class": "measurement"},
+        "state_class": STATE_CLASS_MEASUREMENT,
+        "attrs": {},
     }
 
 
@@ -47,7 +51,8 @@ def create_energy_meta(name, prop_name):
         "device_class": DEVICE_CLASS_ENERGY,
         "unit": ENERGY_KILO_WATT_HOUR,
         "icon": None,
-        "attrs": {"state_class": "total_increasing"},
+        "state_class": STATE_CLASS_TOTAL_INCREASING,
+        "attrs": {},
     }
 
 
@@ -58,7 +63,8 @@ def create_energy_meta_wh(name, prop_name):
         "device_class": DEVICE_CLASS_ENERGY,
         "unit": ENERGY_WATT_HOUR,
         "icon": None,
-        "attrs": {"state_class": "total_increasing"},
+        "state_class": STATE_CLASS_TOTAL_INCREASING,
+        "attrs": {},
     }
 
 
@@ -293,7 +299,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
     async_add_devices(sensors)
 
 
-class MyenergiHubSensor(MyenergiHub):
+class MyenergiHubSensor(MyenergiHub, SensorEntity):
     """myenergi Sensor class."""
 
     def __init__(self, coordinator, config_entry, meta):
@@ -328,8 +334,13 @@ class MyenergiHubSensor(MyenergiHub):
         """Return de device class of the sensor."""
         return self.meta["device_class"]
 
+    @property
+    def state_class(self):
+        """Return de device class of the sensor."""
+        return self.meta.get("state_class", None)
 
-class MyenergiSensor(MyenergiEntity):
+
+class MyenergiSensor(MyenergiEntity, SensorEntity):
     """myenergi Sensor class."""
 
     def __init__(self, coordinator, device, config_entry, meta):
@@ -367,8 +378,13 @@ class MyenergiSensor(MyenergiEntity):
         """Return de device class of the sensor."""
         return self.meta["device_class"]
 
+    @property
+    def state_class(self):
+        """Return de device class of the sensor."""
+        return self.meta.get("state_class", None)
 
-class MyenergiCTEnergySensor(MyenergiEntity):
+
+class MyenergiCTEnergySensor(MyenergiEntity, SensorEntity):
     """myenergi CT Energy sensor class"""
 
     def __init__(self, coordinator, device, config_entry, key):
@@ -414,3 +430,8 @@ class MyenergiCTEnergySensor(MyenergiEntity):
     def device_class(self):
         """Return de device class of the sensor."""
         return self.meta["device_class"]
+
+    @property
+    def state_class(self):
+        """Return de device class of the sensor."""
+        return self.meta.get("state_class", None)
