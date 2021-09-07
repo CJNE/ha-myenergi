@@ -11,7 +11,6 @@ from datetime import timedelta
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from pymyenergi.client import MyenergiClient
@@ -47,10 +46,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     client = MyenergiClient(conn)
 
     coordinator = MyenergiDataUpdateCoordinator(hass, client=client, entry=entry)
-    await coordinator.async_refresh()
-
-    if not coordinator.last_update_success:
-        raise ConfigEntryNotReady
+    await coordinator.async_config_entry_first_refresh()
 
     hass.data[DOMAIN][entry.entry_id] = coordinator
 

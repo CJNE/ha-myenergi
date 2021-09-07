@@ -65,104 +65,105 @@ def create_energy_meta_wh(name, prop_name):
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    devices = []
-    all_devices = await coordinator.client.get_devices()
-    devices.append(
+    sensors = []
+    # Don't cause a refresh when fetching sensors
+    all_devices = await coordinator.client.get_devices("all", False)
+    sensors.append(
         MyenergiHubSensor(
             coordinator,
             entry,
             create_power_meta(
-                "Power Grid",
+                "Power grid",
                 "power_grid",
             ),
         )
     )
-    devices.append(
+    sensors.append(
         MyenergiHubSensor(
             coordinator,
             entry,
             create_energy_meta_wh(
-                "Grid Import",
+                "Grid import today",
                 "energy_imported",
             ),
         )
     )
-    devices.append(
+    sensors.append(
         MyenergiHubSensor(
             coordinator,
             entry,
             create_energy_meta_wh(
-                "Grid Export",
+                "Grid export today",
                 "energy_exported",
             ),
         )
     )
-    devices.append(
+    sensors.append(
         MyenergiHubSensor(
             coordinator,
             entry,
             create_energy_meta_wh(
-                "Energy Diverted",
+                "Diverted today",
                 "energy_diverted",
             ),
         )
     )
-    devices.append(
+    sensors.append(
         MyenergiHubSensor(
             coordinator,
             entry,
             create_energy_meta_wh(
-                "Energy Generated",
+                "Generated today",
                 "energy_generated",
             ),
         )
     )
-    devices.append(
+    sensors.append(
         MyenergiHubSensor(
             coordinator,
             entry,
             create_power_meta(
-                "Power Generation",
+                "Power generation",
                 "power_generation",
             ),
         )
     )
     totals = coordinator.client.get_power_totals()
     if totals.get(CT_LOAD, None) is not None:
-        devices.append(
+        sensors.append(
             MyenergiHubSensor(
                 coordinator,
                 entry,
                 create_power_meta(
-                    "Power Charging",
+                    "Power charging",
                     "power_charging",
                 ),
             )
         )
     if totals.get(CT_BATTERY, None) is not None:
-        devices.append(
+        sensors.append(
             MyenergiHubSensor(
                 coordinator,
                 entry,
                 create_power_meta(
-                    "Power Battery",
+                    "Power battery",
                     "power_battery",
                 ),
             )
         )
-    devices.append(
+    sensors.append(
         MyenergiHubSensor(
             coordinator,
             entry,
             create_power_meta(
-                "Home Consumption",
+                "Home honsumption",
                 "consumption_home",
             ),
         )
     )
     for device in all_devices:
         # Sensors available in all devices
-        devices.append(
+        sensors.append(
             MyenergiSensor(
                 coordinator,
                 device,
@@ -173,7 +174,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 ),
             )
         )
-        devices.append(
+        sensors.append(
             MyenergiSensor(
                 coordinator,
                 device,
@@ -184,7 +185,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 ),
             )
         )
-        devices.append(
+        sensors.append(
             MyenergiSensor(
                 coordinator,
                 device,
@@ -198,22 +199,40 @@ async def async_setup_entry(hass, entry, async_add_devices):
 
         # Sensors common to Zapi and Eddi
         if device.kind in ["zappi", "eddi"]:
-            devices.append(
+            sensors.append(
                 MyenergiSensor(
                     coordinator, device, entry, create_meta("Status", "status")
                 )
             )
-        # Zappi only sensors
-        if device.kind == "zappi":
-            devices.append(
+            sensors.append(
                 MyenergiSensor(
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta("Charge Added Session", "charge_added"),
+                    create_energy_meta_wh("Energy used today", "energy_total"),
                 )
             )
-            devices.append(
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_energy_meta_wh("Energy diverted today", "energy_diverted"),
+                )
+            )
+            for key in device.ct_keys:
+                sensors.append(MyenergiCTEnergySensor(coordinator, device, entry, key))
+        # Zappi only sensors
+        if device.kind == "zappi":
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_energy_meta("Charge added session", "charge_added"),
+                )
+            )
+            sensors.append(
                 MyenergiSensor(
                     coordinator,
                     device,
@@ -223,7 +242,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             )
 
             if device.ct4.name != "None":
-                devices.append(
+                sensors.append(
                     MyenergiSensor(
                         coordinator,
                         device,
@@ -235,7 +254,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     )
                 )
             if device.ct5.name != "None":
-                devices.append(
+                sensors.append(
                     MyenergiSensor(
                         coordinator,
                         device,
@@ -247,7 +266,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     )
                 )
             if device.ct6.name != "None":
-                devices.append(
+                sensors.append(
                     MyenergiSensor(
                         coordinator,
                         device,
@@ -261,15 +280,15 @@ async def async_setup_entry(hass, entry, async_add_devices):
 
         elif device.kind == "eddi":
             # Eddi specifc sensors
-            devices.append(
+            sensors.append(
                 MyenergiSensor(
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta("Energy Diverted Session", "diverted_session"),
+                    create_energy_meta("Energy diverted session", "diverted_session"),
                 )
             )
-    async_add_devices(devices)
+    async_add_devices(sensors)
 
 
 class MyenergiHubSensor(MyenergiHub):
@@ -330,8 +349,54 @@ class MyenergiSensor(MyenergiEntity):
         value = operator.attrgetter(self.meta["prop_name"])(self.device)
         if value is None:
             return None
-        if self.device_class == DEVICE_CLASS_ENERGY:
-            value = round(float(value), 2)
+        return value
+
+    @property
+    def unit_of_measurement(self):
+        return self.meta["unit"]
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return self.meta["icon"]
+
+    @property
+    def device_class(self):
+        """Return de device class of the sensor."""
+        return self.meta["device_class"]
+
+
+class MyenergiCTEnergySensor(MyenergiEntity):
+    """myenergi CT Energy sensor class"""
+
+    def __init__(self, coordinator, device, config_entry, key):
+        meta = {
+            "name": f"{key.replace('_', ' ')} today",
+            "prop_name": key,
+            "device_class": DEVICE_CLASS_ENERGY,
+            "unit": ENERGY_WATT_HOUR,
+            "icon": None,
+            "attrs": {"state_class": "total_increasing"},
+        }
+        self.key = key
+        super().__init__(coordinator, device, config_entry, meta)
+
+    @property
+    def unique_id(self):
+        """Return a unique ID to use for this entity."""
+        return f"{self.config_entry.entry_id}-{self.device.serial_number}-{self.meta['prop_name']}"
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return f"myenergi {self.device.name} {self.meta['name']}"
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        value = self.device.history_data.get(self.key, None)
+        if value is None:
+            return None
         return value
 
     @property

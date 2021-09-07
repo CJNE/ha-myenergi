@@ -10,7 +10,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
     """Setup select platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
     devices = []
-    all_devices = await coordinator.client.get_devices()
+    # Don't cause a refresh when fetching devices
+    all_devices = await coordinator.client.get_devices("all", False)
     for device in all_devices:
         # Zappi only selects
         if device.kind == "zappi":

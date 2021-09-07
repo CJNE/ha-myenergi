@@ -67,6 +67,7 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _test_credentials(self, username, password):
         """Return true if credentials is valid."""
+        _LOGGER.debug("Test myenergi credentials")
         try:
             conn = Connection(username, password)
             client = MyenergiClient(conn)
