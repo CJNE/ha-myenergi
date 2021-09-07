@@ -7,7 +7,6 @@ from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING
 from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_POWER
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
-from homeassistant.const import ENERGY_WATT_HOUR
 from homeassistant.const import POWER_WATT
 from pymyenergi import CT_BATTERY
 from pymyenergi import CT_LOAD
@@ -56,18 +55,6 @@ def create_energy_meta(name, prop_name):
     }
 
 
-def create_energy_meta_wh(name, prop_name):
-    return {
-        "name": name,
-        "prop_name": prop_name,
-        "device_class": DEVICE_CLASS_ENERGY,
-        "unit": ENERGY_WATT_HOUR,
-        "icon": None,
-        "state_class": STATE_CLASS_TOTAL_INCREASING,
-        "attrs": {},
-    }
-
-
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
@@ -88,7 +75,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
         MyenergiHubSensor(
             coordinator,
             entry,
-            create_energy_meta_wh(
+            create_energy_meta(
                 "Grid import today",
                 "energy_imported",
             ),
@@ -98,7 +85,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
         MyenergiHubSensor(
             coordinator,
             entry,
-            create_energy_meta_wh(
+            create_energy_meta(
                 "Grid export today",
                 "energy_exported",
             ),
@@ -108,7 +95,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
         MyenergiHubSensor(
             coordinator,
             entry,
-            create_energy_meta_wh(
+            create_energy_meta(
                 "Diverted today",
                 "energy_diverted",
             ),
@@ -118,7 +105,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
         MyenergiHubSensor(
             coordinator,
             entry,
-            create_energy_meta_wh(
+            create_energy_meta(
                 "Generated today",
                 "energy_generated",
             ),
@@ -162,7 +149,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             coordinator,
             entry,
             create_power_meta(
-                "Home honsumption",
+                "Home consumption",
                 "consumption_home",
             ),
         )
@@ -204,7 +191,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta_wh("Energy used today", "energy_total"),
+                    create_energy_meta("Energy used today", "energy_total"),
                 )
             )
             sensors.append(
@@ -212,7 +199,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta_wh("Energy diverted today", "energy_diverted"),
+                    create_energy_meta("Energy diverted today", "energy_diverted"),
                 )
             )
             for key in device.ct_keys:
@@ -392,7 +379,7 @@ class MyenergiCTEnergySensor(MyenergiEntity, SensorEntity):
             "name": f"{key.replace('_', ' ')} today",
             "prop_name": key,
             "device_class": DEVICE_CLASS_ENERGY,
-            "unit": ENERGY_WATT_HOUR,
+            "unit": ENERGY_KILO_WATT_HOUR,
             "icon": None,
             "attrs": {"state_class": "total_increasing"},
         }
