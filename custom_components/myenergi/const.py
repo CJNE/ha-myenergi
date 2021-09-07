@@ -3,9 +3,9 @@
 NAME = "myenergi"
 DOMAIN = "myenergi"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.10"
+VERSION = "0.0.11"
 
-ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
+ATTRIBUTION = "Data provided by myenergi"
 ISSUE_URL = "https://github.com/cjne/myenergi/issues"
 
 # Icons

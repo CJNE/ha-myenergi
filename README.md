@@ -17,11 +17,15 @@
 myenergi custom component for [Home Assistant](https://home-assistant.io)
 This is a very early release, will add more documentations soon!
 
+Talking to [myenergi API.](https://github.com/cjne/pymyenergi)
+
 **This component will set up the following platforms.**
 
-| Platform | Description                                                        |
-| -------- | ------------------------------------------------------------------ |
-| `sensor` | Show info from [myenergi API.](https://github.com/cjne/pymyenergi) |
+| Platform | Description                                         |
+| -------- | --------------------------------------------------- |
+| `sensor` | Provides various readings for your myenergi devices |
+| `select` | Configure devices                                   |
+| `number` | Configure devices                                   |
 
 ![example][logo]
 
@@ -55,6 +59,8 @@ custom_components/myenergi/config_flow.py
 custom_components/myenergi/const.py
 custom_components/myenergi/manifest.json
 custom_components/myenergi/sensor.py
+custom_components/myenergi/number.py
+custom_components/myenergi/select.py
 ```
 
 ## Configuration is done in the UI
