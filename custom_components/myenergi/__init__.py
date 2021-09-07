@@ -8,6 +8,7 @@ import asyncio
 import logging
 from datetime import timedelta
 
+import homeassistant.util.dt as dt_util
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config
 from homeassistant.core import HomeAssistant
@@ -79,9 +80,15 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         """Update data via library."""
+        today = dt_util.now()
+        today = today.replace(hour=0, minute=0, second=0, microsecond=0)
+        utc_today = dt_util.as_utc(today)
+        _LOGGER.debug(
+            f"Refresh histoy local start of day in UTC {utc_today} {utc_today.tzinfo}"
+        )
         try:
             await self.client.refresh()
-            await self.client.refresh_history_today()
+            await self.client.refresh_history(utc_today, 24, "hour")
         except Exception as exception:
             raise UpdateFailed() from exception
 
