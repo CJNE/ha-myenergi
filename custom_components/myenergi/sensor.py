@@ -96,8 +96,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
             coordinator,
             entry,
             create_energy_meta(
-                "Diverted today",
-                "energy_diverted",
+                "Green Energy today",
+                "energy_green",
             ),
         )
     )
@@ -178,6 +178,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 ),
             )
         )
+        for key in device.ct_keys:
+            sensors.append(MyenergiCTPowerSensor(coordinator, device, entry, key))
 
         # Sensors common to Zapi and Eddi
         if device.kind in ["zappi", "eddi"]:
@@ -199,7 +201,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta("Energy diverted today", "energy_diverted"),
+                    create_energy_meta("Green energy today", "energy_green"),
                 )
             )
             for key in device.ct_keys:
@@ -280,7 +282,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta("Energy diverted session", "diverted_session"),
+                    create_energy_meta("Energy consumed session", "consumed_session"),
                 )
             )
     async_add_devices(sensors)
@@ -380,8 +382,9 @@ class MyenergiCTEnergySensor(MyenergiEntity, SensorEntity):
             "prop_name": key,
             "device_class": DEVICE_CLASS_ENERGY,
             "unit": ENERGY_KILO_WATT_HOUR,
+            "state_class": STATE_CLASS_TOTAL_INCREASING,
             "icon": None,
-            "attrs": {"state_class": "total_increasing"},
+            "attrs": {},
         }
         self.key = key
         super().__init__(coordinator, device, config_entry, meta)
@@ -400,6 +403,60 @@ class MyenergiCTEnergySensor(MyenergiEntity, SensorEntity):
     def state(self):
         """Return the state of the sensor."""
         value = self.device.history_data.get(self.key, None)
+        if value is None:
+            return None
+        return value
+
+    @property
+    def unit_of_measurement(self):
+        return self.meta["unit"]
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return self.meta["icon"]
+
+    @property
+    def device_class(self):
+        """Return de device class of the sensor."""
+        return self.meta["device_class"]
+
+    @property
+    def state_class(self):
+        """Return de device class of the sensor."""
+        return self.meta.get("state_class", None)
+
+
+class MyenergiCTPowerSensor(MyenergiEntity, SensorEntity):
+    """myenergi CT power sensor class"""
+
+    def __init__(self, coordinator, device, config_entry, key):
+        meta = {
+            "name": f"power {key.replace('_', ' ')}",
+            "prop_name": f"power-{key}",
+            "device_class": DEVICE_CLASS_POWER,
+            "state_class": STATE_CLASS_MEASUREMENT,
+            "unit": POWER_WATT,
+            "icon": None,
+            "attrs": {},
+        }
+        self.key = key
+        super().__init__(coordinator, device, config_entry, meta)
+
+    @property
+    def unique_id(self):
+        """Return a unique ID to use for this entity."""
+        return f"{self.config_entry.entry_id}-{self.device.serial_number}-{self.meta['prop_name']}"
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return f"myenergi {self.device.name} {self.meta['name']}"
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        value = self.device.ct_groups.get(self.key, None)
         if value is None:
             return None
         return value

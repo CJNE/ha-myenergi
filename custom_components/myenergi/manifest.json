@@ -7,5 +7,5 @@
   "dependencies": [],
   "config_flow": true,
   "codeowners": ["@cjne"],
-  "requirements": ["pymyenergi==0.0.13"]
+  "requirements": ["pymyenergi==0.0.14"]
 }
