@@ -2,9 +2,8 @@
 from unittest.mock import patch
 
 import pytest
+from custom_components.myenergi.const import CONF_SCAN_INTERVAL
 from custom_components.myenergi.const import DOMAIN
-from custom_components.myenergi.const import PLATFORMS
-from custom_components.myenergi.const import SENSOR
 from homeassistant import config_entries
 from homeassistant import data_entry_flow
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -48,7 +47,7 @@ async def test_successful_config_flow(hass, bypass_get_data):
     # Check that the config flow is complete and a new entry is created with
     # the input data
     assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
-    assert result["title"] == "test_username"
+    assert result["title"] == "Test Site"
     assert result["data"] == MOCK_CONFIG
     assert result["result"]
 
@@ -72,7 +71,51 @@ async def test_failed_config_flow(hass, error_on_get_data):
     )
 
     assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["errors"] == {"base": "connection"}
+
+
+# In this case, we want to simulate a failure during the config flow.
+# We use the `error_on_get_data` mock instead of `bypass_get_data`
+# (note the function parameters) to raise an Exception during
+# validation of the input config.
+async def test_failed_auth_config_flow(hass, auth_error_on_get_data):
+    """Test a failed config flow due to credential validation failure."""
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_USER}
+    )
+
+    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["step_id"] == "user"
+
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], user_input=MOCK_CONFIG
+    )
+
+    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
     assert result["errors"] == {"base": "auth"}
+
+
+# In this case, we want to simulate a failure during the config flow.
+# We use the `error_on_get_data` mock instead of `bypass_get_data`
+# (note the function parameters) to raise an Exception during
+# validation of the input config.
+async def test_failed_timeout_config_flow(hass, timeout_error_on_get_data):
+    """Test a failed config flow due to credential validation failure."""
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_USER}
+    )
+
+    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["step_id"] == "user"
+
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], user_input=MOCK_CONFIG
+    )
+
+    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["errors"] == {"base": "connection_timeout"}
 
 
 # Our config flow also has an options flow, so we must test it as well.
@@ -94,12 +137,12 @@ async def test_options_flow(hass):
     # Enter some fake data into the form
     result = await hass.config_entries.options.async_configure(
         result["flow_id"],
-        user_input={platform: platform != SENSOR for platform in PLATFORMS},
+        user_input={CONF_SCAN_INTERVAL: 22},
     )
 
     # Verify that the flow finishes
     assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
-    assert result["title"] == "test_username"
+    assert result["title"] is None
 
     # Verify that the options were updated
-    assert entry.options == {}
+    assert entry.options == {CONF_SCAN_INTERVAL: 22}
