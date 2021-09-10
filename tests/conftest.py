@@ -1,5 +1,4 @@
 """Global fixtures for myenergi integration."""
-import json
 from typing import Any
 from unittest.mock import patch
 
@@ -7,13 +6,9 @@ import pytest
 from pymyenergi.exceptions import TimeoutException
 from pymyenergi.exceptions import WrongCredentials
 
+from . import load_fixture_json
+
 pytest_plugins = "pytest_homeassistant_custom_component"
-
-
-def load_fixture_json(name):
-    with open(f"tests/fixtures/{name}.json") as json_file:
-        data = json.load(json_file)
-        return data
 
 
 @pytest.fixture(name="auto_enable_custom_integrations", autouse=True)
