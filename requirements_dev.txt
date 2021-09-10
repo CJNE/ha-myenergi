@@ -1,2 +1,2 @@
 homeassistant
-pymyenergi==0.0.13
+pymyenergi==0.0.14
