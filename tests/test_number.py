@@ -18,6 +18,9 @@ async def test_number(hass: HomeAssistant, mock_zappi_set_green: MagicMock) -> N
 
     await setup_mock_myenergi_config_entry(hass)
 
+    entity_state = hass.states.get(TEST_ZAPPI_NUMBER_GREEN_LEVEL)
+    assert entity_state
+    assert entity_state.state == "50"
     await hass.services.async_call(
         NUMBER_DOMAIN,
         SERVICE_SET_VALUE,
