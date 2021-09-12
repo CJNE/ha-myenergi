@@ -454,8 +454,7 @@ class MyenergiCTPowerSensor(MyenergiEntity, SensorEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        value = self.device.ct_groups.get(self.key, None)
-        return value
+        return self.device.ct_groups.get(self.key, None)
 
     @property
     def unit_of_measurement(self):
