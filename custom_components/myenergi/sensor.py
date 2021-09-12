@@ -349,8 +349,6 @@ class MyenergiSensor(MyenergiEntity, SensorEntity):
     def state(self):
         """Return the state of the sensor."""
         value = operator.attrgetter(self.meta["prop_name"])(self.device)
-        if value is None:
-            return None
         return value
 
     @property
@@ -457,8 +455,6 @@ class MyenergiCTPowerSensor(MyenergiEntity, SensorEntity):
     def state(self):
         """Return the state of the sensor."""
         value = self.device.ct_groups.get(self.key, None)
-        if value is None:
-            return None
         return value
 
     @property

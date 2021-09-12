@@ -82,3 +82,17 @@ def timeout_error_get_data_fixture():
         side_effect=TimeoutException,
     ):
         yield
+
+
+@pytest.fixture
+def mock_zappi_set_charge_mode():
+    """Return a mocked Zappi object."""
+    with patch("pymyenergi.client.Zappi.set_charge_mode") as charge_mode:
+        yield charge_mode
+
+
+@pytest.fixture
+def mock_zappi_set_green():
+    """Return a mocked Zappi object."""
+    with patch("pymyenergi.client.Zappi.set_minimum_green_level") as green_lvl:
+        yield green_lvl

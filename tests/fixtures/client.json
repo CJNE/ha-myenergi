@@ -83,9 +83,9 @@
         {
           "dat": "25-08-2021",
           "tim": "18:45:18",
-          "ectt1": "Internal Load",
-          "ectt2": "Internal Load",
-          "ectt3": "Internal Load",
+          "ectt1": "AC Battery",
+          "ectt2": "AC Battery",
+          "ectt3": "AC Battery",
           "frq": 49.96,
           "grd": 4429,
           "pha": 1,
