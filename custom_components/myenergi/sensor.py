@@ -6,7 +6,10 @@ from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
 from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING
 from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_POWER
+from homeassistant.const import DEVICE_CLASS_VOLTAGE
+from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
+from homeassistant.const import FREQUENCY_HERTZ
 from homeassistant.const import POWER_WATT
 from pymyenergi import CT_BATTERY
 from pymyenergi import CT_LOAD
@@ -14,6 +17,10 @@ from pymyenergi import CT_LOAD
 from .const import DOMAIN
 from .entity import MyenergiEntity
 from .entity import MyenergiHub
+
+
+ICON_VOLT = "mdi:lightning-bolt"
+ICON_FREQ = "mdi:sine-wave"
 
 
 def create_meta(
@@ -68,6 +75,34 @@ async def async_setup_entry(hass, entry, async_add_devices):
             create_power_meta(
                 "Power grid",
                 "power_grid",
+            ),
+        )
+    )
+    sensors.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_meta(
+                "Voltage grid",
+                "voltage_grid",
+                DEVICE_CLASS_VOLTAGE,
+                ELECTRIC_POTENTIAL_VOLT,
+                ICON_VOLT,
+                STATE_CLASS_MEASUREMENT,
+            ),
+        )
+    )
+    sensors.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_meta(
+                "Frequency grid",
+                "frequency_grid",
+                None,
+                FREQUENCY_HERTZ,
+                ICON_FREQ,
+                STATE_CLASS_MEASUREMENT,
             ),
         )
     )
