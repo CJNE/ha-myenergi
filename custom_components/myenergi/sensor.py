@@ -213,6 +213,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             ),
         )
     )
+
     totals = coordinator.client.get_power_totals()
     if totals.get(CT_LOAD, None) is not None:
         sensors.append(
@@ -424,7 +425,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     )
                 )
         elif device.kind == EDDI:
-            # Eddi specifc sensors
+           # Eddi specifc sensors
             sensors.append(
                 MyenergiSensor(
                     coordinator,
