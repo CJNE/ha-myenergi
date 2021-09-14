@@ -156,6 +156,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             ),
         )
     )
+
     totals = coordinator.client.get_power_totals()
     if totals.get(CT_LOAD, None) is not None:
         sensors.append(
@@ -309,6 +310,95 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         ),
                     )
                 )
+            # Experimantail sensors
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta bst", "bst"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta bsm", "bsm"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta bss", "bss"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta tz", "tz"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta pwm", "pwm"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta zs", "zs"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta rdc", "rdc"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta rac", "rac"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta rrac", "rrac"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta zsh", "zsh"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Beta zsl", "zsl"),
+                )
+            )
 
         elif device.kind == "eddi":
             # Eddi specifc sensors

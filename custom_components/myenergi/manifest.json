@@ -1,7 +1,7 @@
 {
   "domain": "myenergi",
   "name": "myenergi",
-  "version": "0.0.12beta1",
+  "version": "0.1.12",
   "documentation": "https://github.com/cjne/ha-myenergi",
   "issue_tracker": "https://github.com/cjne/ha-myenergi/issues",
   "dependencies": [],
