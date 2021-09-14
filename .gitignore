@@ -4,3 +4,4 @@ pythonenv*
 .coverage
 venv
 .venv
+.direnv
