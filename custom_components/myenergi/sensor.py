@@ -316,7 +316,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta bst", "bst"),
+                    create_meta(
+                        "Beta bst", "bst", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
             sensors.append(
@@ -324,7 +326,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta bsm", "bsm"),
+                    create_meta(
+                        "Beta bsm", "bsm", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
             sensors.append(
@@ -332,7 +336,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta bss", "bss"),
+                    create_meta(
+                        "Beta bss", "bss", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
             sensors.append(
@@ -340,7 +346,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta tz", "tz"),
+                    create_meta(
+                        "Beta tz", "tz", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
             sensors.append(
@@ -348,7 +356,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta pwm", "pwm"),
+                    create_meta(
+                        "Beta pwm", "pwm", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
             sensors.append(
@@ -356,7 +366,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta zs", "zs"),
+                    create_meta(
+                        "Beta zs", "zs", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
             sensors.append(
@@ -364,7 +376,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta rdc", "rdc"),
+                    create_meta(
+                        "Beta rdc", "rdc", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
             sensors.append(
@@ -372,7 +386,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta rac", "rac"),
+                    create_meta(
+                        "Beta rac", "rac", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
             sensors.append(
@@ -380,7 +396,12 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta rrac", "rrac"),
+                    create_meta(
+                        "Beta rrac",
+                        "rrac",
+                        DEVICE_CLASS_VOLTAGE,
+                        ELECTRIC_POTENTIAL_VOLT,
+                    ),
                 )
             )
             sensors.append(
@@ -388,7 +409,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta zsh", "zsh"),
+                    create_meta(
+                        "Beta zsh", "zsh", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
             sensors.append(
@@ -396,7 +419,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Beta zsl", "zsl"),
+                    create_meta(
+                        "Beta zsl", "zsl", DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT
+                    ),
                 )
             )
 
