@@ -1,0 +1,44 @@
+# Service ID
+myenergi_boost:
+  name: Boost
+  description: Start manual boost
+  target:
+    device:
+      domain: myenergi
+    entity:
+      domain: select
+  fields:
+    amount:
+      name: Amount
+      description: Boost amount (kWh)
+      required: true
+      example: 15
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 99
+myenergi_smart_boost:
+  name: Smart boost
+  description: Start smart boost
+  target:
+    device:
+      domain: myenergi
+      model: Zappi
+    entity:
+      domain: select
+  fields:
+    amount:
+      name: Amount
+      description: Boost amount (kWh)
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 99
+    when:
+      name: Done by
+      description: What time the charge must be completed
+      required: true
+      selector:
+        time:

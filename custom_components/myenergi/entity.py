@@ -1,7 +1,13 @@
 """MyenergiEntity class"""
+import logging
+
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from pymyenergi import EDDI
+from pymyenergi import ZAPPI
 
 from .const import DOMAIN
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
 class MyenergiEntity(CoordinatorEntity):
@@ -33,6 +39,23 @@ class MyenergiEntity(CoordinatorEntity):
             "integration": DOMAIN,
         }
         return {**attrs, **self.meta["attrs"]}
+
+    async def start_boost(self, amount: float) -> None:
+        _LOGGER.debug("Start boost called, amount %s", amount)
+        """Start boost"""
+        if self.device.kind in [ZAPPI, EDDI]:
+            await self.device.start_boost(amount)
+
+        self.schedule_update_ha_state()
+
+    async def start_smart_boost(self, amount: float, when: str) -> None:
+        _LOGGER.debug("Start smart boost called, amount %s when %s", amount, when)
+        """Start boost"""
+        when = when.replace(":", "")[:4]
+        if self.device.kind in [ZAPPI, EDDI]:
+            await self.device.start_smart_boost(amount, when)
+
+        self.schedule_update_ha_state()
 
 
 class MyenergiHub(CoordinatorEntity):

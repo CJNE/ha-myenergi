@@ -1,20 +1,48 @@
 """Sensor platform for myenergi."""
+import voluptuous as vol
 from homeassistant.components.select import SelectEntity
+from homeassistant.helpers import entity_platform
 from pymyenergi.zappi import CHARGE_MODES
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
 
+ATTR_BOOST_AMOUNT = "amount"
+ATTR_BOOST_WHEN = "when"
+BOOST_SCHEMA = {
+    vol.Required(ATTR_BOOST_AMOUNT): vol.All(
+        vol.Coerce(float), vol.Range(min=1, max=100)
+    ),
+}
+SMART_BOOST_SCHEMA = {
+    vol.Required(ATTR_BOOST_AMOUNT): vol.All(
+        vol.Coerce(float),
+        vol.Range(min=1, max=100),
+    ),
+    vol.Required(ATTR_BOOST_WHEN): str,
+}
+
 
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup select platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
+    platform = entity_platform.async_get_current_platform()
     devices = []
     # Don't cause a refresh when fetching devices
     all_devices = await coordinator.client.get_devices("all", False)
     for device in all_devices:
         # Zappi only selects
         if device.kind == "zappi":
+            platform.async_register_entity_service(
+                "myenergi_boost",
+                BOOST_SCHEMA,
+                "start_boost",
+            )
+            platform.async_register_entity_service(
+                "myenergi_smart_boost",
+                SMART_BOOST_SCHEMA,
+                "start_smart_boost",
+            )
             devices.append(ChargeModeSelect(coordinator, device, entry))
     async_add_devices(devices)
 
