@@ -6,13 +6,18 @@ from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
 from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING
 from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_POWER
+from homeassistant.const import DEVICE_CLASS_TEMPERATURE
 from homeassistant.const import DEVICE_CLASS_VOLTAGE
 from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
 from homeassistant.const import FREQUENCY_HERTZ
 from homeassistant.const import POWER_WATT
+from homeassistant.const import TEMP_CELSIUS
 from pymyenergi import CT_BATTERY
 from pymyenergi import CT_LOAD
+from pymyenergi import EDDI
+from pymyenergi import HARVI
+from pymyenergi import ZAPPI
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
@@ -217,7 +222,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             sensors.append(MyenergiCTPowerSensor(coordinator, device, entry, key))
 
         # Sensors common to Zapi and Eddi
-        if device.kind in ["zappi", "eddi"]:
+        if device.kind in [ZAPPI, EDDI]:
             sensors.append(
                 MyenergiSensor(
                     coordinator, device, entry, create_meta("Status", "status")
@@ -242,7 +247,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             for key in device.ct_keys:
                 sensors.append(MyenergiCTEnergySensor(coordinator, device, entry, key))
         # Zappi and harvi
-        if device.kind in ["zappi", "harvi"]:
+        if device.kind in [ZAPPI, HARVI]:
             sensors.append(
                 MyenergiSensor(
                     coordinator,
@@ -255,7 +260,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 )
             )
         # Zappi only sensors
-        if device.kind == "zappi":
+        if device.kind == ZAPPI:
             sensors.append(
                 MyenergiSensor(
                     coordinator,
@@ -309,8 +314,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         ),
                     )
                 )
-
-        elif device.kind == "eddi":
+        elif device.kind == EDDI:
             # Eddi specifc sensors
             sensors.append(
                 MyenergiSensor(
@@ -320,6 +324,34 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_energy_meta("Energy consumed session", "consumed_session"),
                 )
             )
+            if device.temp_1 != -1:
+                sensors.append(
+                    MyenergiSensor(
+                        coordinator,
+                        device,
+                        entry,
+                        create_meta(
+                            f"Temp {device.temp_name_1}",
+                            "temp_1",
+                            DEVICE_CLASS_TEMPERATURE,
+                            TEMP_CELSIUS,
+                        ),
+                    )
+                )
+            if device.temp_2 != -1:
+                sensors.append(
+                    MyenergiSensor(
+                        coordinator,
+                        device,
+                        entry,
+                        create_meta(
+                            f"Temp {device.temp_name_2}",
+                            "temp_2",
+                            DEVICE_CLASS_TEMPERATURE,
+                            TEMP_CELSIUS,
+                        ),
+                    )
+                )
     async_add_devices(sensors)
 
 
