@@ -3,8 +3,6 @@ myenergi_boost:
   name: Boost
   description: Start manual boost
   target:
-    device:
-      domain: myenergi
     entity:
       domain: select
   fields:
@@ -12,8 +10,6 @@ myenergi_boost:
       name: Amount
       description: Boost amount (kWh)
       required: true
-      example: 15
-      default: 5
       selector:
         number:
           min: 1
@@ -23,7 +19,6 @@ myenergi_smart_boost:
   description: Start smart boost
   target:
     device:
-      domain: myenergi
       model: Zappi
     entity:
       domain: select
