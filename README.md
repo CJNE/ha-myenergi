@@ -19,7 +19,9 @@ This component will make all [myenergi](https://myenergi.com) devices connected 
 The energy sensors are fully compatible with the energy dashboard in Home Assistant.
 
 It will create HA devices depending on what you have installed:
+
 - Hub
+
   - Grid power sensor (W)
   - Grid voltage sensor (V)
   - Grid frequency sensor (Hz)
@@ -32,24 +34,26 @@ It will create HA devices depending on what you have installed:
   - Green energy today sensor (kWh), this is the amount of generated energy that was used for charging or heating instead of being exported
 
 - Zappi
+
   - Charge mode selector that let you switch between Stopped, Fast, Eco and Eco+ charge modes
   - Charge added this session sensor (kWh)
   - Energy consumed today sensor (kWh)
   - Energy diverted today sensor (kWh)
   - Power sensors for internal and external CT clamps (W)
-  - Plug status sensor 
+  - Plug status sensor
   - Charger status sensor
   - Minumum green level number input
   - Service to start boost (provide boost amount in kWh as paramter)
   - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
 
 - Eddi
-   - Power sensors for internal and external CT clamps (W)
-   - Temperature sensors if fitted
-   
-- Harvi
-  - Power sensors for internal and external CT clamps (W)
 
+  - Power sensors for internal and external CT clamps (W)
+  - Temperature sensors if fitted
+
+- Harvi
+
+  - Power sensors for internal and external CT clamps (W)
 
 Talking to the myenergi API using the [pymyenergi python library](https://github.com/cjne/pymyenergi)
 
