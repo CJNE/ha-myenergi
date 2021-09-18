@@ -15,9 +15,43 @@
 [![Community Forum][forum-shield]][forum]
 
 myenergi custom component for [Home Assistant](https://home-assistant.io)
-This is a very early release, will add more documentations soon!
+This component will make all [myenergi](https://myenergi.com) devices connected to your hub acessible in Home Assistant.
+The energy sensors are fully compatible with the energy dashboard in Home Assistant.
 
-Talking to [myenergi API.](https://github.com/cjne/pymyenergi)
+It will create HA devices depending on what you have installed:
+- Hub
+  - Grid power sensor (W)
+  - Grid voltage sensor (V)
+  - Grid frequency sensor (Hz)
+  - Genertion power sensor (W)
+  - Charging/heating power sensor (W)
+  - Home power today sensor (W), power that is not charging, heating, generation and export.
+  - Energy generated today sensor (kWh)
+  - Energy exported today sensor (kWh)
+  - Energy imported today sensor (kWh)
+  - Green energy today sensor (kWh), this is the amount of generated energy that was used for charging or heating instead of being exported
+
+- Zappi
+  - Charge mode selector that let you switch between Stopped, Fast, Eco and Eco+ charge modes
+  - Charge added this session sensor (kWh)
+  - Energy consumed today sensor (kWh)
+  - Energy diverted today sensor (kWh)
+  - Power sensors for internal and external CT clamps (W)
+  - Plug status sensor 
+  - Charger status sensor
+  - Minumum green level number input
+  - Service to start boost (provide boost amount in kWh as paramter)
+  - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
+
+- Eddi
+   - Power sensors for internal and external CT clamps (W)
+   - Temperature sensors if fitted
+   
+- Harvi
+  - Power sensors for internal and external CT clamps (W)
+
+
+Talking to the myenergi API using the [pymyenergi python library](https://github.com/cjne/pymyenergi)
 
 **This component will set up the following platforms.**
 
