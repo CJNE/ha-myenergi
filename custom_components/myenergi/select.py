@@ -9,7 +9,7 @@ from .const import DOMAIN
 from .entity import MyenergiEntity
 
 ATTR_BOOST_AMOUNT = "amount"
-ATTR_BOOST_TIME = "minutes"
+ATTR_BOOST_TIME = "time"
 ATTR_BOOST_TARGET = "target"
 ATTR_BOOST_WHEN = "when"
 BOOST_SCHEMA = {

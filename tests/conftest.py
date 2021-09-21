@@ -92,10 +92,24 @@ def mock_zappi_set_charge_mode():
 
 
 @pytest.fixture
+def mock_eddi_set_operating_mode():
+    """Return a mocked Eddi object."""
+    with patch("pymyenergi.client.Eddi.set_operating_mode") as op_mode:
+        yield op_mode
+
+
+@pytest.fixture
 def mock_zappi_start_boost():
     """Return a mocked Zappi object."""
     with patch("pymyenergi.client.Zappi.start_boost") as start_boost:
         yield start_boost
+
+
+@pytest.fixture
+def mock_eddi_manual_boost():
+    """Return a mocked Eddi object."""
+    with patch("pymyenergi.client.Eddi.manual_boost") as manual_boost:
+        yield manual_boost
 
 
 @pytest.fixture
