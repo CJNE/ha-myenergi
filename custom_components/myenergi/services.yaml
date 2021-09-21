@@ -14,6 +14,32 @@ myenergi_boost:
         number:
           min: 1
           max: 99
+myenergi_eddi_boost:
+  name: Boost
+  description: Start manual boost
+  target:
+    entity:
+      domain: select
+  fields:
+    target:
+      name: Target
+      description: Heater / Relay
+      required: true
+      selector:
+        select:
+          options:
+            - "Heater 1"
+            - "Heater 2"
+            - "Relay 1"
+            - "Relay 2"
+    time:
+      name: Time
+      description: Boost time (minutes)
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 1440
 myenergi_smart_boost:
   name: Smart boost
   description: Start smart boost
