@@ -45,12 +45,15 @@ async def setup_mock_myenergi_config_entry(
     config_entry: ConfigEntry | None = None,
     client: Mock | None = None,
 ) -> ConfigEntry:
+    client_data = "client"
+    if data is not None:
+        client_data = data.get("client_data", "client")
     """Add a mock sunspec config entry to hass."""
     config_entry = config_entry or create_mock_myenergi_config_entry(hass, data)
     """Mock data from client.fetch_data()"""
     with patch(
         "pymyenergi.client.MyenergiClient.fetch_data",
-        return_value=load_fixture_json("client"),
+        return_value=load_fixture_json(client_data),
     ), patch(
         "pymyenergi.zappi.Zappi.fetch_history_data",
         return_value=load_fixture_json("history_zappi"),

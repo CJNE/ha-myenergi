@@ -87,6 +87,26 @@ async def async_setup_entry(hass, entry, async_add_devices):
         MyenergiHubSensor(
             coordinator,
             entry,
+            create_power_meta(
+                "Power export",
+                "power_export",
+            ),
+        )
+    )
+    sensors.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_power_meta(
+                "Power import",
+                "power_import",
+            ),
+        )
+    )
+    sensors.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
             create_meta(
                 "Voltage grid",
                 "voltage_grid",
@@ -374,7 +394,14 @@ class MyenergiHubSensor(MyenergiHub, SensorEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return operator.attrgetter(self.meta["prop_name"])(self.coordinator.client)
+        prop_name = self.meta["prop_name"]
+        if prop_name == "power_export":
+            power = self.coordinator.client.power_grid
+            return abs(min(0, power))
+        elif prop_name == "power_import":
+            power = self.coordinator.client.power_grid
+            return max(0, power)
+        return operator.attrgetter(prop_name)(self.coordinator.client)
 
     @property
     def unit_of_measurement(self):
