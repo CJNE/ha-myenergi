@@ -11,6 +11,7 @@ from homeassistant.core import HomeAssistant
 from . import setup_mock_myenergi_config_entry
 
 TEST_ZAPPI_NUMBER_GREEN_LEVEL = "number.myenergi_test_zappi_1_minimum_green_level"
+TEST_EDDI_NUMBER_HEATER_PRIORITY = "number.myenergi_test_eddi_1_heater_priority"
 
 
 async def test_number(hass: HomeAssistant, mock_zappi_set_green: MagicMock) -> None:
@@ -34,3 +35,28 @@ async def test_number(hass: HomeAssistant, mock_zappi_set_green: MagicMock) -> N
     await hass.async_block_till_done()
     assert mock_zappi_set_green.call_count == 1
     mock_zappi_set_green.assert_called_with(58)
+
+
+async def test_heater_priority(
+    hass: HomeAssistant, mock_eddi_heater: MagicMock
+) -> None:
+    """Verify device information includes expected details."""
+
+    await setup_mock_myenergi_config_entry(hass)
+
+    entity_state = hass.states.get(TEST_EDDI_NUMBER_HEATER_PRIORITY)
+    assert entity_state
+    assert entity_state.state == "1"
+    await hass.services.async_call(
+        NUMBER_DOMAIN,
+        SERVICE_SET_VALUE,
+        {
+            ATTR_ENTITY_ID: TEST_EDDI_NUMBER_HEATER_PRIORITY,
+            "value": "2",
+        },
+        blocking=False,
+    )
+    assert mock_eddi_heater.call_count == 0
+    await hass.async_block_till_done()
+    assert mock_eddi_heater.call_count == 1
+    mock_eddi_heater.assert_called_with("heater2")

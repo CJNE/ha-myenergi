@@ -124,3 +124,10 @@ def mock_zappi_set_green():
     """Return a mocked Zappi object."""
     with patch("pymyenergi.client.Zappi.set_minimum_green_level") as green_lvl:
         yield green_lvl
+
+
+@pytest.fixture
+def mock_eddi_heater():
+    """Return a mocked eddi object."""
+    with patch("pymyenergi.client.Eddi.set_heater_priority") as heater:
+        yield heater
