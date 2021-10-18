@@ -69,9 +69,8 @@ Talking to the myenergi API using the [pymyenergi python library](https://github
 
 ## HACS Installation
 
-1. Add this repository to "Custom repositories"
-2. Add and search for myenergi in HACS
-3. Install
+1. Search for myenergi in HACS
+2. Install
 
 ## Manual Installation
 
@@ -125,7 +124,7 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 [commits-shield]: https://img.shields.io/github/commit-activity/y/cjne/ha-myenergi.svg?style=for-the-badge
 [commits]: https://github.com/cjne/ha-myenergi/commits/main
 [hacs]: https://hacs.xyz
-[hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
+[hacsbadge]: https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge
 [discord]: https://discord.gg/Qa5fW2R
 [discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
 [logo]: logo@2x.png
