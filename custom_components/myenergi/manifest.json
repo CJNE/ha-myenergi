@@ -1,12 +1,12 @@
 {
   "domain": "myenergi",
   "name": "myenergi",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "documentation": "https://github.com/cjne/ha-myenergi",
   "issue_tracker": "https://github.com/cjne/ha-myenergi/issues",
   "dependencies": [],
   "config_flow": true,
   "codeowners": ["@cjne"],
   "iot_class": "cloud_polling",
-  "requirements": ["pymyenergi==0.0.23"]
+  "requirements": ["pymyenergi==0.0.24"]
 }

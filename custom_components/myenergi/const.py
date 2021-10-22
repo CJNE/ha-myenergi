@@ -3,7 +3,7 @@
 NAME = "myenergi"
 DOMAIN = "myenergi"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.14"
+VERSION = "0.0.16"
 
 ATTRIBUTION = "Data provided by myenergi"
 ISSUE_URL = "https://github.com/cjne/myenergi/issues"
