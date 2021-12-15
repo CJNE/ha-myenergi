@@ -32,7 +32,7 @@ class MyenergiEntity(CoordinatorEntity):
 
     @property
     def entity_category(self):
-        return self.meta.get('category', None)
+        return self.meta.get("category", None)
 
     @property
     def extra_state_attributes(self):
@@ -88,5 +88,4 @@ class MyenergiHub(CoordinatorEntity):
 
     @property
     def entity_category(self):
-        return self.meta.get('category', None)
-
+        return self.meta.get("category", None)

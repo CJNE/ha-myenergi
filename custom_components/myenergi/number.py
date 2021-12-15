@@ -27,7 +27,12 @@ class HeaterPriorityNumber(MyenergiEntity, NumberEntity):
     """myenergi Sensor class."""
 
     def __init__(self, coordinator, device, config_entry):
-        super().__init__(coordinator, device, config_entry, { "attrs": {}, "category": ENTITY_CATEGORY_CONFIG })
+        super().__init__(
+            coordinator,
+            device,
+            config_entry,
+            {"attrs": {}, "category": ENTITY_CATEGORY_CONFIG},
+        )
 
     @property
     def unique_id(self):
@@ -72,7 +77,12 @@ class DevicePriorityNumber(MyenergiEntity, NumberEntity):
     """myenergi number class."""
 
     def __init__(self, coordinator, device, config_entry):
-        super().__init__(coordinator, device, config_entry, { "attrs": {}, "category": ENTITY_CATEGORY_CONFIG })
+        super().__init__(
+            coordinator,
+            device,
+            config_entry,
+            {"attrs": {}, "category": ENTITY_CATEGORY_CONFIG},
+        )
 
     @property
     def unique_id(self):
@@ -118,7 +128,12 @@ class MinimumGreenLevelNumber(MyenergiEntity, NumberEntity):
     """myenergi Sensor class."""
 
     def __init__(self, coordinator, device, config_entry):
-        super().__init__(coordinator, device, config_entry, { "attrs": {}, "category": ENTITY_CATEGORY_CONFIG })
+        super().__init__(
+            coordinator,
+            device,
+            config_entry,
+            {"attrs": {}, "category": ENTITY_CATEGORY_CONFIG},
+        )
 
     @property
     def unique_id(self):

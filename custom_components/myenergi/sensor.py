@@ -10,6 +10,7 @@ from homeassistant.const import DEVICE_CLASS_TEMPERATURE
 from homeassistant.const import DEVICE_CLASS_VOLTAGE
 from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
+from homeassistant.const import ENTITY_CATEGORY_DIAGNOSTIC
 from homeassistant.const import FREQUENCY_HERTZ
 from homeassistant.const import POWER_WATT
 from homeassistant.const import TEMP_CELSIUS
@@ -22,7 +23,6 @@ from pymyenergi import ZAPPI
 from .const import DOMAIN
 from .entity import MyenergiEntity
 from .entity import MyenergiHub
-from homeassistant.const import ENTITY_CATEGORY_DIAGNOSTIC
 
 
 ICON_VOLT = "mdi:lightning-bolt"
@@ -30,7 +30,13 @@ ICON_FREQ = "mdi:sine-wave"
 
 
 def create_meta(
-    name, prop_name, device_class=None, unit=None, category=None, icon=None, state_class=None
+    name,
+    prop_name,
+    device_class=None,
+    unit=None,
+    category=None,
+    icon=None,
+    state_class=None,
 ):
     """Create metadata for entity"""
     return {
@@ -255,15 +261,24 @@ async def async_setup_entry(hass, entry, async_add_devices):
         )
         for key in device.ct_keys:
             if device.kind == HARVI:
-                sensors.append(MyenergiCTPowerSensor(coordinator, device, entry, key, None))
+                sensors.append(
+                    MyenergiCTPowerSensor(coordinator, device, entry, key, None)
+                )
             else:
-                sensors.append(MyenergiCTPowerSensor(coordinator, device, entry, key, ENTITY_CATEGORY_DIAGNOSTIC))
+                sensors.append(
+                    MyenergiCTPowerSensor(
+                        coordinator, device, entry, key, ENTITY_CATEGORY_DIAGNOSTIC
+                    )
+                )
 
         # Sensors common to Zapi and Eddi
         if device.kind in [ZAPPI, EDDI]:
             sensors.append(
                 MyenergiSensor(
-                    coordinator, device, entry, create_meta("Status", "status", None, None, None, "mdi:ev-station")
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Status", "status", None, None, None, "mdi:ev-station"),
                 )
             )
             sensors.append(
@@ -271,7 +286,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta("Energy used today", "energy_total", ENTITY_CATEGORY_DIAGNOSTIC),
+                    create_energy_meta(
+                        "Energy used today", "energy_total", ENTITY_CATEGORY_DIAGNOSTIC
+                    ),
                 )
             )
             sensors.append(
@@ -279,7 +296,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta("Green energy today", "energy_green", ENTITY_CATEGORY_DIAGNOSTIC),
+                    create_energy_meta(
+                        "Green energy today", "energy_green", ENTITY_CATEGORY_DIAGNOSTIC
+                    ),
                 )
             )
             for key in device.ct_keys:
@@ -313,7 +332,14 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Plug status", "plug_status", None, None, None, "mdi:ev-plug-type2"),
+                    create_meta(
+                        "Plug status",
+                        "plug_status",
+                        None,
+                        None,
+                        None,
+                        "mdi:ev-plug-type2",
+                    ),
                 )
             )
 
