@@ -131,3 +131,10 @@ def mock_eddi_heater():
     """Return a mocked eddi object."""
     with patch("pymyenergi.client.Eddi.set_heater_priority") as heater:
         yield heater
+
+
+@pytest.fixture
+def mock_eddi_device():
+    """Return a mocked eddi object."""
+    with patch("pymyenergi.client.Eddi.set_priority") as device:
+        yield device
