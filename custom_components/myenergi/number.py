@@ -1,5 +1,6 @@
 """Sensor platform for myenergi."""
 from homeassistant.components.number import NumberEntity
+from homeassistant.const import ENTITY_CATEGORY_CONFIG
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
@@ -26,7 +27,7 @@ class HeaterPriorityNumber(MyenergiEntity, NumberEntity):
     """myenergi Sensor class."""
 
     def __init__(self, coordinator, device, config_entry):
-        super().__init__(coordinator, device, config_entry)
+        super().__init__(coordinator, device, config_entry, { "attrs": {}, "category": ENTITY_CATEGORY_CONFIG })
 
     @property
     def unique_id(self):
@@ -34,6 +35,10 @@ class HeaterPriorityNumber(MyenergiEntity, NumberEntity):
         return (
             f"{self.config_entry.entry_id}-{self.device.serial_number}-heater_priority"
         )
+
+    @property
+    def entity_category(self):
+        return ENTITY_CATEGORY_CONFIG
 
     @property
     def name(self):
@@ -67,7 +72,7 @@ class DevicePriorityNumber(MyenergiEntity, NumberEntity):
     """myenergi number class."""
 
     def __init__(self, coordinator, device, config_entry):
-        super().__init__(coordinator, device, config_entry)
+        super().__init__(coordinator, device, config_entry, { "attrs": {}, "category": ENTITY_CATEGORY_CONFIG })
 
     @property
     def unique_id(self):
@@ -92,6 +97,11 @@ class DevicePriorityNumber(MyenergiEntity, NumberEntity):
         self.async_schedule_update_ha_state()
 
     @property
+    def icon(self):
+        """Return the icon of the select."""
+        return "mdi:sort-numeric-variant"
+
+    @property
     def min_value(self):
         return 1
 
@@ -108,7 +118,7 @@ class MinimumGreenLevelNumber(MyenergiEntity, NumberEntity):
     """myenergi Sensor class."""
 
     def __init__(self, coordinator, device, config_entry):
-        super().__init__(coordinator, device, config_entry)
+        super().__init__(coordinator, device, config_entry, { "attrs": {}, "category": ENTITY_CATEGORY_CONFIG })
 
     @property
     def unique_id(self):
@@ -119,6 +129,11 @@ class MinimumGreenLevelNumber(MyenergiEntity, NumberEntity):
     def name(self):
         """Return the name of the sensor."""
         return f"myenergi {self.device.name} Minimum Green Level"
+
+    @property
+    def icon(self):
+        """Return the icon of the select."""
+        return "mdi:leaf"
 
     @property
     def value(self):
