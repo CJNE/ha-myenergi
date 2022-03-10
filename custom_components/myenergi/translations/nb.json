@@ -5,8 +5,8 @@
         "title": "myenergi",
         "description": "Hvis du trenger hjep til konfigurasjon ta en titt her: https://github.com/cjne/myenergi",
         "data": {
-          "username": "Brukernavn",
-          "password": "Passord"
+          "username": "Hub serienummver",
+          "password": "API nyckel"
         }
       }
     },

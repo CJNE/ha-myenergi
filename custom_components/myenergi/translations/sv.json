@@ -5,13 +5,13 @@
         "title": "myenergi",
         "description": "Om du behöver hjälp med konfigurationen, kolla här: https://github.com/cjne/ha-myenergi",
         "data": {
-          "username": "Användarnamn / serienummer för hub",
-          "password": "Lösenord"
+          "username": "Serienummer för hub",
+          "password": "API nyckel / Lösenord"
         }
       }
     },
     "error": {
-      "auth": "Användarnamn/Lösenord är felaktigt",
+      "auth": "Serienummer / API nyckel är fel",
       "connection": "Kunde inte ansluta till myenergi, vänligen försök lite senare.",
       "connection_timeout": "Anslutningen tappades, servern kan vara upptagen, vänligen försök lite senare."
     },

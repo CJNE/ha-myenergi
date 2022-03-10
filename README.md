@@ -72,6 +72,8 @@ Talking to the myenergi API using the [pymyenergi python library](https://github
 1. Search for myenergi in HACS
 2. Install
 
+This is the recommended way to install.
+
 ## Manual Installation
 
 1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
@@ -87,20 +89,23 @@ Using your HA configuration directory (folder) as a starting point you should no
 ```text
 custom_components/myenergi/translations/en.json
 custom_components/myenergi/translations/fr.json
+custom_components/myenergi/translations/sv.json
 custom_components/myenergi/translations/nb.json
-custom_components/myenergi/translations/sensor.en.json
-custom_components/myenergi/translations/sensor.fr.json
-custom_components/myenergi/translations/sensor.nb.json
 custom_components/myenergi/__init__.py
 custom_components/myenergi/config_flow.py
 custom_components/myenergi/const.py
+custom_components/myenergi/entity.py
 custom_components/myenergi/manifest.json
-custom_components/myenergi/sensor.py
 custom_components/myenergi/number.py
 custom_components/myenergi/select.py
+custom_components/myenergi/sensor.py
+custom_components/myenergi/services.yaml
 ```
 
 ## Configuration is done in the UI
+
+If you have trouble logging in you might need to request an API key from myenergi.
+See [this forum thread](https://myenergi.info/api-keys-t5185.html) for more information.
 
 <!---->
 
