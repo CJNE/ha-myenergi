@@ -10,6 +10,7 @@ from homeassistant.const import DEVICE_CLASS_TEMPERATURE
 from homeassistant.const import DEVICE_CLASS_VOLTAGE
 from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
+from homeassistant.const import ENTITY_CATEGORY_DIAGNOSTIC
 from homeassistant.const import FREQUENCY_HERTZ
 from homeassistant.const import POWER_WATT
 from homeassistant.const import TEMP_CELSIUS
@@ -29,7 +30,13 @@ ICON_FREQ = "mdi:sine-wave"
 
 
 def create_meta(
-    name, prop_name, device_class=None, unit=None, icon=None, state_class=None
+    name,
+    prop_name,
+    device_class=None,
+    unit=None,
+    category=None,
+    icon=None,
+    state_class=None,
 ):
     """Create metadata for entity"""
     return {
@@ -37,30 +44,33 @@ def create_meta(
         "prop_name": prop_name,
         "device_class": device_class,
         "unit": unit,
+        "category": category,
         "icon": icon,
         "state_class": state_class,
         "attrs": {},
     }
 
 
-def create_power_meta(name, prop_name):
+def create_power_meta(name, prop_name, category=None):
     return {
         "name": name,
         "prop_name": prop_name,
         "device_class": DEVICE_CLASS_POWER,
         "unit": POWER_WATT,
+        "category": category,
         "icon": "mdi:flash",
         "state_class": STATE_CLASS_MEASUREMENT,
         "attrs": {},
     }
 
 
-def create_energy_meta(name, prop_name):
+def create_energy_meta(name, prop_name, category=None):
     return {
         "name": name,
         "prop_name": prop_name,
         "device_class": DEVICE_CLASS_ENERGY,
         "unit": ENERGY_KILO_WATT_HOUR,
+        "category": category,
         "icon": None,
         "state_class": STATE_CLASS_TOTAL_INCREASING,
         "attrs": {},
@@ -80,6 +90,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             create_power_meta(
                 "Power grid",
                 "power_grid",
+                ENTITY_CATEGORY_DIAGNOSTIC,
             ),
         )
     )
@@ -90,6 +101,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             create_power_meta(
                 "Power export",
                 "power_export",
+                ENTITY_CATEGORY_DIAGNOSTIC,
             ),
         )
     )
@@ -100,6 +112,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             create_power_meta(
                 "Power import",
                 "power_import",
+                ENTITY_CATEGORY_DIAGNOSTIC,
             ),
         )
     )
@@ -112,6 +125,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 "voltage_grid",
                 DEVICE_CLASS_VOLTAGE,
                 ELECTRIC_POTENTIAL_VOLT,
+                ENTITY_CATEGORY_DIAGNOSTIC,
                 ICON_VOLT,
                 STATE_CLASS_MEASUREMENT,
             ),
@@ -126,6 +140,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 "frequency_grid",
                 None,
                 FREQUENCY_HERTZ,
+                ENTITY_CATEGORY_DIAGNOSTIC,
                 ICON_FREQ,
                 STATE_CLASS_MEASUREMENT,
             ),
@@ -178,6 +193,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             create_power_meta(
                 "Power generation",
                 "power_generation",
+                ENTITY_CATEGORY_DIAGNOSTIC,
             ),
         )
     )
@@ -190,6 +206,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 create_power_meta(
                     "Power charging",
                     "power_charging",
+                    ENTITY_CATEGORY_DIAGNOSTIC,
                 ),
             )
         )
@@ -201,6 +218,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 create_power_meta(
                     "Power battery",
                     "power_battery",
+                    ENTITY_CATEGORY_DIAGNOSTIC,
                 ),
             )
         )
@@ -211,6 +229,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             create_power_meta(
                 "Home consumption",
                 "consumption_home",
+                ENTITY_CATEGORY_DIAGNOSTIC,
             ),
         )
     )
@@ -224,6 +243,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 create_power_meta(
                     f"{device.ct1.name} CT1",
                     "ct1.power",
+                    ENTITY_CATEGORY_DIAGNOSTIC,
                 ),
             )
         )
@@ -235,17 +255,30 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 create_power_meta(
                     f"{device.ct2.name} CT2",
                     "ct2.power",
+                    ENTITY_CATEGORY_DIAGNOSTIC,
                 ),
             )
         )
         for key in device.ct_keys:
-            sensors.append(MyenergiCTPowerSensor(coordinator, device, entry, key))
+            if device.kind == HARVI:
+                sensors.append(
+                    MyenergiCTPowerSensor(coordinator, device, entry, key, None)
+                )
+            else:
+                sensors.append(
+                    MyenergiCTPowerSensor(
+                        coordinator, device, entry, key, ENTITY_CATEGORY_DIAGNOSTIC
+                    )
+                )
 
         # Sensors common to Zapi and Eddi
         if device.kind in [ZAPPI, EDDI]:
             sensors.append(
                 MyenergiSensor(
-                    coordinator, device, entry, create_meta("Status", "status")
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Status", "status", None, None, None, "mdi:ev-station"),
                 )
             )
             sensors.append(
@@ -253,7 +286,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta("Energy used today", "energy_total"),
+                    create_energy_meta(
+                        "Energy used today", "energy_total", ENTITY_CATEGORY_DIAGNOSTIC
+                    ),
                 )
             )
             sensors.append(
@@ -261,7 +296,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_energy_meta("Green energy today", "energy_green"),
+                    create_energy_meta(
+                        "Green energy today", "energy_green", ENTITY_CATEGORY_DIAGNOSTIC
+                    ),
                 )
             )
             for key in device.ct_keys:
@@ -276,6 +313,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_power_meta(
                         f"{device.ct3.name} CT3",
                         "ct3.power",
+                        ENTITY_CATEGORY_DIAGNOSTIC,
                     ),
                 )
             )
@@ -294,7 +332,14 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Plug status", "plug_status"),
+                    create_meta(
+                        "Plug status",
+                        "plug_status",
+                        None,
+                        None,
+                        None,
+                        "mdi:ev-plug-type2",
+                    ),
                 )
             )
 
@@ -307,6 +352,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         create_power_meta(
                             f"{device.ct4.name} CT4",
                             "ct4.power",
+                            ENTITY_CATEGORY_DIAGNOSTIC,
                         ),
                     )
                 )
@@ -319,6 +365,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         create_power_meta(
                             f"{device.ct5.name} CT5",
                             "ct5.power",
+                            ENTITY_CATEGORY_DIAGNOSTIC,
                         ),
                     )
                 )
@@ -331,6 +378,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         create_power_meta(
                             f"{device.ct6.name} CT6",
                             "ct6.power",
+                            ENTITY_CATEGORY_DIAGNOSTIC,
                         ),
                     )
                 )
@@ -355,6 +403,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                             "temp_1",
                             DEVICE_CLASS_TEMPERATURE,
                             TEMP_CELSIUS,
+                            ENTITY_CATEGORY_DIAGNOSTIC,
                         ),
                     )
                 )
@@ -369,6 +418,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                             "temp_2",
                             DEVICE_CLASS_TEMPERATURE,
                             TEMP_CELSIUS,
+                            ENTITY_CATEGORY_DIAGNOSTIC,
                         ),
                     )
                 )
@@ -474,6 +524,7 @@ class MyenergiCTEnergySensor(MyenergiEntity, SensorEntity):
             "prop_name": key,
             "device_class": DEVICE_CLASS_ENERGY,
             "unit": ENERGY_KILO_WATT_HOUR,
+            "category": ENTITY_CATEGORY_DIAGNOSTIC,
             "state_class": STATE_CLASS_TOTAL_INCREASING,
             "icon": None,
             "attrs": {},
@@ -522,12 +573,13 @@ class MyenergiCTEnergySensor(MyenergiEntity, SensorEntity):
 class MyenergiCTPowerSensor(MyenergiEntity, SensorEntity):
     """myenergi CT power sensor class"""
 
-    def __init__(self, coordinator, device, config_entry, key):
+    def __init__(self, coordinator, device, config_entry, key, category):
         meta = {
             "name": f"power {key.replace('_', ' ')}",
             "prop_name": f"power-{key}",
             "device_class": DEVICE_CLASS_POWER,
             "state_class": STATE_CLASS_MEASUREMENT,
+            "category": category,
             "unit": POWER_WATT,
             "icon": None,
             "attrs": {},

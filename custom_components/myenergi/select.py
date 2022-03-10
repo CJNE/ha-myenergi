@@ -115,6 +115,11 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
         return f"myenergi {self.device.name} Charge Mode"
 
     @property
+    def icon(self):
+        """Return the icon of the select."""
+        return "mdi:ev-station"
+
+    @property
     def current_option(self):
         """Return the state of the sensor."""
         return self.device.charge_mode

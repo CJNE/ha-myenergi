@@ -31,7 +31,11 @@ class MyenergiEntity(CoordinatorEntity):
         }
 
     @property
-    def device_state_attributes(self):
+    def entity_category(self):
+        return self.meta.get("category", None)
+
+    @property
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             "integration": DOMAIN,
@@ -75,9 +79,13 @@ class MyenergiHub(CoordinatorEntity):
         }
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         attrs = {
             "integration": DOMAIN,
         }
         return {**attrs, **self.meta["attrs"]}
+
+    @property
+    def entity_category(self):
+        return self.meta.get("category", None)

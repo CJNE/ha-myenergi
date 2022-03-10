@@ -1,2 +1,4 @@
 homeassistant
 pymyenergi
+flake8
+reorder-python-imports
