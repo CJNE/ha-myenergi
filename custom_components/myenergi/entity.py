@@ -1,6 +1,7 @@
 """MyenergiEntity class"""
 import logging
 
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
@@ -18,6 +19,8 @@ class MyenergiEntity(CoordinatorEntity):
             self.meta = {"attrs": {}}
         else:
             self.meta = meta
+            if self.meta.get("category", None) is not None:
+                self.meta["category"] = EntityCategory(self.meta["category"])
 
     @property
     def device_info(self):
@@ -68,6 +71,9 @@ class MyenergiHub(CoordinatorEntity):
         self.config_entry = config_entry
         self.coordinator = coordinator
         self.meta = meta
+        if meta is not None:
+            if self.meta.get("category", None) is not None:
+                self.meta["category"] = EntityCategory(self.meta["category"])
 
     @property
     def device_info(self):
