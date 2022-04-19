@@ -1,9 +1,10 @@
 """Sensor platform for myenergi."""
 from homeassistant.components.number import NumberEntity
-from homeassistant.const import ENTITY_CATEGORY_CONFIG
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
+
+ENTITY_CATEGORY_CONFIG = "config"
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
@@ -43,7 +44,7 @@ class HeaterPriorityNumber(MyenergiEntity, NumberEntity):
 
     @property
     def entity_category(self):
-        return ENTITY_CATEGORY_CONFIG
+        return self.meta["category"]
 
     @property
     def name(self):
