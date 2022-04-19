@@ -14,8 +14,8 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
-myenergi custom component for [Home Assistant](https://home-assistant.io)
-This component will make all [myenergi](https://myenergi.com) devices connected to your hub acessible in Home Assistant.
+myenergi custom component for [Home Assistant](https://home-assistant.io).
+This component will make all [myenergi](https://myenergi.com) devices connected to your hub accessible in Home Assistant.
 The energy sensors are fully compatible with the energy dashboard in Home Assistant.
 
 It will create HA devices depending on what you have installed:
@@ -27,7 +27,7 @@ It will create HA devices depending on what you have installed:
   - Grid frequency sensor (Hz)
   - Genertion power sensor (W)
   - Charging/heating power sensor (W)
-  - Home power today sensor (W), power that is not charging, heating, generation and export.
+  - Home power today sensor (W), power that is not charging, heating, generation and export
   - Energy generated today sensor (kWh)
   - Energy exported today sensor (kWh)
   - Energy imported today sensor (kWh)
@@ -81,8 +81,8 @@ This is the recommended way to install.
 3. In the `custom_components` directory (folder) create a new folder called `myenergi`.
 4. Download _all_ the files from the `custom_components/myenergi/` directory (folder) in this repository.
 5. Place the files you downloaded in the new directory (folder) you created.
-6. Restart Home Assistant
-7. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "myenergi"
+6. Restart Home Assistant.
+7. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "myenergi".
 
 Using your HA configuration directory (folder) as a starting point you should now also have this:
 
@@ -111,13 +111,13 @@ See [this forum thread](https://myenergi.info/api-keys-t5185.html) for more info
 
 ## Contributions are welcome!
 
-If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
+If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md).
 
 ## Credits
 
 This project was generated from [@oncleben31](https://github.com/oncleben31)'s [Home Assistant Custom Component Cookiecutter](https://github.com/oncleben31/cookiecutter-homeassistant-custom-component) template.
 
-Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [integration_blueprint][integration_blueprint] template
+Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [integration_blueprint][integration_blueprint] template.
 
 ---
 
