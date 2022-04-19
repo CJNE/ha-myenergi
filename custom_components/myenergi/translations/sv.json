@@ -2,8 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "myenergi",
-        "description": "Om du behöver hjälp med konfigurationen, kolla här: https://github.com/cjne/ha-myenergi",
+        "description": "Om du behöver hjälp med konfigurationen, se här: https://github.com/cjne/ha-myenergi",
         "data": {
           "username": "Serienummer för hub",
           "password": "API nyckel / Lösenord"
