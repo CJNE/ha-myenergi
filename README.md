@@ -69,10 +69,12 @@ Talking to the myenergi API using the [pymyenergi python library](https://github
 
 ## HACS Installation
 
-1. Search for myenergi in HACS
-2. Install
-
 This is the recommended way to install.
+
+1. Search for myenergi in [HACS](https://hacs.xyz/).
+2. Install.
+3. Restart Home Assistant.
+4. In the HA UI go to "Configuration" -> "Integrations" click "+" and thensearch for "myenergi".
 
 ## Manual Installation
 
@@ -82,7 +84,7 @@ This is the recommended way to install.
 4. Download _all_ the files from the `custom_components/myenergi/` directory (folder) in this repository.
 5. Place the files you downloaded in the new directory (folder) you created.
 6. Restart Home Assistant.
-7. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "myenergi".
+7. In the HA UI go to "Configuration" -> "Integrations" click "+" and then search for "myenergi".
 
 Using your HA configuration directory (folder) as a starting point you should now also have this:
 
@@ -104,8 +106,8 @@ custom_components/myenergi/services.yaml
 
 ## Configuration is done in the UI
 
-If you have trouble logging in you might need to request an API key from myenergi.
-See [this forum thread](https://myenergi.info/api-keys-t5185.html) for more information.
+If you have trouble logging in you might need to request an API key from myenergi. You can generate one at your [myenergi account page](https://myaccount.myenergi.com).
+See the [myenergi support article](https://support.myenergi.com/hc/en-gb/articles/5069627351185-How-do-I-get-an-API-key-) for more information.
 
 <!---->
 
