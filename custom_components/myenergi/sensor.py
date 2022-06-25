@@ -10,10 +10,10 @@ from homeassistant.const import DEVICE_CLASS_TEMPERATURE
 from homeassistant.const import DEVICE_CLASS_VOLTAGE
 from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
-from homeassistant.const import ENTITY_CATEGORY_DIAGNOSTIC
 from homeassistant.const import FREQUENCY_HERTZ
 from homeassistant.const import POWER_WATT
 from homeassistant.const import TEMP_CELSIUS
+from homeassistant.helpers.entity import EntityCategory
 from pymyenergi import CT_BATTERY
 from pymyenergi import CT_LOAD
 from pymyenergi import EDDI
@@ -24,6 +24,7 @@ from .const import DOMAIN
 from .entity import MyenergiEntity
 from .entity import MyenergiHub
 
+ENTITY_CATEGORY_DIAGNOSTIC = EntityCategory.DIAGNOSTIC
 
 ICON_VOLT = "mdi:lightning-bolt"
 ICON_FREQ = "mdi:sine-wave"

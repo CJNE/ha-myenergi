@@ -1,4 +1,5 @@
 homeassistant
 pymyenergi
 flake8
+pytest
 reorder-python-imports

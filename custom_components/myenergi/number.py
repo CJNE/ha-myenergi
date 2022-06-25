@@ -1,10 +1,11 @@
 """Sensor platform for myenergi."""
 from homeassistant.components.number import NumberEntity
+from homeassistant.helpers.entity import EntityCategory
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
 
-ENTITY_CATEGORY_CONFIG = "config"
+ENTITY_CATEGORY_CONFIG = EntityCategory.CONFIG
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
