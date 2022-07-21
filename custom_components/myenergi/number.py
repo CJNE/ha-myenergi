@@ -53,25 +53,25 @@ class HeaterPriorityNumber(MyenergiEntity, NumberEntity):
         return f"myenergi {self.device.name} Heater Priority"
 
     @property
-    def value(self):
+    def native_value(self):
         """Return the state of the sensor."""
         return self.device.heater_priority
 
-    async def async_set_value(self, value: float) -> None:
+    async def async_set_native_value(self, value: float) -> None:
         """Change the selected option."""
         await self.device.set_heater_priority(f"heater{int(value)}")
         self.async_schedule_update_ha_state()
 
     @property
-    def min_value(self):
+    def native_min_value(self):
         return 1
 
     @property
-    def max_value(self):
+    def native_max_value(self):
         return 2
 
     @property
-    def step(self):
+    def native_step(self):
         return 1
 
 
@@ -99,11 +99,11 @@ class DevicePriorityNumber(MyenergiEntity, NumberEntity):
         return f"myenergi {self.device.name} Device Priority"
 
     @property
-    def value(self):
+    def native_value(self):
         """Return the state of the sensor."""
         return self.device.priority
 
-    async def async_set_value(self, value: float) -> None:
+    async def async_set_native_value(self, value: float) -> None:
         """Change the selected option."""
         await self.device.set_priority(int(value))
         self.async_schedule_update_ha_state()
@@ -114,15 +114,15 @@ class DevicePriorityNumber(MyenergiEntity, NumberEntity):
         return "mdi:sort-numeric-variant"
 
     @property
-    def min_value(self):
+    def native_min_value(self):
         return 1
 
     @property
-    def max_value(self):
+    def native_max_value(self):
         return 10
 
     @property
-    def step(self):
+    def native_step(self):
         return 1
 
 
@@ -153,23 +153,23 @@ class MinimumGreenLevelNumber(MyenergiEntity, NumberEntity):
         return "mdi:leaf"
 
     @property
-    def value(self):
+    def native_value(self):
         """Return the state of the sensor."""
         return self.device.minimum_green_level
 
-    async def async_set_value(self, value: float) -> None:
+    async def async_set_native_value(self, value: float) -> None:
         """Change the selected option."""
         await self.device.set_minimum_green_level(int(value))
         self.async_schedule_update_ha_state()
 
     @property
-    def min_value(self):
+    def native_min_value(self):
         return 0
 
     @property
-    def max_value(self):
+    def native_max_value(self):
         return 100
 
     @property
-    def step(self):
+    def native_step(self):
         return 1
