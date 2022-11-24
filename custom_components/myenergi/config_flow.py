@@ -80,11 +80,7 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             error = "connection_timeout"
         except Exception as ex:  # pylint: disable=broad-except
             _LOGGER.error(
-                "".join(
-                    traceback.format_exception(
-                        etype=type(ex), value=ex, tb=ex.__traceback__
-                    )
-                )
+                "".join(traceback.format_exception(ex, value=ex, tb=ex.__traceback__))
             )
             error = "connection"
         return error, None
