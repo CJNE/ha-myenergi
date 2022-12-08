@@ -43,13 +43,14 @@ It will create HA devices depending on what you have installed:
   - Plug status sensor
   - Charger status sensor
   - Minumum green level number input
-  - Service to start boost (provide boost amount in kWh as paramter)
+  - Service to start boost (provide boost amount in kWh as parameter)
   - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
 
 - Eddi
 
   - Power sensors for internal and external CT clamps (W)
   - Temperature sensors if fitted
+  - service to start boost (provide boost amount in minutes as parameter)
 
 - Harvi
 
@@ -74,7 +75,7 @@ This is the recommended way to install.
 1. Search for myenergi in [HACS](https://hacs.xyz/).
 2. Install.
 3. Restart Home Assistant.
-4. In the HA UI go to "Configuration" -> "Integrations" click "+" and thensearch for "myenergi".
+4. In the HA UI go to "Configuration" -> "Integrations" click "+" and then search for "myenergi".
 
 ## Manual Installation
 
