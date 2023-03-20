@@ -305,7 +305,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             for key in device.ct_keys:
                 sensors.append(MyenergiCTEnergySensor(coordinator, device, entry, key))
         # Zappi and harvi
-        if device.kind in [ZAPPI, HARVI]:
+        if device.kind in [ZAPPI, EDDI, HARVI]:
             sensors.append(
                 MyenergiSensor(
                     coordinator,
