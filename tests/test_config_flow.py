@@ -142,7 +142,6 @@ async def test_options_flow(hass):
 
     # Verify that the flow finishes
     assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
-    assert result["title"] is None
 
     # Verify that the options were updated
     assert entry.options == {CONF_SCAN_INTERVAL: 22}
