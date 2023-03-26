@@ -11,6 +11,7 @@ from homeassistant.const import DEVICE_CLASS_VOLTAGE
 from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
 from homeassistant.const import FREQUENCY_HERTZ
+from homeassistant.const import PERCENTAGE
 from homeassistant.const import POWER_WATT
 from homeassistant.const import TEMP_CELSIUS
 from homeassistant.helpers.entity import EntityCategory
@@ -351,6 +352,14 @@ async def async_setup_entry(hass, entry, async_add_devices):
             )
         # Zappi only sensors
         if device.kind == ZAPPI:
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("PWM", "pwm", unit=PERCENTAGE),
+                )
+            )
             sensors.append(
                 MyenergiSensor(
                     coordinator,
