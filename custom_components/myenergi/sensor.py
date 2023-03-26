@@ -88,6 +88,20 @@ async def async_setup_entry(hass, entry, async_add_devices):
         MyenergiHubSensor(
             coordinator,
             entry,
+            create_meta("Hub firmware", "firmware_version", icon="mdi:numeric"),
+        )
+    )
+    sensors.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
+            create_meta("Hub serial number", "serial_number", icon="mdi:numeric"),
+        )
+    )
+    sensors.append(
+        MyenergiHubSensor(
+            coordinator,
+            entry,
             create_power_meta(
                 "Power grid",
                 "power_grid",
@@ -236,6 +250,23 @@ async def async_setup_entry(hass, entry, async_add_devices):
     )
     for device in all_devices:
         # Sensors available in all devices
+
+        sensors.append(
+            MyenergiSensor(
+                coordinator,
+                device,
+                entry,
+                create_meta("Firmware", "firmware_version", icon="mdi:numeric"),
+            )
+        )
+        sensors.append(
+            MyenergiSensor(
+                coordinator,
+                device,
+                entry,
+                create_meta("Serial number", "serial_number", icon="mdi:numeric"),
+            )
+        )
         sensors.append(
             MyenergiSensor(
                 coordinator,
