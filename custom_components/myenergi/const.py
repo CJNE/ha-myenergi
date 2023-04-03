@@ -3,7 +3,7 @@
 NAME = "myenergi"
 DOMAIN = "myenergi"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.18"
+VERSION = "0.0.19"
 
 ATTRIBUTION = "Data provided by myenergi"
 ISSUE_URL = "https://github.com/cjne/myenergi/issues"
@@ -11,14 +11,12 @@ ISSUE_URL = "https://github.com/cjne/myenergi/issues"
 # Icons
 ICON = "mdi:format-quote-close"
 
-# Device classes
-BINARY_SENSOR_DEVICE_CLASS = "connectivity"
-
 # Platforms
 SENSOR = "sensor"
+BINARY_SENSOR = "binary_sensor"
 SELECT = "select"
 NUMBER = "number"
-PLATFORMS = [SENSOR, SELECT, NUMBER]
+PLATFORMS = [SENSOR, BINARY_SENSOR, SELECT, NUMBER]
 
 
 # Configuration and options
