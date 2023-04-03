@@ -2,6 +2,7 @@
 import operator
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
+from pymyenergi import EDDI
 from pymyenergi import ZAPPI
 
 from .const import DOMAIN
@@ -25,6 +26,33 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     {
                         "name": "Update available",
                         "prop_name": "update_available",
+                        "icon": None,
+                        "attrs": {},
+                    },
+                )
+            )
+        if device.kind == EDDI:
+            sensors.append(
+                MyenergiBinarySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    {
+                        "name": "Relay 1",
+                        "prop_name": "r1a",
+                        "icon": None,
+                        "attrs": {},
+                    },
+                )
+            )
+            sensors.append(
+                MyenergiBinarySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    {
+                        "name": "Relay 2",
+                        "prop_name": "r2a",
                         "icon": None,
                         "attrs": {},
                     },
