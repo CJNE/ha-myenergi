@@ -1,7 +1,7 @@
 """MyenergiEntity class"""
 import logging
 
-from homeassistant.const import EntityCategory
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN

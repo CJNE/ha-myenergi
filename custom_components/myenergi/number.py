@@ -1,6 +1,6 @@
 """Sensor platform for myenergi."""
 from homeassistant.components.number import NumberEntity
-from homeassistant.const import EntityCategory
+from homeassistant.helpers.entity import EntityCategory
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
