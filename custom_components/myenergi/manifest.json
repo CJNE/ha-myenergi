@@ -7,6 +7,6 @@
   "documentation": "https://github.com/cjne/ha-myenergi",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/cjne/ha-myenergi/issues",
-  "requirements": ["pymyenergi==0.0.26"],
-  "version": "0.0.22"
+  "requirements": ["pymyenergi==0.0.27"],
+  "version": "0.0.23"
 }
