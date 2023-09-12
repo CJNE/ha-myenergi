@@ -311,14 +311,6 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Status", "status", None, None, None, "mdi:ev-station"),
-                )
-            )
-            sensors.append(
-                MyenergiSensor(
-                    coordinator,
-                    device,
-                    entry,
                     create_energy_meta(
                         "Energy used today", "energy_total", ENTITY_CATEGORY_DIAGNOSTIC
                     ),
@@ -352,6 +344,14 @@ async def async_setup_entry(hass, entry, async_add_devices):
             )
         # Zappi only sensors
         if device.kind == ZAPPI:
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Status", "status", None, None, None, "mdi:ev-station"),
+                )
+            )
             sensors.append(
                 MyenergiSensor(
                     coordinator,
@@ -430,7 +430,29 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
+                    create_meta("Status", "status", None, None, None, "mdi:shower"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
                     create_energy_meta("Energy consumed session", "consumed_session"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta("Active Heater",
+                                "active_heater",
+                                None,
+                                None,
+                                None,
+                                "mdi:fraction-one-half",
+                    ),
                 )
             )
             if device.temp_1 != -1:

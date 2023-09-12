@@ -15,7 +15,7 @@
 [![Community Forum][forum-shield]][forum]
 
 myenergi custom component for [Home Assistant](https://home-assistant.io).
-This component will make all [myenergi](https://myenergi.com) devices connected to your hub accessible in Home Assistant.
+This component will make all supported [myenergi](https://myenergi.com) devices (libbi is not currently supported) connected to your hub accessible in Home Assistant.
 The energy sensors are fully compatible with the energy dashboard in Home Assistant.
 
 It will create HA devices depending on what you have installed:
@@ -25,13 +25,13 @@ It will create HA devices depending on what you have installed:
   - Grid power sensor (W)
   - Grid voltage sensor (V)
   - Grid frequency sensor (Hz)
-  - Genertion power sensor (W)
+  - Generation power sensor (W)
   - Charging/heating power sensor (W)
-  - Home power today sensor (W), power that is not charging, heating, generation and export
+  - Home power today sensor (W); consumption - power that is not charging, heating, generation and export
   - Energy generated today sensor (kWh)
   - Energy exported today sensor (kWh)
   - Energy imported today sensor (kWh)
-  - Green energy today sensor (kWh), this is the amount of generated energy that was used for charging or heating instead of being exported
+  - Green energy today sensor (kWh); this is the amount of generated energy that was used for charging or heating instead of being exported
 
 - Zappi
 
@@ -42,21 +42,29 @@ It will create HA devices depending on what you have installed:
   - Power sensors for internal and external CT clamps (W)
   - Plug status sensor
   - Charger status sensor
-  - Minumum green level number input
+  - Minumum green level number input; how much power must be sourced from green sources (local generation) to do diversion charging
   - Service to start boost (provide boost amount in kWh as parameter)
   - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
 
 - Eddi
 
+  - Operating mode selector that let you switch between Stopped (no heating will take place) and Normal modes
   - Power sensors for internal and external CT clamps (W)
   - Temperature sensors if fitted
-  - service to start boost (provide boost amount in minutes as parameter)
+  - Service to start boost (provide boost amount in minutes as parameter)
+  - Heater priority; whether the first or second heater should be used first
 
 - Harvi
 
   - Power sensors for internal and external CT clamps (W)
 
-Talking to the myenergi API using the [pymyenergi python library](https://github.com/cjne/pymyenergi)
+Common sensor entities may also include:
+
+- Serial number
+- Firmware version
+- Device priority; used for deciding which gets power first
+
+This Home Assistant add-on talks to the myenergi API using the [pymyenergi python library](https://github.com/cjne/pymyenergi).
 
 **This component will set up the following platforms.**
 
@@ -109,6 +117,8 @@ custom_components/myenergi/services.yaml
 
 If you have trouble logging in you might need to request an API key from myenergi. You can generate one at your [myenergi account page](https://myaccount.myenergi.com).
 See the [myenergi support article](https://support.myenergi.com/hc/en-gb/articles/5069627351185-How-do-I-get-an-API-key-) for more information.
+
+If you need to change your API key for any reason, you will need to remove the device from "Integration entries", and re-add it again with the new API key. Historical data will not be lost.
 
 <!---->
 
