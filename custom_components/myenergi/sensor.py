@@ -446,12 +446,13 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Active Heater",
-                                "active_heater",
-                                None,
-                                None,
-                                None,
-                                "mdi:fraction-one-half",
+                    create_meta(
+                        "Active Heater",
+                        "active_heater",
+                        None,
+                        None,
+                        None,
+                        "mdi:fraction-one-half",
                     ),
                 )
             )
