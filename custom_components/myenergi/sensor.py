@@ -31,6 +31,7 @@ ENTITY_CATEGORY_DIAGNOSTIC = EntityCategory.DIAGNOSTIC
 
 ICON_VOLT = "mdi:lightning-bolt"
 ICON_FREQ = "mdi:sine-wave"
+ICON_POWER = "mdi:flash"
 
 
 def create_meta(
@@ -533,6 +534,36 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         ICON_FREQ,
                         STATE_CLASS_MEASUREMENT,
                     ),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Inverter size",
+                        "inverter_size",
+                        None,
+                        ENERGY_KILO_WATT_HOUR,
+                        ENTITY_CATEGORY_DIAGNOSTIC,
+                        ICON_POWER,
+                    ),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Battery size",
+                        "battery_size",
+                        None,
+                        ENERGY_KILO_WATT_HOUR,
+                        ENTITY_CATEGORY_DIAGNOSTIC,
+                        ICON_POWER,
+                    )
                 )
             )
     async_add_devices(sensors)
