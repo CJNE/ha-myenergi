@@ -8,6 +8,7 @@ from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_POWER
 from homeassistant.const import DEVICE_CLASS_TEMPERATURE
 from homeassistant.const import DEVICE_CLASS_VOLTAGE
+from homeassistant.const import DEVICE_CLASS_BATTERY
 from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
 from homeassistant.const import FREQUENCY_HERTZ
@@ -20,6 +21,7 @@ from pymyenergi import CT_LOAD
 from pymyenergi import EDDI
 from pymyenergi import HARVI
 from pymyenergi import ZAPPI
+from pymyenergi import LIBBI
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
@@ -486,6 +488,53 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         ),
                     )
                 )
+        elif device.kind == LIBBI:
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"SoC",
+                        "state_of_charge",
+                        DEVICE_CLASS_BATTERY,
+                        PERCENTAGE,
+                        ENTITY_CATEGORY_DIAGNOSTIC,
+                    ),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Voltage",
+                        "supply_voltage",
+                        DEVICE_CLASS_VOLTAGE,
+                        ELECTRIC_POTENTIAL_VOLT,
+                        ENTITY_CATEGORY_DIAGNOSTIC,
+                        ICON_VOLT,
+                        STATE_CLASS_MEASUREMENT,
+                    ),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Frequency",
+                        "supply_frequency",
+                        None,
+                        FREQUENCY_HERTZ,
+                        ENTITY_CATEGORY_DIAGNOSTIC,
+                        ICON_FREQ,
+                        STATE_CLASS_MEASUREMENT,
+                    ),
+                )
+            )
     async_add_devices(sensors)
 
 
