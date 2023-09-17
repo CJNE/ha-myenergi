@@ -594,6 +594,46 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     )
                 )
             )
+            sensors.append(
+                MyenergiCTEnergySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    "grid_import"
+                )
+            )
+            sensors.append(
+                MyenergiCTEnergySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    "grid_export"
+                )
+            )
+            sensors.append(
+                MyenergiCTEnergySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    "battery_charge"
+                )
+            )
+            sensors.append(
+                MyenergiCTEnergySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    "battery_discharge"
+                )
+            )
+            sensors.append(
+                MyenergiCTEnergySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    "generated"
+                )
+            )
     async_add_devices(sensors)
 
 
