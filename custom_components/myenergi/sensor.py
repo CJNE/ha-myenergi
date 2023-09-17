@@ -32,6 +32,7 @@ ENTITY_CATEGORY_DIAGNOSTIC = EntityCategory.DIAGNOSTIC
 ICON_VOLT = "mdi:lightning-bolt"
 ICON_FREQ = "mdi:sine-wave"
 ICON_POWER = "mdi:flash"
+ICON_HOME_BATTERY = "mdi:home-battery"
 
 
 def create_meta(
@@ -563,6 +564,33 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         ENERGY_KILO_WATT_HOUR,
                         ENTITY_CATEGORY_DIAGNOSTIC,
                         ICON_POWER,
+                    )
+                )
+            )
+            """ expose this temporarily (it's mapped to operating mode)"""
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Local mode",
+                        "local_mode",
+                    )
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Status",
+                        "status",
+                        None,
+                        None,
+                        None,
+                        ICON_HOME_BATTERY,
                     )
                 )
             )

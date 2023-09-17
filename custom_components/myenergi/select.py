@@ -5,6 +5,9 @@ from homeassistant.helpers import entity_platform
 from pymyenergi.eddi import EDDI_MODES
 from pymyenergi.zappi import CHARGE_MODES
 from pymyenergi.libbi import LIBBI_MODES
+from pymyenergi.libbi import LIBBI_MODE_NAMES
+from pymyenergi.libbi import MODE_STOPPED
+from pymyenergi.libbi import MODE_NORMAL
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
@@ -158,9 +161,9 @@ class LibbiOperatingModeSelect(MyenergiEntity, SelectEntity):
     @property
     def current_option(self):
         """Return the state of the sensor."""
-        if self.device.status == "Stopped":
-            return "Stopped"
-        return "Normal"
+        if self.device.local_mode == LIBBI_MODE_NAMES[MODE_STOPPED]:
+            return LIBBI_MODES[MODE_STOPPED]
+        return LIBBI_MODES[MODE_NORMAL]
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
