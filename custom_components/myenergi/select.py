@@ -4,6 +4,10 @@ from homeassistant.components.select import SelectEntity
 from homeassistant.helpers import entity_platform
 from pymyenergi.eddi import EDDI_MODES
 from pymyenergi.zappi import CHARGE_MODES
+from pymyenergi.libbi import LIBBI_MODES
+from pymyenergi.libbi import LIBBI_MODE_NAMES
+from pymyenergi.libbi import MODE_STOPPED
+from pymyenergi.libbi import MODE_NORMAL
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
@@ -60,6 +64,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 "start_eddi_boost",
             )
             devices.append(EddiOperatingModeSelect(coordinator, device, entry))
+        elif device.kind == "libbi":
+            devices.append(LibbiOperatingModeSelect(coordinator, device, entry))
     async_add_devices(devices)
 
 
@@ -132,3 +138,38 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
     @property
     def options(self):
         return CHARGE_MODES[1:]
+
+
+class LibbiOperatingModeSelect(MyenergiEntity, SelectEntity):
+    """myenergi Sensor class."""
+
+    def __init__(self, coordinator, device, config_entry):
+        super().__init__(coordinator, device, config_entry)
+
+    @property
+    def unique_id(self):
+        """Return a unique ID to use for this entity."""
+        return (
+            f"{self.config_entry.entry_id}-{self.device.serial_number}-operating_mode"
+        )
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return f"myenergi {self.device.name} Operating Mode"
+
+    @property
+    def current_option(self):
+        """Return the state of the sensor."""
+        if self.device.local_mode == LIBBI_MODE_NAMES[MODE_STOPPED]:
+            return LIBBI_MODES[MODE_STOPPED]
+        return LIBBI_MODES[MODE_NORMAL]
+
+    async def async_select_option(self, option: str) -> None:
+        """Change the selected option."""
+        await self.device.set_operating_mode(option)
+        self.async_schedule_update_ha_state()
+
+    @property
+    def options(self):
+        return LIBBI_MODES

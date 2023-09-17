@@ -22,6 +22,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
         elif device.kind == "eddi":
             devices.append(HeaterPriorityNumber(coordinator, device, entry))
             devices.append(DevicePriorityNumber(coordinator, device, entry))
+        elif device.kind == "libbi":
+            devices.append(DevicePriorityNumber(coordinator, device, entry))
     async_add_devices(devices)
 
 
