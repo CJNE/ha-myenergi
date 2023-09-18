@@ -673,7 +673,7 @@ class MyenergiHubSensor(MyenergiHub, SensorEntity):
     @property
     def unique_id(self):
         """Return a unique ID to use for this entity."""
-        return f"{self.config_entry.entry_id}-{self.coordinator.client.serial_number}-{self.meta['prop_name']}"
+        return f"{self.config_entry.entry_id}-hub-{self.coordinator.client.serial_number}-{self.meta['prop_name']}"
 
     @property
     def name(self):
