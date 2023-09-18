@@ -501,7 +501,6 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         "state_of_charge",
                         DEVICE_CLASS_BATTERY,
                         PERCENTAGE,
-                        ENTITY_CATEGORY_DIAGNOSTIC,
                     ),
                 )
             )
@@ -595,43 +594,83 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 )
             )
             sensors.append(
-                MyenergiCTEnergySensor(
+                MyenergiSensor(
                     coordinator,
                     device,
                     entry,
-                    "grid_import"
+                    create_meta(
+                        f"Grid import today",
+                        "grid_import",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
                 )
             )
             sensors.append(
-                MyenergiCTEnergySensor(
+                MyenergiSensor(
                     coordinator,
                     device,
                     entry,
-                    "grid_export"
+                    create_meta(
+                        f"Grid export today",
+                        "grid_export",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
                 )
             )
             sensors.append(
-                MyenergiCTEnergySensor(
+                MyenergiSensor(
                     coordinator,
                     device,
                     entry,
-                    "battery_charge"
+                    create_meta(
+                        f"Battery charge today",
+                        "battery_charge",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
                 )
             )
             sensors.append(
-                MyenergiCTEnergySensor(
+                MyenergiSensor(
                     coordinator,
                     device,
                     entry,
-                    "battery_discharge"
+                    create_meta(
+                        f"Battery discharge today",
+                        "battery_discharge",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
                 )
             )
             sensors.append(
-                MyenergiCTEnergySensor(
+                MyenergiSensor(
                     coordinator,
                     device,
                     entry,
-                    "generated"
+                    create_meta(
+                        f"Solar generation today",
+                        "generated",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
                 )
             )
     async_add_devices(sensors)
