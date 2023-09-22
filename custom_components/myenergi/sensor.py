@@ -501,7 +501,6 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         "state_of_charge",
                         DEVICE_CLASS_BATTERY,
                         PERCENTAGE,
-                        ENTITY_CATEGORY_DIAGNOSTIC,
                     ),
                 )
             )
@@ -567,18 +566,6 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     )
                 )
             )
-            """ expose this temporarily (it's mapped to operating mode)"""
-            sensors.append(
-                MyenergiSensor(
-                    coordinator,
-                    device,
-                    entry,
-                    create_meta(
-                        f"Local mode",
-                        "local_mode",
-                    )
-                )
-            )
             sensors.append(
                 MyenergiSensor(
                     coordinator,
@@ -594,6 +581,86 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     )
                 )
             )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Grid import today",
+                        "grid_import",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Grid export today",
+                        "grid_export",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Battery charge today",
+                        "battery_charge",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Battery discharge today",
+                        "battery_discharge",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        f"Solar generation today",
+                        "generated",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_TOTAL_INCREASING,
+                    )
+                )
+            )
     async_add_devices(sensors)
 
 
@@ -606,7 +673,7 @@ class MyenergiHubSensor(MyenergiHub, SensorEntity):
     @property
     def unique_id(self):
         """Return a unique ID to use for this entity."""
-        return f"{self.config_entry.entry_id}-{self.coordinator.client.serial_number}-{self.meta['prop_name']}"
+        return f"{self.config_entry.entry_id}-hub-{self.coordinator.client.serial_number}-{self.meta['prop_name']}"
 
     @property
     def name(self):
