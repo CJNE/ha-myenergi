@@ -78,6 +78,8 @@ This Home Assistant add-on talks to the myenergi API using the [pymyenergi pytho
 
 ## HACS Installation
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=CJNE&repository=ha-myenergi&category=integration)
+
 This is the recommended way to install.
 
 1. Search for myenergi in [HACS](https://hacs.xyz/).
