@@ -4,11 +4,11 @@ import operator
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
 from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING
+from homeassistant.const import DEVICE_CLASS_BATTERY
 from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_POWER
 from homeassistant.const import DEVICE_CLASS_TEMPERATURE
 from homeassistant.const import DEVICE_CLASS_VOLTAGE
-from homeassistant.const import DEVICE_CLASS_BATTERY
 from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
 from homeassistant.const import FREQUENCY_HERTZ
@@ -20,8 +20,8 @@ from pymyenergi import CT_BATTERY
 from pymyenergi import CT_LOAD
 from pymyenergi import EDDI
 from pymyenergi import HARVI
-from pymyenergi import ZAPPI
 from pymyenergi import LIBBI
+from pymyenergi import ZAPPI
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
@@ -497,7 +497,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"SoC",
+                        "SoC",
                         "state_of_charge",
                         DEVICE_CLASS_BATTERY,
                         PERCENTAGE,
@@ -510,7 +510,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Voltage",
+                        "Voltage",
                         "supply_voltage",
                         DEVICE_CLASS_VOLTAGE,
                         ELECTRIC_POTENTIAL_VOLT,
@@ -526,7 +526,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Frequency",
+                        "Frequency",
                         "supply_frequency",
                         None,
                         FREQUENCY_HERTZ,
@@ -542,7 +542,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Inverter size",
+                        "Inverter size",
                         "inverter_size",
                         None,
                         ENERGY_KILO_WATT_HOUR,
@@ -557,13 +557,13 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Battery size",
+                        "Battery size",
                         "battery_size",
                         None,
                         ENERGY_KILO_WATT_HOUR,
                         ENTITY_CATEGORY_DIAGNOSTIC,
                         ICON_POWER,
-                    )
+                    ),
                 )
             )
             sensors.append(
@@ -572,13 +572,13 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Status",
+                        "Status",
                         "status",
                         None,
                         None,
                         None,
                         ICON_HOME_BATTERY,
-                    )
+                    ),
                 )
             )
             sensors.append(
@@ -587,14 +587,14 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Grid import today",
+                        "Grid import today",
                         "grid_import",
                         DEVICE_CLASS_ENERGY,
                         ENERGY_KILO_WATT_HOUR,
                         None,
                         None,
                         STATE_CLASS_TOTAL_INCREASING,
-                    )
+                    ),
                 )
             )
             sensors.append(
@@ -603,14 +603,14 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Grid export today",
+                        "Grid export today",
                         "grid_export",
                         DEVICE_CLASS_ENERGY,
                         ENERGY_KILO_WATT_HOUR,
                         None,
                         None,
                         STATE_CLASS_TOTAL_INCREASING,
-                    )
+                    ),
                 )
             )
             sensors.append(
@@ -619,14 +619,14 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Battery charge today",
+                        "Battery charge today",
                         "battery_charge",
                         DEVICE_CLASS_ENERGY,
                         ENERGY_KILO_WATT_HOUR,
                         None,
                         None,
                         STATE_CLASS_TOTAL_INCREASING,
-                    )
+                    ),
                 )
             )
             sensors.append(
@@ -635,14 +635,14 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Battery discharge today",
+                        "Battery discharge today",
                         "battery_discharge",
                         DEVICE_CLASS_ENERGY,
                         ENERGY_KILO_WATT_HOUR,
                         None,
                         None,
                         STATE_CLASS_TOTAL_INCREASING,
-                    )
+                    ),
                 )
             )
             sensors.append(
@@ -651,14 +651,14 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     device,
                     entry,
                     create_meta(
-                        f"Solar generation today",
+                        "Solar generation today",
                         "generated",
                         DEVICE_CLASS_ENERGY,
                         ENERGY_KILO_WATT_HOUR,
                         None,
                         None,
                         STATE_CLASS_TOTAL_INCREASING,
-                    )
+                    ),
                 )
             )
     async_add_devices(sensors)

@@ -3,11 +3,11 @@ import voluptuous as vol
 from homeassistant.components.select import SelectEntity
 from homeassistant.helpers import entity_platform
 from pymyenergi.eddi import EDDI_MODES
-from pymyenergi.zappi import CHARGE_MODES
-from pymyenergi.libbi import LIBBI_MODES
 from pymyenergi.libbi import LIBBI_MODE_NAMES
-from pymyenergi.libbi import MODE_STOPPED
+from pymyenergi.libbi import LIBBI_MODES
 from pymyenergi.libbi import MODE_NORMAL
+from pymyenergi.libbi import MODE_STOPPED
+from pymyenergi.zappi import CHARGE_MODES
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
