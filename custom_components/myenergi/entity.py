@@ -64,6 +64,12 @@ class MyenergiEntity(CoordinatorEntity):
         await self.device.start_smart_boost(amount, when)
         self.schedule_update_ha_state()
 
+    async def stop_boost(self) -> None:
+        _LOGGER.debug("Stop boost called")
+        """Stop boost"""
+        await self.device.stop_boost()
+        self.schedule_update_ha_state()
+
 
 class MyenergiHub(CoordinatorEntity):
     def __init__(self, coordinator, config_entry, meta):
