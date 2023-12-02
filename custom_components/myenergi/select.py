@@ -56,6 +56,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 SMART_BOOST_SCHEMA,
                 "start_smart_boost",
             )
+            platform.async_register_entity_service(
+                "myenergi_stop_boost",
+                {},
+                "stop_boost",
+            )
             devices.append(ZappiChargeModeSelect(coordinator, device, entry))
         elif device.kind == "eddi":
             platform.async_register_entity_service(
