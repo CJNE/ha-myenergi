@@ -2,19 +2,14 @@
 import operator
 
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
-from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING
-from homeassistant.const import DEVICE_CLASS_BATTERY
-from homeassistant.const import DEVICE_CLASS_ENERGY
-from homeassistant.const import DEVICE_CLASS_POWER
-from homeassistant.const import DEVICE_CLASS_TEMPERATURE
-from homeassistant.const import DEVICE_CLASS_VOLTAGE
-from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
-from homeassistant.const import ENERGY_KILO_WATT_HOUR
-from homeassistant.const import FREQUENCY_HERTZ
+from homeassistant.components.sensor import SensorStateClass
+from homeassistant.components.sensor import SensorDeviceClass
+from homeassistant.const import UnitOfElectricPotential
+from homeassistant.const import UnitOfEnergy
+from homeassistant.const import UnitOfFrequency
 from homeassistant.const import PERCENTAGE
-from homeassistant.const import POWER_WATT
-from homeassistant.const import TEMP_CELSIUS
+from homeassistant.const import UnitOfPower
+from homeassistant.const import UnitOfTemperature
 from homeassistant.helpers.entity import EntityCategory
 from pymyenergi import CT_BATTERY
 from pymyenergi import CT_LOAD
@@ -61,11 +56,11 @@ def create_power_meta(name, prop_name, category=None):
     return {
         "name": name,
         "prop_name": prop_name,
-        "device_class": DEVICE_CLASS_POWER,
-        "unit": POWER_WATT,
+        "device_class": SensorDeviceClass.POWER,
+        "unit": UnitOfPower.WATT,
         "category": category,
         "icon": "mdi:flash",
-        "state_class": STATE_CLASS_MEASUREMENT,
+        "state_class": SensorStateClass.MEASUREMENT,
         "attrs": {},
     }
 
@@ -74,11 +69,11 @@ def create_energy_meta(name, prop_name, category=None):
     return {
         "name": name,
         "prop_name": prop_name,
-        "device_class": DEVICE_CLASS_ENERGY,
-        "unit": ENERGY_KILO_WATT_HOUR,
+        "device_class": SensorDeviceClass.ENERGY,
+        "unit": UnitOfEnergy.KILO_WATT_HOUR,
         "category": category,
         "icon": None,
-        "state_class": STATE_CLASS_TOTAL_INCREASING,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
         "attrs": {},
     }
 
@@ -143,11 +138,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
             create_meta(
                 "Voltage grid",
                 "voltage_grid",
-                DEVICE_CLASS_VOLTAGE,
-                ELECTRIC_POTENTIAL_VOLT,
+                SensorDeviceClass.VOLTAGE,
+                UnitOfElectricPotential.VOLT,
                 ENTITY_CATEGORY_DIAGNOSTIC,
                 ICON_VOLT,
-                STATE_CLASS_MEASUREMENT,
+                SensorStateClass.MEASUREMENT,
             ),
         )
     )
@@ -159,10 +154,10 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 "Frequency grid",
                 "frequency_grid",
                 None,
-                FREQUENCY_HERTZ,
+                UnitOfFrequency.HERTZ,
                 ENTITY_CATEGORY_DIAGNOSTIC,
                 ICON_FREQ,
-                STATE_CLASS_MEASUREMENT,
+                SensorStateClass.MEASUREMENT,
             ),
         )
     )
@@ -469,8 +464,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         create_meta(
                             f"Temp {device.temp_name_1}",
                             "temp_1",
-                            DEVICE_CLASS_TEMPERATURE,
-                            TEMP_CELSIUS,
+                            SensorDeviceClass.TEMPERATURE,
+                            UnitOfTemperature.CELSIUS,
                             ENTITY_CATEGORY_DIAGNOSTIC,
                         ),
                     )
@@ -484,8 +479,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         create_meta(
                             f"Temp {device.temp_name_2}",
                             "temp_2",
-                            DEVICE_CLASS_TEMPERATURE,
-                            TEMP_CELSIUS,
+                            SensorDeviceClass.TEMPERATURE,
+                            UnitOfTemperature.CELSIUS,
                             ENTITY_CATEGORY_DIAGNOSTIC,
                         ),
                     )
@@ -499,7 +494,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_meta(
                         "SoC",
                         "state_of_charge",
-                        DEVICE_CLASS_BATTERY,
+                        SensorDeviceClass.BATTERY,
                         PERCENTAGE,
                     ),
                 )
@@ -512,11 +507,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_meta(
                         "Voltage",
                         "supply_voltage",
-                        DEVICE_CLASS_VOLTAGE,
-                        ELECTRIC_POTENTIAL_VOLT,
+                        SensorDeviceClass.VOLTAGE,
+                        UnitOfElectricPotential.VOLT,
                         ENTITY_CATEGORY_DIAGNOSTIC,
                         ICON_VOLT,
-                        STATE_CLASS_MEASUREMENT,
+                        SensorStateClass.MEASUREMENT,
                     ),
                 )
             )
@@ -529,10 +524,10 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         "Frequency",
                         "supply_frequency",
                         None,
-                        FREQUENCY_HERTZ,
+                        UnitOfFrequency.HERTZ,
                         ENTITY_CATEGORY_DIAGNOSTIC,
                         ICON_FREQ,
-                        STATE_CLASS_MEASUREMENT,
+                        SensorStateClass.MEASUREMENT,
                     ),
                 )
             )
@@ -545,7 +540,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         "Inverter size",
                         "inverter_size",
                         None,
-                        ENERGY_KILO_WATT_HOUR,
+                        UnitOfEnergy.KILO_WATT_HOUR,
                         ENTITY_CATEGORY_DIAGNOSTIC,
                         ICON_POWER,
                     ),
@@ -560,7 +555,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         "Battery size",
                         "battery_size",
                         None,
-                        ENERGY_KILO_WATT_HOUR,
+                        UnitOfEnergy.KILO_WATT_HOUR,
                         ENTITY_CATEGORY_DIAGNOSTIC,
                         ICON_POWER,
                     ),
@@ -589,11 +584,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_meta(
                         "Grid import today",
                         "grid_import",
-                        DEVICE_CLASS_ENERGY,
-                        ENERGY_KILO_WATT_HOUR,
+                        SensorDeviceClass.ENERGY,
+                        UnitOfEnergy.KILO_WATT_HOUR,
                         None,
                         None,
-                        STATE_CLASS_TOTAL_INCREASING,
+                        SensorStateClass.TOTAL_INCREASING,
                     ),
                 )
             )
@@ -605,11 +600,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_meta(
                         "Grid export today",
                         "grid_export",
-                        DEVICE_CLASS_ENERGY,
-                        ENERGY_KILO_WATT_HOUR,
+                        SensorDeviceClass.ENERGY,
+                        UnitOfEnergy.KILO_WATT_HOUR,
                         None,
                         None,
-                        STATE_CLASS_TOTAL_INCREASING,
+                        SensorStateClass.TOTAL_INCREASING,
                     ),
                 )
             )
@@ -621,11 +616,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_meta(
                         "Battery charge today",
                         "battery_charge",
-                        DEVICE_CLASS_ENERGY,
-                        ENERGY_KILO_WATT_HOUR,
+                        SensorDeviceClass.ENERGY,
+                        UnitOfEnergy.KILO_WATT_HOUR,
                         None,
                         None,
-                        STATE_CLASS_TOTAL_INCREASING,
+                        SensorStateClass.TOTAL_INCREASING,
                     ),
                 )
             )
@@ -637,11 +632,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_meta(
                         "Battery discharge today",
                         "battery_discharge",
-                        DEVICE_CLASS_ENERGY,
-                        ENERGY_KILO_WATT_HOUR,
+                        SensorDeviceClass.ENERGY,
+                        UnitOfEnergy.KILO_WATT_HOUR,
                         None,
                         None,
-                        STATE_CLASS_TOTAL_INCREASING,
+                        SensorStateClass.TOTAL_INCREASING,
                     ),
                 )
             )
@@ -653,11 +648,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_meta(
                         "Solar generation today",
                         "generated",
-                        DEVICE_CLASS_ENERGY,
-                        ENERGY_KILO_WATT_HOUR,
+                        SensorDeviceClass.ENERGY,
+                        UnitOfEnergy.KILO_WATT_HOUR,
                         None,
                         None,
-                        STATE_CLASS_TOTAL_INCREASING,
+                        SensorStateClass.TOTAL_INCREASING,
                     ),
                 )
             )
@@ -761,10 +756,10 @@ class MyenergiCTEnergySensor(MyenergiEntity, SensorEntity):
         meta = {
             "name": f"{key.replace('_', ' ')} today",
             "prop_name": key,
-            "device_class": DEVICE_CLASS_ENERGY,
-            "unit": ENERGY_KILO_WATT_HOUR,
+            "device_class": SensorDeviceClass.ENERGY,
+            "unit": UnitOfEnergy.KILO_WATT_HOUR,
             "category": ENTITY_CATEGORY_DIAGNOSTIC,
-            "state_class": STATE_CLASS_TOTAL_INCREASING,
+            "state_class": SensorStateClass.TOTAL_INCREASING,
             "icon": None,
             "attrs": {},
         }
@@ -816,10 +811,10 @@ class MyenergiCTPowerSensor(MyenergiEntity, SensorEntity):
         meta = {
             "name": f"power {key.replace('_', ' ')}",
             "prop_name": f"power-{key}",
-            "device_class": DEVICE_CLASS_POWER,
-            "state_class": STATE_CLASS_MEASUREMENT,
+            "device_class": SensorDeviceClass.POWER,
+            "state_class": SensorStateClass.MEASUREMENT,
             "category": category,
-            "unit": POWER_WATT,
+            "unit": UnitOfPower.WATT,
             "icon": None,
             "attrs": {},
         }
