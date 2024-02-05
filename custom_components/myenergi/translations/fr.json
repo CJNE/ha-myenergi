@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "Si vous avez besoin d'aide pour la configuration, regardez ici: https://github.com/cjne/myenergi",
+        "description": "Si vous avez besoin d'aide pour la configuration, regardez ici: https://github.com/CJNE/ha-myenergi",
         "data": {
           "username": "Identifiant",
           "password": "Mot de Passe"
