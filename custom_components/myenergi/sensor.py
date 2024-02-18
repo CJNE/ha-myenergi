@@ -1,13 +1,13 @@
 """Sensor platform for myenergi."""
 import operator
 
+from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.components.sensor import SensorStateClass
-from homeassistant.components.sensor import SensorDeviceClass
+from homeassistant.const import PERCENTAGE
 from homeassistant.const import UnitOfElectricPotential
 from homeassistant.const import UnitOfEnergy
 from homeassistant.const import UnitOfFrequency
-from homeassistant.const import PERCENTAGE
 from homeassistant.const import UnitOfPower
 from homeassistant.const import UnitOfTemperature
 from homeassistant.helpers.entity import EntityCategory

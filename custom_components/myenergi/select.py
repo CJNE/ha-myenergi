@@ -9,11 +9,7 @@ from pymyenergi.zappi import CHARGE_MODES
 from .const import DOMAIN
 from .entity import MyenergiEntity
 
-LIBBI_MODE_NAMES = {
-    0: 'Stopped',
-    1: 'Normal',
-    5: 'Export'
-}
+LIBBI_MODE_NAMES = {0: "Stopped", 1: "Normal", 5: "Export"}
 
 ATTR_BOOST_AMOUNT = "amount"
 ATTR_BOOST_TIME = "time"
