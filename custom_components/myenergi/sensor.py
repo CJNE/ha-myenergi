@@ -498,7 +498,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         PERCENTAGE,
                         None,
                         None,
-                        STATE_CLASS_MEASUREMENT,
+                        SensorStateClass.MEASUREMENT,
                     ),
                 )
             )
