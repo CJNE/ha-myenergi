@@ -501,6 +501,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         "state_of_charge",
                         DEVICE_CLASS_BATTERY,
                         PERCENTAGE,
+                        None,
+                        None,
+                        STATE_CLASS_MEASUREMENT,
                     ),
                 )
             )
