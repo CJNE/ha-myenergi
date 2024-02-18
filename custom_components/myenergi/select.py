@@ -3,14 +3,17 @@ import voluptuous as vol
 from homeassistant.components.select import SelectEntity
 from homeassistant.helpers import entity_platform
 from pymyenergi.eddi import EDDI_MODES
-from pymyenergi.libbi import LIBBI_MODE_NAMES
 from pymyenergi.libbi import LIBBI_MODES
-from pymyenergi.libbi import MODE_NORMAL
-from pymyenergi.libbi import MODE_STOPPED
 from pymyenergi.zappi import CHARGE_MODES
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
+
+LIBBI_MODE_NAMES = {
+    0: 'Stopped',
+    1: 'Normal',
+    5: 'Export'
+}
 
 ATTR_BOOST_AMOUNT = "amount"
 ATTR_BOOST_TIME = "time"
@@ -166,9 +169,8 @@ class LibbiOperatingModeSelect(MyenergiEntity, SelectEntity):
     @property
     def current_option(self):
         """Return the state of the sensor."""
-        if self.device.local_mode == LIBBI_MODE_NAMES[MODE_STOPPED]:
-            return LIBBI_MODES[MODE_STOPPED]
-        return LIBBI_MODES[MODE_NORMAL]
+        mode = self.device.local_mode
+        return LIBBI_MODE_NAMES[mode]
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
