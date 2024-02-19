@@ -11,6 +11,8 @@ from pymyenergi.exceptions import TimeoutException
 from pymyenergi.exceptions import WrongCredentials
 
 from . import SCAN_INTERVAL
+from .const import CONF_APP_EMAIL
+from .const import CONF_APP_PASSWORD
 from .const import CONF_PASSWORD
 from .const import CONF_SCAN_INTERVAL
 from .const import CONF_USERNAME
@@ -36,7 +38,10 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             err, client = await self._test_credentials(
-                user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
+                user_input[CONF_USERNAME],
+                user_input[CONF_PASSWORD],
+                user_input[CONF_APP_EMAIL],
+                user_input[CONF_APP_PASSWORD],
             )
             if client:
                 return self.async_create_entry(title=client.site_name, data=user_input)
@@ -53,23 +58,35 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _show_config_form(self, user_input):  # pylint: disable=unused-argument
         """Show the configuration form to edit location data."""
-        defaults = user_input or {CONF_USERNAME: "", CONF_PASSWORD: ""}
+        defaults = user_input or {
+            CONF_USERNAME: "",
+            CONF_PASSWORD: "",
+            CONF_APP_EMAIL: "",
+            CONF_APP_PASSWORD: "",
+        }
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_USERNAME, default=defaults[CONF_USERNAME]): str,
                     vol.Required(CONF_PASSWORD, default=defaults[CONF_PASSWORD]): str,
+                    vol.Required(CONF_APP_EMAIL, default=defaults[CONF_APP_EMAIL]): str,
+                    vol.Required(
+                        CONF_APP_PASSWORD, default=defaults[CONF_APP_PASSWORD]
+                    ): str,
                 }
             ),
             errors=self._errors,
         )
 
-    async def _test_credentials(self, username, password):
+    async def _test_credentials(self, username, password, app_email, app_password):
         """Return true if credentials is valid."""
         _LOGGER.debug("Test myenergi credentials")
         try:
-            conn = Connection(username, password)
+            conn = await self.hass.async_add_executor_job(
+                Connection, username, password, app_password, app_email
+            )
+            await conn.discoverLocations()
             client = MyenergiClient(conn)
             await client.refresh()
             return None, client

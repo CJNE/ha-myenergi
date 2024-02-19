@@ -9,14 +9,19 @@ import logging
 from datetime import timedelta
 
 import homeassistant.util.dt as dt_util
+import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import callback
 from homeassistant.core import Config
 from homeassistant.core import HomeAssistant
+from homeassistant.core import ServiceCall
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from pymyenergi.client import MyenergiClient
 from pymyenergi.connection import Connection
 
+from .const import CONF_APP_EMAIL
+from .const import CONF_APP_PASSWORD
 from .const import CONF_PASSWORD
 from .const import CONF_SCAN_INTERVAL
 from .const import CONF_USERNAME
@@ -28,6 +33,14 @@ SCAN_INTERVAL = timedelta(seconds=60)
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
+ATTR_CHARGE_TARGET = "chargetarget"
+LIBBI_CHARGE_TARGET_SCHEMA = {
+    vol.Required(ATTR_CHARGE_TARGET): vol.All(
+        vol.Coerce(float),
+        vol.Range(min=0, max=20400),
+    )
+}
+
 
 async def async_setup(hass: HomeAssistant, config: Config):
     """Set up this integration using YAML is not supported."""
@@ -35,6 +48,16 @@ async def async_setup(hass: HomeAssistant, config: Config):
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
+    @callback
+    async def libbi_set_charge_target(call: ServiceCall) -> None:
+        """My first service."""
+        _LOGGER.debug("Received data %s", call.data)
+        _LOGGER.debug("Device IDs to use: %s", call.data["device_id"])
+        coordinator = hass.data[DOMAIN][entry.entry_id]
+        all_devices = await coordinator.client.get_devices("all", False)
+        for device in all_devices:
+            _LOGGER.debug("Found device: %s", device)
+
     """Set up this integration using UI."""
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
@@ -42,8 +65,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     username = entry.data.get(CONF_USERNAME)
     password = entry.data.get(CONF_PASSWORD)
+    app_email = entry.data.get(CONF_APP_EMAIL)
+    app_password = entry.data.get(CONF_APP_PASSWORD)
 
-    conn = Connection(username, password)
+    conn = await hass.async_add_executor_job(
+        Connection, username, password, app_password, app_email
+    )
+    await conn.discoverLocations()
+
     client = MyenergiClient(conn)
 
     coordinator = MyenergiDataUpdateCoordinator(hass, client=client, entry=entry)
@@ -59,6 +88,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             )
 
     entry.add_update_listener(async_reload_entry)
+
+    hass.services.async_register(
+        DOMAIN, "myenergi_libbi_charge_target", libbi_set_charge_target
+    )
     return True
 
 
@@ -87,6 +120,9 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
             f"Refresh histoy local start of day in UTC {utc_today} {utc_today.tzinfo}"
         )
         try:
+            await self.hass.async_add_executor_job(
+                self.client._connection.checkAndUpdateToken
+            )
             await self.client.refresh()
             await self.client.refresh_history(utc_today, 24, "hour")
         except Exception as exception:
