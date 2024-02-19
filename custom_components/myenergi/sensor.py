@@ -661,6 +661,22 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     ),
                 )
             )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        "Charge target",
+                        "charge_target",
+                        DEVICE_CLASS_ENERGY,
+                        ENERGY_KILO_WATT_HOUR,
+                        None,
+                        None,
+                        STATE_CLASS_MEASUREMENT,
+                    ),
+                )
+            )
     async_add_devices(sensors)
 
 

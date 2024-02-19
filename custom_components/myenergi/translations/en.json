@@ -5,7 +5,9 @@
         "description": "If you need help with the configuration have a look here: https://github.com/cjne/ha-myenergi",
         "data": {
           "username": "Hub serial number",
-          "password": "API key / Password"
+          "password": "API key",
+          "app_email": "App email",
+          "app_password": "App password"
         }
       }
     },
