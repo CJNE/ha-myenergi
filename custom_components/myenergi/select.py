@@ -9,6 +9,8 @@ from pymyenergi.zappi import CHARGE_MODES
 from .const import DOMAIN
 from .entity import MyenergiEntity
 
+LIBBI_MODE_NAMES = {0: "Stopped", 1: "Normal", 5: "Export"}
+
 ATTR_BOOST_AMOUNT = "amount"
 ATTR_BOOST_TIME = "time"
 ATTR_BOOST_TARGET = "target"
@@ -59,6 +61,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 "myenergi_smart_boost",
                 SMART_BOOST_SCHEMA,
                 "start_smart_boost",
+            )
+            platform.async_register_entity_service(
+                "myenergi_stop_boost",
+                {},
+                "stop_boost",
             )
             devices.append(ZappiChargeModeSelect(coordinator, device, entry))
         elif device.kind == "eddi":

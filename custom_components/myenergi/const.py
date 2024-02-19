@@ -3,7 +3,7 @@
 NAME = "myenergi"
 DOMAIN = "myenergi"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.24"
+VERSION = "0.0.25"
 
 ATTRIBUTION = "Data provided by myenergi"
 ISSUE_URL = "https://github.com/CJNE/ha-myenergi/issues"
