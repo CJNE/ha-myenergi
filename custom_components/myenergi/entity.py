@@ -89,6 +89,7 @@ class MyenergiEntity(CoordinatorEntity):
         _LOGGER.debug("unlock called")
         """Unlock"""
         await self.device.unlock()
+
     async def libbi_set_charge_target(self, chargetarget: float) -> None:
         _LOGGER.debug("Setting libbi charge target to %s Wh", chargetarget)
         """Set libbi charge target"""
