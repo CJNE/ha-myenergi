@@ -7,15 +7,23 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from pymyenergi.client import MyenergiClient
 from pymyenergi.connection import Connection
-from pymyenergi.exceptions import TimeoutException
-from pymyenergi.exceptions import WrongCredentials
+from pymyenergi.exceptions import (
+    TimeoutException,
+    WrongCredentials
+)
 
 from . import SCAN_INTERVAL
-from .const import CONF_PASSWORD
-from .const import CONF_SCAN_INTERVAL
-from .const import CONF_USERNAME
-from .const import DOMAIN
+from .const import (
+    CONF_PASSWORD,
+    CONF_SCAN_INTERVAL,
+    CONF_USERNAME,
+    DOMAIN
+)
 
+from homeassistant.helpers.selector import (
+    NumberSelector,
+    NumberSelectorConfig,
+)
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -111,7 +119,7 @@ class MyenergiOptionsFlowHandler(config_entries.OptionsFlow):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Optional(CONF_SCAN_INTERVAL, default=scan_interval): int,
+                    vol.Required(CONF_SCAN_INTERVAL, default=scan_interval): NumberSelector(NumberSelectorConfig(min=1, max=300, step=1),),
                 }
             ),
         )
