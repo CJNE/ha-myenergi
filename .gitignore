@@ -5,5 +5,4 @@ pythonenv*
 venv
 .venv
 .direnv
-.vscode/settings.json
-.devcontainer/configuration.yaml
+
