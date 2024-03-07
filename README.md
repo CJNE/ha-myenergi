@@ -46,6 +46,7 @@ It will create HA devices depending on what you have installed:
   - Service to start boost (provide boost amount in kWh as parameter)
   - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
   - Service to stop boost
+  - Service to unlock the Zappi
 
 - Eddi
 
