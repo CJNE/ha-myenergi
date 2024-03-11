@@ -1,15 +1,16 @@
 """Diagnostics support for Daikin Diagnostics."""
 from __future__ import annotations
+
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntry
-
 from pymyenergi.client import MyenergiClient
 from pymyenergi.connection import Connection
 
 from .const import DOMAIN
+
 
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: ConfigEntry
@@ -23,4 +24,3 @@ async def async_get_config_entry_diagnostics(
     for device in all_devices:
         data[device.serial_number] = device.data
     return data
-
