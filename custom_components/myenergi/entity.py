@@ -70,6 +70,12 @@ class MyenergiEntity(CoordinatorEntity):
         await self.device.stop_boost()
         self.schedule_update_ha_state()
 
+    async def unlock(self) -> None:
+        _LOGGER.debug("unlock called")
+        """Unlock"""
+        await self.device.unlock()
+        self.schedule_update_ha_state()
+
 
 class MyenergiHub(CoordinatorEntity):
     def __init__(self, coordinator, config_entry, meta):

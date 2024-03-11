@@ -71,3 +71,11 @@ myenergi_stop_boost:
       model: Zappi
     entity:
       domain: select
+myenergi_unlock:
+  name: Unlock
+  description: Unlock
+  target:
+    device:
+      model: Zappi
+    entity:
+      domain: select
