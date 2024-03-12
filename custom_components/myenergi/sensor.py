@@ -310,7 +310,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
-                    create_meta("Number of phases", "num_phases", ENTITY_CATEGORY_DIAGNOSTIC),
+                    create_meta(
+                        "Number of phases", "num_phases", ENTITY_CATEGORY_DIAGNOSTIC
+                    ),
                 )
             )
             sensors.append(

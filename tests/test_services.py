@@ -92,9 +92,7 @@ async def test_stop_boost(
     assert mock_zappi_stop_boost.call_count == 1
 
 
-async def test_unlock(
-    hass: HomeAssistant, mock_zappi_unlock: MagicMock
-) -> None:
+async def test_unlock(hass: HomeAssistant, mock_zappi_unlock: MagicMock) -> None:
     """Verify device information includes expected details."""
 
     await setup_mock_myenergi_config_entry(hass)
