@@ -90,3 +90,21 @@ async def test_stop_boost(
     assert mock_zappi_stop_boost.call_count == 0
     await hass.async_block_till_done()
     assert mock_zappi_stop_boost.call_count == 1
+
+
+async def test_unlock(hass: HomeAssistant, mock_zappi_unlock: MagicMock) -> None:
+    """Verify device information includes expected details."""
+
+    await setup_mock_myenergi_config_entry(hass)
+
+    await hass.services.async_call(
+        "myenergi",
+        "myenergi_unlock",
+        {
+            ATTR_ENTITY_ID: TEST_ZAPPI_SELECT_CHARGE_MODE,
+        },
+        blocking=False,
+    )
+    assert mock_zappi_unlock.call_count == 0
+    await hass.async_block_till_done()
+    assert mock_zappi_unlock.call_count == 1

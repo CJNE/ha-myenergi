@@ -348,6 +348,16 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     coordinator,
                     device,
                     entry,
+                    create_meta(
+                        "Number of phases", "num_phases", ENTITY_CATEGORY_DIAGNOSTIC
+                    ),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
                     create_meta("Status", "status", None, None, None, "mdi:ev-station"),
                 )
             )
@@ -683,6 +693,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     create_meta(
                         "Charge target",
                         "charge_target",
+                        SensorDeviceClass.ENERGY,
+                        UnitOfEnergy.KILO_WATT_HOUR,
+                        None,
+                        None,
+                        SensorStateClass.MEASUREMENT,
                         SensorDeviceClass.ENERGY,
                         UnitOfEnergy.KILO_WATT_HOUR,
                         None,

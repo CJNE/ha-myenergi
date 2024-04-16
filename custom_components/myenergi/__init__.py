@@ -117,7 +117,7 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
         today = today.replace(hour=0, minute=0, second=0, microsecond=0)
         utc_today = dt_util.as_utc(today)
         _LOGGER.debug(
-            f"Refresh histoy local start of day in UTC {utc_today} {utc_today.tzinfo}"
+            f"Refresh history local start of day in UTC {utc_today} {utc_today.tzinfo}"
         )
         try:
             await self.hass.async_add_executor_job(
