@@ -1,4 +1,6 @@
 """Sensor platform for myenergi."""
+import logging
+
 import voluptuous as vol
 from homeassistant.components.select import SelectEntity
 from homeassistant.helpers import entity_platform
@@ -8,6 +10,8 @@ from pymyenergi.zappi import CHARGE_MODES
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 LIBBI_MODE_NAMES = {"STOP": "Stopped", "BALANCE": "Normal", "DRAIN": "Export"}
 
@@ -80,12 +84,13 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 "start_eddi_boost",
             )
             devices.append(EddiOperatingModeSelect(coordinator, device, entry))
+        # libbi services and selects
         elif device.kind == "libbi":
-            #            platform.async_register_entity_service(
-            #                "myenergi_libbi_charge_target",
-            #                LIBBI_CHARGE_TARGET_SCHEMA,
-            #                "libbi_set_charge_target",
-            #            )
+            platform.async_register_entity_service(
+                "myenergi_libbi_charge_target",
+                LIBBI_CHARGE_TARGET_SCHEMA,
+                "libbi_set_charge_target",
+            )
             devices.append(LibbiOperatingModeSelect(coordinator, device, entry))
     async_add_devices(devices)
 

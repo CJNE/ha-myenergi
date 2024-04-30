@@ -9,12 +9,9 @@ import logging
 from datetime import timedelta
 
 import homeassistant.util.dt as dt_util
-import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import callback
 from homeassistant.core import Config
 from homeassistant.core import HomeAssistant
-from homeassistant.core import ServiceCall
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from pymyenergi.client import MyenergiClient
@@ -33,14 +30,6 @@ SCAN_INTERVAL = timedelta(seconds=60)
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
-ATTR_CHARGE_TARGET = "chargetarget"
-LIBBI_CHARGE_TARGET_SCHEMA = {
-    vol.Required(ATTR_CHARGE_TARGET): vol.All(
-        vol.Coerce(float),
-        vol.Range(min=0, max=20400),
-    )
-}
-
 
 async def async_setup(hass: HomeAssistant, config: Config):
     """Set up this integration using YAML is not supported."""
@@ -48,16 +37,6 @@ async def async_setup(hass: HomeAssistant, config: Config):
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    @callback
-    async def libbi_set_charge_target(call: ServiceCall) -> None:
-        """My first service."""
-        _LOGGER.debug("Received data %s", call.data)
-        _LOGGER.debug("Device IDs to use: %s", call.data["device_id"])
-        coordinator = hass.data[DOMAIN][entry.entry_id]
-        all_devices = await coordinator.client.get_devices("all", False)
-        for device in all_devices:
-            _LOGGER.debug("Found device: %s", device)
-
     """Set up this integration using UI."""
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
@@ -89,9 +68,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     entry.add_update_listener(async_reload_entry)
 
-    hass.services.async_register(
-        DOMAIN, "myenergi_libbi_charge_target", libbi_set_charge_target
-    )
     return True
 
 
