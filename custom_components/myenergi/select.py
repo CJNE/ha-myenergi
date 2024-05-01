@@ -1,6 +1,4 @@
 """Sensor platform for myenergi."""
-import logging
-
 import voluptuous as vol
 from homeassistant.components.select import SelectEntity
 from homeassistant.helpers import entity_platform
@@ -10,8 +8,6 @@ from pymyenergi.zappi import CHARGE_MODES
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
-
-_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 LIBBI_MODE_NAMES = {"STOP": "Stopped", "BALANCE": "Normal", "DRAIN": "Export"}
 
