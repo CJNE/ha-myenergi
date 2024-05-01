@@ -17,6 +17,8 @@ from homeassistant.helpers.update_coordinator import UpdateFailed
 from pymyenergi.client import MyenergiClient
 from pymyenergi.connection import Connection
 
+from .const import CONF_APP_EMAIL
+from .const import CONF_APP_PASSWORD
 from .const import CONF_PASSWORD
 from .const import CONF_SCAN_INTERVAL
 from .const import CONF_USERNAME
@@ -42,8 +44,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     username = entry.data.get(CONF_USERNAME)
     password = entry.data.get(CONF_PASSWORD)
+    app_email = entry.data.get(CONF_APP_EMAIL)
+    app_password = entry.data.get(CONF_APP_PASSWORD)
 
-    conn = Connection(username, password)
+    conn = await hass.async_add_executor_job(
+        Connection, username, password, app_password, app_email
+    )
+    await conn.discoverLocations()
+
     client = MyenergiClient(conn)
 
     coordinator = MyenergiDataUpdateCoordinator(hass, client=client, entry=entry)
@@ -59,6 +67,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             )
 
     entry.add_update_listener(async_reload_entry)
+
     return True
 
 
@@ -84,9 +93,12 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
         today = today.replace(hour=0, minute=0, second=0, microsecond=0)
         utc_today = dt_util.as_utc(today)
         _LOGGER.debug(
-            f"Refresh histoy local start of day in UTC {utc_today} {utc_today.tzinfo}"
+            f"Refresh history local start of day in UTC {utc_today} {utc_today.tzinfo}"
         )
         try:
+            await self.hass.async_add_executor_job(
+                self.client._connection.checkAndUpdateToken
+            )
             await self.client.refresh()
             await self.client.refresh_history(utc_today, 24, "hour")
         except Exception as exception:

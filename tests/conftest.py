@@ -138,3 +138,17 @@ def mock_eddi_device():
     """Return a mocked eddi object."""
     with patch("pymyenergi.client.Eddi.set_priority") as device:
         yield device
+
+
+@pytest.fixture
+def mock_zappi_stop_boost():
+    """Return a mocked Zappi object."""
+    with patch("pymyenergi.client.Zappi.stop_boost") as stop_boost:
+        yield stop_boost
+
+
+@pytest.fixture
+def mock_zappi_unlock():
+    """Return a mocked Zappi object."""
+    with patch("pymyenergi.client.Zappi.unlock") as unlock:
+        yield unlock

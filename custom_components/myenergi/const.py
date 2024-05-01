@@ -3,7 +3,7 @@
 NAME = "myenergi"
 DOMAIN = "myenergi"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.24"
+VERSION = "0.0.27"
 
 ATTRIBUTION = "Data provided by myenergi"
 ISSUE_URL = "https://github.com/CJNE/ha-myenergi/issues"
@@ -16,13 +16,16 @@ SENSOR = "sensor"
 BINARY_SENSOR = "binary_sensor"
 SELECT = "select"
 NUMBER = "number"
-PLATFORMS = [SENSOR, BINARY_SENSOR, SELECT, NUMBER]
+SWITCH = "switch"
+PLATFORMS = [SENSOR, BINARY_SENSOR, SELECT, NUMBER, SWITCH]
 
 
 # Configuration and options
 CONF_SCAN_INTERVAL = "scan_interval"
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
+CONF_APP_EMAIL = "app_email"
+CONF_APP_PASSWORD = "app_password"
 
 # Defaults
 DEFAULT_NAME = DOMAIN

@@ -45,6 +45,8 @@ It will create HA devices depending on what you have installed:
   - Minumum green level number input; how much power must be sourced from green sources (local generation) to do diversion charging
   - Service to start boost (provide boost amount in kWh as parameter)
   - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
+  - Service to stop boost
+  - Service to unlock the Zappi
 
 - Eddi
 

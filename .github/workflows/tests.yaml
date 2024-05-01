@@ -9,6 +9,7 @@ on:
   pull_request:
   schedule:
     - cron: "0 0 * * *"
+  workflow_dispatch:
 
 env:
   DEFAULT_PYTHON: 3.9
@@ -19,10 +20,10 @@ jobs:
     name: Pre-commit
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4.1.0
+        uses: actions/checkout@v4.1.2
 
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        uses: actions/setup-python@v4.7.1
+        uses: actions/setup-python@v5.0.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
 
@@ -44,7 +45,7 @@ jobs:
     name: HACS
     steps:
       - name: Check out the repository
-        uses: "actions/checkout@v4.1.0"
+        uses: "actions/checkout@v4.1.2"
 
       - name: HACS validation
         uses: "hacs/action@22.5.0"
@@ -57,7 +58,7 @@ jobs:
     name: Hassfest
     steps:
       - name: Check out the repository
-        uses: "actions/checkout@v4.1.0"
+        uses: "actions/checkout@v4.1.2"
 
       - name: Hassfest validation
         uses: "home-assistant/actions/hassfest@master"
@@ -66,9 +67,9 @@ jobs:
     name: Run tests
     steps:
       - name: Check out code from GitHub
-        uses: "actions/checkout@v4.1.0"
+        uses: "actions/checkout@v4.1.2"
       - name: Setup Python ${{ env.DEFAULT_PYTHON }}
-        uses: "actions/setup-python@v4.7.1"
+        uses: "actions/setup-python@v5.0.0"
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
       - name: Install requirements
