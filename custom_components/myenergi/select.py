@@ -158,7 +158,9 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
     def __init__(self, coordinator, device, config_entry):
         super().__init__(coordinator, device, config_entry)
         self._attr_icon = "mdi:ev-station"
-        self._attr_unique_id = f"{self.config_entry.entry_id}-{self.device.serial_number}-charge_mode"
+        self._attr_unique_id = (
+            f"{self.config_entry.entry_id}-{self.device.serial_number}-charge_mode"
+        )
         self._attr_name = f"myenergi {self.device.name} Charge Mode"
         self._attr_translation_key = "phase_setting"
         self._attr_options = CHARGE_MODES[1:]
