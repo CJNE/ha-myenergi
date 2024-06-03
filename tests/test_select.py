@@ -37,7 +37,6 @@ async def test_zappi_select(
     mock_zappi_set_phase_setting.assert_called_with("1")
 
 
-
 async def test_zappi_phaseselect(
     hass: HomeAssistant, mock_zappi_set_charge_mode: MagicMock
 ) -> None:
