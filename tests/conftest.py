@@ -97,6 +97,7 @@ def mock_zappi_set_phase_setting():
     with patch("pymyenergi.client.Zappi.set_phase_setting") as phase_setting:
         yield phase_setting
 
+
 @pytest.fixture
 def mock_eddi_set_operating_mode():
     """Return a mocked Eddi object."""
