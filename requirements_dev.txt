@@ -1,7 +1,7 @@
 pre-commit==3.6.2
 black==24.2.0
 flake8==7.0.0
-reorder-python-imports==3.12.0
+reorder-python-imports==3.13.0
 homeassistant
 pymyenergi
 pytest
