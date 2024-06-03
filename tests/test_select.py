@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant
 from . import setup_mock_myenergi_config_entry
 
 TEST_ZAPPI_SELECT_CHARGE_MODE = "select.myenergi_test_zappi_1_charge_mode"
-TEST_ZAPPI_SELECT_PHASE_SETTING = "select.myenergi_test_zappi_1_phase_setting_select"
+TEST_ZAPPI_SELECT_PHASE_SETTING = "select.myenergi_test_zappi_1_phase_setting"
 TEST_EDDI_SELECT_OP_MODE = "select.myenergi_test_eddi_1_operating_mode"
 
 

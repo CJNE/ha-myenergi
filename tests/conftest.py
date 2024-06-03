@@ -92,6 +92,12 @@ def mock_zappi_set_charge_mode():
 
 
 @pytest.fixture
+def mock_zappi_set_phase_setting():
+    """Return a mocked Zappi object."""
+    with patch("pymyenergi.client.Zappi.set_phase_setting") as phase_setting:
+        yield phase_setting
+
+@pytest.fixture
 def mock_eddi_set_operating_mode():
     """Return a mocked Eddi object."""
     with patch("pymyenergi.client.Eddi.set_operating_mode") as op_mode:
