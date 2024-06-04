@@ -50,7 +50,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     conn = await hass.async_add_executor_job(
         Connection, username, password, app_password, app_email
     )
-    await conn.discoverLocations()
+    if app_email and app_password:
+        await conn.discoverLocations()
 
     client = MyenergiClient(conn)
 
@@ -67,6 +68,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             )
 
     entry.add_update_listener(async_reload_entry)
+
+    # once we reconfigure the integration, we (possibly) need to use the new credentials
+    entry.async_on_unload(entry.add_update_listener(config_update_listener))
 
     return True
 
@@ -85,6 +89,7 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
                 entry.data.get(CONF_SCAN_INTERVAL, SCAN_INTERVAL.total_seconds()),
             )
         )
+
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=scan_interval)
 
     async def _async_update_data(self):
@@ -127,3 +132,7 @@ async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Reload config entry."""
     await async_unload_entry(hass, entry)
     await async_setup_entry(hass, entry)
+
+
+async def config_update_listener(hass, entry):
+    """Handle options update."""

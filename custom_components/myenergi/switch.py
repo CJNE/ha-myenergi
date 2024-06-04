@@ -67,7 +67,6 @@ class MyenergiSwitch(MyenergiEntity, SwitchEntity):
     async def async_turn_on(self, **kwargs):
         """Turn the entity on."""
         _LOGGER.debug("libbi charging from grid is now ON")
-        _LOGGER.debug(type(self))
         await operator.methodcaller(self.meta["update_func"], True)(self.device)
         self.async_schedule_update_ha_state()
 
