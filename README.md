@@ -87,7 +87,7 @@ This is the recommended way to install.
 1. Search for myenergi in [HACS](https://hacs.xyz/).
 2. Install.
 3. Restart Home Assistant.
-4. In the HA UI go to "Configuration" -> "Integrations" click "+" and then search for "myenergi".
+4. In the HA UI, click Settings in the left nav bar, then click "Devices & Services". By default you should be viewing the Integrations tab. Click "+ Add Integration" button at bottom right and then search for "myenergi".
 
 ## Manual Installation
 
@@ -97,7 +97,7 @@ This is the recommended way to install.
 4. Download _all_ the files from the `custom_components/myenergi/` directory (folder) in this repository.
 5. Place the files you downloaded in the new directory (folder) you created.
 6. Restart Home Assistant.
-7. In the HA UI go to "Configuration" -> "Integrations" click "+" and then search for "myenergi".
+7. In the HA UI, click Settings in the left nav bar, then click "Devices & Services". By default you should be viewing the Integrations tab. Click "+ Add Integration" button at bottom right and then search for "myenergi".
 
 Using your HA configuration directory (folder) as a starting point you should now also have this:
 
