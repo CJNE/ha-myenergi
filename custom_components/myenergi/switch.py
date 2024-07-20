@@ -1,4 +1,5 @@
 """Switch platform for myenergi."""
+import logging
 import operator
 
 from homeassistant.components.switch import SwitchEntity
@@ -6,6 +7,8 @@ from pymyenergi import LIBBI
 
 from .const import DOMAIN
 from .entity import MyenergiEntity
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
@@ -63,10 +66,12 @@ class MyenergiSwitch(MyenergiEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs):
         """Turn the entity on."""
+        _LOGGER.debug("libbi charging from grid is now ON")
         await operator.methodcaller(self.meta["update_func"], True)(self.device)
         self.async_schedule_update_ha_state()
 
     async def async_turn_off(self, **kwargs):
         """Turn the entity off."""
+        _LOGGER.debug("libbi charging from grid is now OFF")
         await operator.methodcaller(self.meta["update_func"], False)(self.device)
         self.async_schedule_update_ha_state()
