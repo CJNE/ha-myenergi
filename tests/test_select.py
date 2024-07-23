@@ -1,4 +1,5 @@
 """Test myenergi sensor."""
+
 from unittest.mock import MagicMock
 
 from homeassistant.components.select import DOMAIN as SELECT_DOMAIN

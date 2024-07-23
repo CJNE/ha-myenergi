@@ -1,4 +1,5 @@
 """Test myenergi sensor."""
+
 from unittest.mock import MagicMock
 
 from homeassistant.const import ATTR_ENTITY_ID

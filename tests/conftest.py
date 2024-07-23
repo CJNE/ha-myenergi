@@ -1,4 +1,5 @@
 """Global fixtures for myenergi integration."""
+
 from typing import Any
 from unittest.mock import patch
 
