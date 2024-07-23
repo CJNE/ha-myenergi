@@ -1,4 +1,5 @@
 """Adds config flow for myenergi."""
+
 import logging
 import traceback
 

@@ -1,4 +1,5 @@
 """Sensor platform for myenergi."""
+
 import voluptuous as vol
 from homeassistant.components.select import SelectEntity
 from homeassistant.helpers import entity_platform

@@ -1,4 +1,5 @@
 """Sensor platform for myenergi."""
+
 import operator
 
 from homeassistant.components.binary_sensor import BinarySensorEntity

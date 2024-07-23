@@ -4,6 +4,7 @@ Custom integration to integrate myenergi with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/cjne/myenergi
 """
+
 import asyncio
 import logging
 from datetime import timedelta
