@@ -1,4 +1,5 @@
 """Sensor platform for myenergi."""
+
 from homeassistant.components.number import NumberEntity
 from homeassistant.helpers.entity import EntityCategory
 

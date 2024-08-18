@@ -1,4 +1,5 @@
 """Constants for myenergi tests."""
+
 from custom_components.myenergi.const import (
     CONF_PASSWORD,
 )
