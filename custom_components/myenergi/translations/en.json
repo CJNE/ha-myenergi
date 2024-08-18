@@ -26,5 +26,16 @@
         }
       }
     }
+  },
+  "entity": {
+    "select": {
+      "phase_setting": {
+        "state": {
+          "1": "1",
+          "3": "3",
+          "auto": "Automatic"
+        }
+      }
+    }
   }
 }

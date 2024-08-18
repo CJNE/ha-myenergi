@@ -12,6 +12,8 @@ from .entity import MyenergiEntity
 
 LIBBI_MODE_NAMES = {0: "Stopped", 1: "Normal", 5: "Export"}
 
+ZAPPI_PHASE_SETTING = ["1", "3", "auto"]
+
 ATTR_BOOST_AMOUNT = "amount"
 ATTR_BOOST_TIME = "time"
 ATTR_BOOST_TARGET = "target"
@@ -67,6 +69,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 "unlock",
             )
             devices.append(ZappiChargeModeSelect(coordinator, device, entry))
+            devices.append(ZappiPhaseSettingSelect(coordinator, device, entry))
         elif device.kind == "eddi":
             platform.async_register_entity_service(
                 "myenergi_eddi_boost",
@@ -114,26 +117,40 @@ class EddiOperatingModeSelect(MyenergiEntity, SelectEntity):
         return EDDI_MODES
 
 
+class ZappiPhaseSettingSelect(MyenergiEntity, SelectEntity):
+    """myenergi Sensor class."""
+
+    def __init__(self, coordinator, device, config_entry):
+        super().__init__(coordinator, device, config_entry)
+        self._attr_icon = "mdi:ev-station"
+        self._attr_unique_id = f"{self.config_entry.entry_id}-{self.device.serial_number}-phase_setting_select"
+        self._attr_name = f"myenergi {self.device.name} Phase Setting"
+        self._attr_translation_key = "phase_setting"
+        self._attr_options = ZAPPI_PHASE_SETTING
+
+    @property
+    def current_option(self):
+        """Return the state of the sensor."""
+        return self.device.num_phases
+
+    async def async_select_option(self, option: str) -> None:
+        """Change the selected option."""
+        await self.device.set_phase_setting(option)
+        self.async_schedule_update_ha_state()
+
+
 class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
     """myenergi Sensor class."""
 
     def __init__(self, coordinator, device, config_entry):
         super().__init__(coordinator, device, config_entry)
-
-    @property
-    def unique_id(self):
-        """Return a unique ID to use for this entity."""
-        return f"{self.config_entry.entry_id}-{self.device.serial_number}-charge_mode"
-
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        return f"myenergi {self.device.name} Charge Mode"
-
-    @property
-    def icon(self):
-        """Return the icon of the select."""
-        return "mdi:ev-station"
+        self._attr_icon = "mdi:ev-station"
+        self._attr_unique_id = (
+            f"{self.config_entry.entry_id}-{self.device.serial_number}-charge_mode"
+        )
+        self._attr_name = f"myenergi {self.device.name} Charge Mode"
+        self._attr_translation_key = "phase_setting"
+        self._attr_options = CHARGE_MODES[1:]
 
     @property
     def current_option(self):
@@ -144,10 +161,6 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
         """Change the selected option."""
         await self.device.set_charge_mode(option)
         self.async_schedule_update_ha_state()
-
-    @property
-    def options(self):
-        return CHARGE_MODES[1:]
 
 
 class LibbiOperatingModeSelect(MyenergiEntity, SelectEntity):
