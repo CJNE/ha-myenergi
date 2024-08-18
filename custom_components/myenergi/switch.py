@@ -1,4 +1,5 @@
 """Switch platform for myenergi."""
+
 import logging
 import operator
 
