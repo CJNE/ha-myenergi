@@ -18,6 +18,8 @@ from homeassistant.helpers.update_coordinator import UpdateFailed
 from pymyenergi.client import MyenergiClient
 from pymyenergi.connection import Connection
 
+from .const import CONF_APP_EMAIL
+from .const import CONF_APP_PASSWORD
 from .const import CONF_PASSWORD
 from .const import CONF_SCAN_INTERVAL
 from .const import CONF_USERNAME
@@ -43,8 +45,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     username = entry.data.get(CONF_USERNAME)
     password = entry.data.get(CONF_PASSWORD)
+    app_email = entry.data.get(CONF_APP_EMAIL)
+    app_password = entry.data.get(CONF_APP_PASSWORD)
 
-    conn = Connection(username, password)
+    conn = await hass.async_add_executor_job(
+        Connection, username, password, app_password, app_email
+    )
+    if app_email and app_password:
+        await conn.discoverLocations()
+
     client = MyenergiClient(conn)
 
     coordinator = MyenergiDataUpdateCoordinator(hass, client=client, entry=entry)
@@ -58,6 +67,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             await hass.config_entries.async_forward_entry_setups(entry, platform)
 
     entry.add_update_listener(async_reload_entry)
+
+    # once we reconfigure the integration, we (possibly) need to use the new credentials
+    entry.async_on_unload(entry.add_update_listener(config_update_listener))
+
     return True
 
 
@@ -75,6 +88,7 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
                 entry.data.get(CONF_SCAN_INTERVAL, SCAN_INTERVAL.total_seconds()),
             )
         )
+
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=scan_interval)
 
     async def _async_update_data(self):
@@ -86,6 +100,9 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
             f"Refresh history local start of day in UTC {utc_today} {utc_today.tzinfo}"
         )
         try:
+            await self.hass.async_add_executor_job(
+                self.client._connection.checkAndUpdateToken
+            )
             await self.client.refresh()
             await self.client.refresh_history(utc_today, 24, "hour")
         except Exception as exception:
@@ -114,3 +131,7 @@ async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Reload config entry."""
     await async_unload_entry(hass, entry)
     await async_setup_entry(hass, entry)
+
+
+async def config_update_listener(hass, entry):
+    """Handle options update."""

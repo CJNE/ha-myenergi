@@ -5,7 +5,9 @@
         "description": "If you need help with the configuration have a look here: https://github.com/cjne/ha-myenergi",
         "data": {
           "username": "Hub serial number",
-          "password": "API key / Password"
+          "password": "API key",
+          "app_email": "App email (only required for libbi)",
+          "app_password": "App password (only required for libbi)"
         }
       }
     },
@@ -22,7 +24,20 @@
     "step": {
       "user": {
         "data": {
-          "scan_interval": "Update interval (seconds)"
+          "scan_interval": "Update interval (seconds)",
+          "app_email": "App email (only required for libbi)",
+          "app_password": "App password (only required for libbi)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "select": {
+      "phase_setting": {
+        "state": {
+          "1": "1",
+          "3": "3",
+          "auto": "Automatic"
         }
       }
     }

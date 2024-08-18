@@ -79,3 +79,19 @@ myenergi_unlock:
       model: Zappi
     entity:
       domain: select
+myenergi_libbi_charge_target:
+  name: Charge target
+  description: Set charge target for libbi
+  target:
+    device:
+      model: Libbi
+  fields:
+    chargetarget:
+      name: Charge Target
+      description: Libbi charge target in Wh
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 20400
+          step: 255
