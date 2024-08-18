@@ -1,4 +1,5 @@
 """Constants for myenergi."""
+
 # Base component constants
 NAME = "myenergi"
 DOMAIN = "myenergi"

@@ -1,4 +1,5 @@
 """Test myenergi sensor."""
+
 from homeassistant.core import HomeAssistant
 
 from . import setup_mock_myenergi_config_entry
