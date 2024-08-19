@@ -142,8 +142,8 @@ class MyenergiOptionsFlowHandler(config_entries.OptionsFlow):
         scan_interval = self.config_entry.options.get(
             CONF_SCAN_INTERVAL, SCAN_INTERVAL.total_seconds()
         )
-        app_email = self.config_entry.options.get(CONF_APP_EMAIL)
-        app_password = self.config_entry.options.get(CONF_APP_PASSWORD)
+        app_email = self.config_entry.options.get(CONF_APP_EMAIL, "")
+        app_password = self.config_entry.options.get(CONF_APP_PASSWORD, "")
 
         return self.async_show_form(
             step_id="user",
