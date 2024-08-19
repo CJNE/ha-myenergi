@@ -16,6 +16,7 @@ async def test_boost(hass: HomeAssistant, mock_zappi_start_boost: MagicMock) -> 
 
     await setup_mock_myenergi_config_entry(hass)
 
+    assert mock_zappi_start_boost.call_count == 0
     await hass.services.async_call(
         "myenergi",
         "myenergi_boost",
@@ -25,7 +26,6 @@ async def test_boost(hass: HomeAssistant, mock_zappi_start_boost: MagicMock) -> 
         },
         blocking=False,
     )
-    assert mock_zappi_start_boost.call_count == 0
     await hass.async_block_till_done()
     assert mock_zappi_start_boost.call_count == 1
     mock_zappi_start_boost.assert_called_with(44.0)
@@ -38,6 +38,7 @@ async def test_smart_boost(
 
     await setup_mock_myenergi_config_entry(hass)
 
+    assert mock_zappi_start_smart_boost.call_count == 0
     await hass.services.async_call(
         "myenergi",
         "myenergi_smart_boost",
@@ -48,7 +49,6 @@ async def test_smart_boost(
         },
         blocking=False,
     )
-    assert mock_zappi_start_smart_boost.call_count == 0
     await hass.async_block_till_done()
     assert mock_zappi_start_smart_boost.call_count == 1
     mock_zappi_start_smart_boost.assert_called_with(11.0, "1213")
@@ -61,13 +61,13 @@ async def test_eddi_boost(
 
     await setup_mock_myenergi_config_entry(hass)
 
+    assert mock_eddi_manual_boost.call_count == 0
     await hass.services.async_call(
         "myenergi",
         "myenergi_eddi_boost",
         {ATTR_ENTITY_ID: TEST_EDDI_SELECT_OP_MODE, "target": "Heater 1", "time": 44},
         blocking=False,
     )
-    assert mock_eddi_manual_boost.call_count == 0
     await hass.async_block_till_done()
     assert mock_eddi_manual_boost.call_count == 1
     mock_eddi_manual_boost.assert_called_with("Heater 1", 44.0)
@@ -80,6 +80,7 @@ async def test_stop_boost(
 
     await setup_mock_myenergi_config_entry(hass)
 
+    assert mock_zappi_stop_boost.call_count == 0
     await hass.services.async_call(
         "myenergi",
         "myenergi_stop_boost",
@@ -88,7 +89,6 @@ async def test_stop_boost(
         },
         blocking=False,
     )
-    assert mock_zappi_stop_boost.call_count == 0
     await hass.async_block_till_done()
     assert mock_zappi_stop_boost.call_count == 1
 
@@ -98,6 +98,7 @@ async def test_unlock(hass: HomeAssistant, mock_zappi_unlock: MagicMock) -> None
 
     await setup_mock_myenergi_config_entry(hass)
 
+    assert mock_zappi_unlock.call_count == 0
     await hass.services.async_call(
         "myenergi",
         "myenergi_unlock",
@@ -106,6 +107,5 @@ async def test_unlock(hass: HomeAssistant, mock_zappi_unlock: MagicMock) -> None
         },
         blocking=False,
     )
-    assert mock_zappi_unlock.call_count == 0
     await hass.async_block_till_done()
     assert mock_zappi_unlock.call_count == 1

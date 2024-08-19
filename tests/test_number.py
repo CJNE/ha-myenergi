@@ -24,6 +24,7 @@ async def test_number(hass: HomeAssistant, mock_zappi_set_green: MagicMock) -> N
     entity_state = hass.states.get(TEST_ZAPPI_NUMBER_GREEN_LEVEL)
     assert entity_state
     assert entity_state.state == "50"
+    assert mock_zappi_set_green.call_count == 0
     await hass.services.async_call(
         NUMBER_DOMAIN,
         SERVICE_SET_VALUE,
@@ -33,7 +34,6 @@ async def test_number(hass: HomeAssistant, mock_zappi_set_green: MagicMock) -> N
         },
         blocking=False,
     )
-    assert mock_zappi_set_green.call_count == 0
     await hass.async_block_till_done()
     assert mock_zappi_set_green.call_count == 1
     mock_zappi_set_green.assert_called_with(58)
@@ -49,6 +49,7 @@ async def test_heater_priority(
     entity_state = hass.states.get(TEST_EDDI_NUMBER_HEATER_PRIORITY)
     assert entity_state
     assert entity_state.state == "1"
+    assert mock_eddi_heater.call_count == 0
     await hass.services.async_call(
         NUMBER_DOMAIN,
         SERVICE_SET_VALUE,
@@ -58,7 +59,6 @@ async def test_heater_priority(
         },
         blocking=False,
     )
-    assert mock_eddi_heater.call_count == 0
     await hass.async_block_till_done()
     assert mock_eddi_heater.call_count == 1
     mock_eddi_heater.assert_called_with("heater2")
@@ -74,6 +74,7 @@ async def test_device_priority(
     entity_state = hass.states.get(TEST_EDDI_NUMBER_DEVICE_PRIORITY)
     assert entity_state
     assert entity_state.state == "2"
+    assert mock_eddi_device.call_count == 0
     await hass.services.async_call(
         NUMBER_DOMAIN,
         SERVICE_SET_VALUE,
@@ -83,7 +84,6 @@ async def test_device_priority(
         },
         blocking=False,
     )
-    assert mock_eddi_device.call_count == 0
     await hass.async_block_till_done()
     assert mock_eddi_device.call_count == 1
     mock_eddi_device.assert_called_with(3)
