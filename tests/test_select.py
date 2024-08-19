@@ -22,6 +22,7 @@ async def test_zappi_select(
 
     await setup_mock_myenergi_config_entry(hass)
 
+    assert mock_zappi_set_phase_setting.call_count == 0
     await hass.services.async_call(
         SELECT_DOMAIN,
         SERVICE_SELECT_OPTION,
@@ -31,7 +32,6 @@ async def test_zappi_select(
         },
         blocking=False,
     )
-    assert mock_zappi_set_phase_setting.call_count == 0
     await hass.async_block_till_done()
     assert mock_zappi_set_phase_setting.call_count == 1
     mock_zappi_set_phase_setting.assert_called_with("1")
@@ -44,6 +44,7 @@ async def test_zappi_phaseselect(
 
     await setup_mock_myenergi_config_entry(hass)
 
+    assert mock_zappi_set_charge_mode.call_count == 0
     await hass.services.async_call(
         SELECT_DOMAIN,
         SERVICE_SELECT_OPTION,
@@ -53,7 +54,6 @@ async def test_zappi_phaseselect(
         },
         blocking=False,
     )
-    assert mock_zappi_set_charge_mode.call_count == 0
     await hass.async_block_till_done()
     assert mock_zappi_set_charge_mode.call_count == 1
     mock_zappi_set_charge_mode.assert_called_with("Eco+")
@@ -66,6 +66,7 @@ async def test_eddi_select(
 
     await setup_mock_myenergi_config_entry(hass)
 
+    assert mock_eddi_set_operating_mode.call_count == 0
     await hass.services.async_call(
         SELECT_DOMAIN,
         SERVICE_SELECT_OPTION,
@@ -75,7 +76,6 @@ async def test_eddi_select(
         },
         blocking=False,
     )
-    assert mock_eddi_set_operating_mode.call_count == 0
     await hass.async_block_till_done()
     assert mock_eddi_set_operating_mode.call_count == 1
     mock_eddi_set_operating_mode.assert_called_with("Stopped")
