@@ -36,6 +36,7 @@ It will create HA devices depending on what you have installed:
 - Zappi
 
   - Charge mode selector that let you switch between Stopped, Fast, Eco and Eco+ charge modes
+  - Phase setting to switch between Automatic, 1, or 3 phase charging in Eco+ charge mode
   - Charge added this session sensor (kWh)
   - Energy consumed today sensor (kWh)
   - Energy diverted today sensor (kWh)
