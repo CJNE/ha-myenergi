@@ -14,8 +14,6 @@ LIBBI_MODE_NAMES = {"STOP": "Stopped", "BALANCE": "Normal", "DRAIN": "Export"}
 
 ZAPPI_PHASE_SETTING = ["1", "3", "auto"]
 
-ZAPPI_PHASE_SETTING = ["1", "3", "auto"]
-
 ATTR_BOOST_AMOUNT = "amount"
 ATTR_BOOST_TIME = "time"
 ATTR_BOOST_TARGET = "target"
