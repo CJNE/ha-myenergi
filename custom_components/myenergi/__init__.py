@@ -15,6 +15,7 @@ from homeassistant.core import Config
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
+from homeassistant.helpers.httpx_client import get_async_client
 from pymyenergi.client import MyenergiClient
 from pymyenergi.connection import Connection
 
@@ -48,8 +49,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     app_email = entry.data.get(CONF_APP_EMAIL)
     app_password = entry.data.get(CONF_APP_PASSWORD)
 
+    async_client = get_async_client(hass)
+
     conn = await hass.async_add_executor_job(
-        Connection, username, password, app_password, app_email
+        Connection, username, password, app_password, app_email, 20, async_client
     )
     if app_email and app_password:
         await conn.discoverLocations()
@@ -107,6 +110,7 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
             await self.client.refresh()
             await self.client.refresh_history(utc_today, 24, "hour")
         except Exception as exception:
+            _LOGGER.debug(exception)
             raise UpdateFailed() from exception
 
 
