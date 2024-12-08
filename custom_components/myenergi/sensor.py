@@ -392,6 +392,43 @@ async def async_setup_entry(hass, entry, async_add_devices):
                         "mdi:ev-plug-type2",
                     ),
                 )
+            )            
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        "Smart boost start hour", 
+                        "smart_boost_start_hour",
+                        None,
+                        None,
+                        None,
+                        "mdi:clock-fast"
+                    ),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        "Smart boost start minute", 
+                        "smart_boost_start_minute",
+                        None,
+                        None,
+                        None,
+                        "mdi:clock-fast"),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_energy_meta("Smart boost amount", "smart_boost_amount"),
+                )
             )
 
             if device.ct4.name != "None":
