@@ -44,6 +44,9 @@ It will create HA devices depending on what you have installed:
   - Plug status sensor
   - Charger status sensor
   - Minumum green level number input; how much power must be sourced from green sources (local generation) to do diversion charging
+  - Smart boost start hour
+  - Smart boost start minute
+  - Smart boost amount; in kWh
   - Service to start boost (provide boost amount in kWh as parameter)
   - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
   - Service to stop boost
