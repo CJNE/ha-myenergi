@@ -48,6 +48,10 @@ It will create HA devices depending on what you have installed:
   - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
   - Service to stop boost
   - Service to unlock the Zappi
+  - Sensor for PIN Lock Status (This is not very useful in the real world)
+  - Sensor for Charge when Locked Status (This is the sensor that relates to the "unlock" service call and is the one you will want to use)
+  - Sensor for lock when plugged in status
+  - Sensor for lock when unplugged status
 
 - Eddi
 
