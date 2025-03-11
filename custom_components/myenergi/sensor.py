@@ -329,19 +329,19 @@ async def async_setup_entry(hass, entry, async_add_devices):
             for key in device.ct_keys:
                 sensors.append(MyenergiCTEnergySensor(coordinator, device, entry, key))
         # Zappi and harvi
-#        if device.kind in [ZAPPI, EDDI, HARVI]:
-#            sensors.append(
-#                MyenergiSensor(
-#                    coordinator,
-#                    device,
-#                    entry,
-#                    create_power_meta(
-#                        f"{device.ct3.name} CT3",
-#                        "ct3.power",
-#                        ENTITY_CATEGORY_DIAGNOSTIC,
-#                    ),
-#                )
-#            )
+        if device.kind in [ZAPPI, EDDI, HARVI]:
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_power_meta(
+                        f"{device.ct3.name} CT3",
+                        "ct3.power",
+                        ENTITY_CATEGORY_DIAGNOSTIC,
+                    ),
+                )
+            )
         # Zappi only sensors
         if device.kind == ZAPPI:
             sensors.append(
