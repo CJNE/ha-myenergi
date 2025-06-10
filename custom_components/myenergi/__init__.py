@@ -11,7 +11,7 @@ from datetime import timedelta
 
 import homeassistant.util.dt as dt_util
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import Config
+from homeassistant.core_config import Config  # Updated import for 2025.11
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
