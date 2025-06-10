@@ -70,7 +70,7 @@ Common sensor entities may also include:
 - Firmware version
 - Device priority; used for deciding which gets power first
 
-This Home Assistant integration talks to the MyEnergi API using the [pymyenergi python library](https://github.com/cjne/pymyenergi).
+This Home Assistant integration talks to the myenergi API using the [pymyenergi python library](https://github.com/cjne/pymyenergi).
 
 **This component will set up the following platforms.**
 
