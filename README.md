@@ -47,6 +47,10 @@ It will create HA devices depending on what you have installed:
   - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
   - Service to stop boost
   - Service to unlock the Zappi
+  - Sensor for PIN Lock Status (This is not very useful in the real world)
+  - Sensor for Charge when Locked Status (This is the sensor that relates to the "unlock" service call and is the one you will want to use)
+  - Sensor for lock when plugged in status
+  - Sensor for lock when unplugged status
 
 - Eddi
 
@@ -122,7 +126,15 @@ custom_components/myenergi/services.yaml
 If you have trouble logging in you might need to request an API key from myenergi. You can generate one at your [myenergi account page](https://myaccount.myenergi.com).
 See the [myenergi support article](https://support.myenergi.com/hc/en-gb/articles/5069627351185-How-do-I-get-an-API-key-) for more information.
 
-If you need to change your API key for any reason, you will need to remove the device from "Integration entries", and re-add it again with the new API key. Historical data will not be lost.
+## Troubleshooting
+
+in case of issues, check the MyEnergi app first to ensure everything works in the MyEnergi eco system.
+
+If you need to change your API key for any reason, you will need to remove the device from "Integration entries", and re-add it again with the new API key.
+
+If the master device is changed or replaced, a new API key is needed.
+
+If an additional device is added, it can take a few hours before it shows up.
 
 <!---->
 

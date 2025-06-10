@@ -45,7 +45,6 @@ class MyenergiEntity(CoordinatorEntity):
             "name": self.device.name,
             "model": self.device.kind.capitalize(),
             "manufacturer": "myenergi",
-            "via_device": self.coordinator.client.serial_number,
             "sw_version": self.device.firmware_version,
         }
 
