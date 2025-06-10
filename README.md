@@ -21,6 +21,7 @@ The energy sensors are fully compatible with the energy dashboard in Home Assist
 It will create HA devices depending on what you have installed:
 
 - Hub
+
   - Grid power sensor (W)
   - Grid voltage sensor (V)
   - Grid frequency sensor (Hz)
