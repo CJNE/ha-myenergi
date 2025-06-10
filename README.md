@@ -14,8 +14,8 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
-MyEnergi custom component for [Home Assistant](https://home-assistant.io).
-This component will make all supported [MyEnergi](https://myenergi.com) devices (libbi is not currently supported) connected to your MyEnergi hub accessible in Home Assistant.
+Myenergi custom component for [Home Assistant](https://home-assistant.io).
+This component will make all supported [myenergi](https://myenergi.com) devices (libbi is not currently supported) connected to your myenergi hub accessible in Home Assistant.
 The energy sensors are fully compatible with the energy dashboard in Home Assistant.
 
 It will create HA devices depending on what you have installed:
