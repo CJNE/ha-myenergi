@@ -1,4 +1,4 @@
-# myenergi for Home Assistant
+# Myenergi for Home Assistant
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
@@ -14,20 +14,19 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
-myenergi custom component for [Home Assistant](https://home-assistant.io).
-This component will make all supported [myenergi](https://myenergi.com) devices (libbi is not currently supported) connected to your hub accessible in Home Assistant.
+Myenergi custom component for [Home Assistant](https://home-assistant.io).
+This component will make all supported [myenergi](https://myenergi.com) devices (libbi is not currently supported) connected to your myenergi hub accessible in Home Assistant.
 The energy sensors are fully compatible with the energy dashboard in Home Assistant.
 
 It will create HA devices depending on what you have installed:
 
 - Hub
-
   - Grid power sensor (W)
   - Grid voltage sensor (V)
   - Grid frequency sensor (Hz)
   - Generation power sensor (W)
   - Charging/heating power sensor (W)
-  - Home power today sensor (W); consumption - power that is not charging, heating, generation and export
+  - Home power sensor (W); consumed power that is not charging, heating, generation and export
   - Energy generated today sensor (kWh)
   - Energy exported today sensor (kWh)
   - Energy imported today sensor (kWh)
@@ -35,15 +34,15 @@ It will create HA devices depending on what you have installed:
 
 - Zappi
 
-  - Charge mode selector that let you switch between Stopped, Fast, Eco and Eco+ charge modes
-  - Phase setting to switch between Automatic, 1, or 3 phase charging in Eco+ charge mode
+  - Charge mode selector (Stopped, Fast, Eco and Eco+)
+  - Phase setting (Automatic, 1 phase, 3 phase); Used in Eco+ charge mode
   - Charge added this session sensor (kWh)
   - Energy consumed today sensor (kWh)
   - Energy diverted today sensor (kWh)
   - Power sensors for internal and external CT clamps (W)
-  - Plug status sensor
-  - Charger status sensor
-  - Minumum green level number input; how much power must be sourced from green sources (local generation) to do diversion charging
+  - Plug status sensor (EV Connected, Waiting for EV, Charging, EV Disconnected)
+  - Charger status sensor (Paused, Charging, Boosting, Completed)
+  - Minumum green level number input (%); how much power must be sourced from green sources (local generation) to do diversion charging
   - Service to start boost (provide boost amount in kWh as parameter)
   - Service to start smart boost (provide boost amount in kWh and desired finished time as paramters)
   - Service to stop boost
@@ -71,7 +70,7 @@ Common sensor entities may also include:
 - Firmware version
 - Device priority; used for deciding which gets power first
 
-This Home Assistant add-on talks to the myenergi API using the [pymyenergi python library](https://github.com/cjne/pymyenergi).
+This Home Assistant integration talks to the myenergi API using the [pymyenergi python library](https://github.com/cjne/pymyenergi).
 
 **This component will set up the following platforms.**
 
