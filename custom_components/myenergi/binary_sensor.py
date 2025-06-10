@@ -143,20 +143,20 @@ class MyenergiBinarySensor(MyenergiEntity, BinarySensorEntity):
 
     @property
     def locked(self):
-       """Lock status"""
-       return self._data.get("lck", 0) >> 1 & 1 == 1
+        """Lock status"""
+        return self._data.get("lck", 0) >> 1 & 1 == 1
 
     @property
     def lock_when_pluggedin(self):
-       """Lock when plugged in status"""
-       return self._data.get("lck", 0) >> 2 & 1 == 1
+        """Lock when plugged in status"""
+        return self._data.get("lck", 0) >> 2 & 1 == 1
 
     @property
     def lock_when_unplugged(self):
-       """Lock when unplugged status"""
-       return self._data.get("lck", 0) >> 3 & 1 == 1
+        """Lock when unplugged status"""
+        return self._data.get("lck", 0) >> 3 & 1 == 1
 
     @property
     def charge_when_locked(self):
-       """Charge when locked enabled"""
-       return self._data.get("lck", 0) >> 4 & 1 == 1
+        """Charge when locked enabled"""
+        return self._data.get("lck", 0) >> 4 & 1 == 1

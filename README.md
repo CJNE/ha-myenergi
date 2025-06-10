@@ -127,11 +127,11 @@ custom_components/myenergi/services.yaml
 If you have trouble logging in you might need to request an API key from myenergi. You can generate one at your [myenergi account page](https://myaccount.myenergi.com).
 See the [myenergi support article](https://support.myenergi.com/hc/en-gb/articles/5069627351185-How-do-I-get-an-API-key-) for more information.
 
-## Troubleshooting 
+## Troubleshooting
 
 in case of issues, check the MyEnergi app first to ensure everything works in the MyEnergi eco system.
 
-If you need to change your API key for any reason, you will need to remove the device from "Integration entries", and re-add it again with the new API key. 
+If you need to change your API key for any reason, you will need to remove the device from "Integration entries", and re-add it again with the new API key.
 
 If the master device is changed or replaced, a new API key is needed.
 
