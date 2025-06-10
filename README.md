@@ -1,4 +1,4 @@
-# MyEnergi for Home Assistant
+# Myenergi for Home Assistant
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
