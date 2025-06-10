@@ -32,6 +32,58 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     },
                 )
             )
+            sensors.append(
+                MyenergiBinarySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    {
+                        "name": "Charge When Locked",
+                        "prop_name": "charge_when_locked",
+                        "icon": None,
+                        "attrs": {},
+                    },
+                )
+            )
+            sensors.append(
+                MyenergiBinarySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    {
+                        "name": "Locked",
+                        "prop_name": "locked",
+                        "icon": None,
+                        "attrs": {},
+                    },
+                )
+            )
+            sensors.append(
+                MyenergiBinarySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    {
+                        "name": "Lock when Plugged In",
+                        "prop_name": "lock_when_pluggedin",
+                        "icon": None,
+                        "attrs": {},
+                    },
+                )
+            )
+            sensors.append(
+                MyenergiBinarySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    {
+                        "name": "Lock when Unplugged",
+                        "prop_name": "lock_when_unplugged",
+                        "icon": None,
+                        "attrs": {},
+                    },
+                )
+            )
         if device.kind == EDDI:
             sensors.append(
                 MyenergiBinarySensor(
@@ -88,3 +140,23 @@ class MyenergiBinarySensor(MyenergiEntity, BinarySensorEntity):
     def icon(self):
         """Return the icon of the sensor."""
         return self.meta["icon"]
+
+    @property
+    def locked(self):
+       """Lock status"""
+       return self._data.get("lck", 0) >> 1 & 1 == 1
+
+    @property
+    def lock_when_pluggedin(self):
+       """Lock when plugged in status"""
+       return self._data.get("lck", 0) >> 2 & 1 == 1
+
+    @property
+    def lock_when_unplugged(self):
+       """Lock when unplugged status"""
+       return self._data.get("lck", 0) >> 3 & 1 == 1
+
+    @property
+    def charge_when_locked(self):
+       """Charge when locked enabled"""
+       return self._data.get("lck", 0) >> 4 & 1 == 1
