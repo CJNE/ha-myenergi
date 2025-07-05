@@ -479,7 +479,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                             UnitOfTemperature.CELSIUS,
                             ENTITY_CATEGORY_DIAGNOSTIC,
                             ICON_TEMP,
-                            SensorStateClass.MEASUREMENT
+                            SensorStateClass.MEASUREMENT,
                         ),
                     )
                 )
@@ -496,7 +496,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                             UnitOfTemperature.CELSIUS,
                             ENTITY_CATEGORY_DIAGNOSTIC,
                             ICON_TEMP,
-                            SensorStateClass.MEASUREMENT
+                            SensorStateClass.MEASUREMENT,
                         ),
                     )
                 )
