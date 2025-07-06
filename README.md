@@ -12,7 +12,7 @@
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
 [![Discord][discord-shield]][discord]
-[![Community Forum][forum-shield]][forum]
+[![Community Forum][forum-shield]](https://community.home-assistant.io/t/myenergi-zappi-eddi-harvi/908261)
 
 Myenergi custom component for [Home Assistant](https://home-assistant.io).
 This component will make all supported [myenergi](https://myenergi.com) devices (libbi is not currently supported) connected to your myenergi hub accessible in Home Assistant.
@@ -129,7 +129,9 @@ See the [myenergi support article](https://support.myenergi.com/hc/en-gb/article
 
 ## Troubleshooting
 
-in case of issues, check the MyEnergi app first to ensure everything works in the MyEnergi eco system.
+1. Check the MyEnergi app first to ensure everything works in the MyEnergi eco system.
+2. Update the integration to the latest version and restart Home Assistant.
+3. Check the (closed) issues and [Community Forum](https://community.home-assistant.io/t/myenergi-zappi-eddi-harvi/908261)
 
 If you need to change your API key for any reason, you will need to remove the device from "Integration entries", and re-add it again with the new API key.
 
