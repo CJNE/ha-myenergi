@@ -139,6 +139,8 @@ If the master device is changed or replaced, a new API key is needed.
 
 If an additional device is added, it can take a few hours before it shows up.
 
+This integration is incompatible with Octopus. If Octopus controls your devices, this integration will no longer function correctly.
+
 <!---->
 
 ## Contributions are welcome!
