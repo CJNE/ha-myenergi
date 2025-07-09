@@ -29,7 +29,7 @@ ICON_VOLT = "mdi:lightning-bolt"
 ICON_FREQ = "mdi:sine-wave"
 ICON_POWER = "mdi:flash"
 ICON_HOME_BATTERY = "mdi:home-battery"
-
+ICON_TEMP = "mdi:thermometer"
 
 def create_meta(
     name,
@@ -478,6 +478,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
                             SensorDeviceClass.TEMPERATURE,
                             UnitOfTemperature.CELSIUS,
                             ENTITY_CATEGORY_DIAGNOSTIC,
+                            ICON_TEMP,
+                            SensorStateClass.MEASUREMENT,
                         ),
                     )
                 )
@@ -493,6 +495,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
                             SensorDeviceClass.TEMPERATURE,
                             UnitOfTemperature.CELSIUS,
                             ENTITY_CATEGORY_DIAGNOSTIC,
+                            ICON_TEMP,
+                            SensorStateClass.MEASUREMENT,
                         ),
                     )
                 )
