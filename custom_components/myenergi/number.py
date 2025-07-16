@@ -203,13 +203,16 @@ class TargetChargePercentSlider(MyenergiEntity, NumberEntity):
 
     @property
     def native_value(self):
-        """Return the current percentage value."""
-        return int(round(self.device.charge_target * 10)) 
+     """Return the current charge target as a percentage of battery capacity."""
+     if self.device.battery_size: 
+        return int(round(self.device.charge_target / self.device.battery_size * 100))
+     return 0
 
     async def async_set_native_value(self, value: float) -> None:
-        """Set the new Charge target percentage."""
-        target_wh = (value / 100) * self.device.battery_size * 1000
-        await self.device.set_charge_target(int(target_wh))
+     """Set a new charge target percentage (converted to Wh)."""
+     if self.device.battery_size:
+        target_wh = int((value / 100) * (self.device.battery_size * 1000))  
+        await self.device.set_charge_target(target_wh)
         self.async_schedule_update_ha_state()
 
     @property
