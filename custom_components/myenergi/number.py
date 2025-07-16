@@ -25,6 +25,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
             devices.append(DevicePriorityNumber(coordinator, device, entry))
         elif device.kind == "libbi":
             devices.append(DevicePriorityNumber(coordinator, device, entry))
+            devices.append(TargetChargePercentSlider(coordinator, device, entry))
     async_add_devices(devices)
 
 
@@ -176,3 +177,57 @@ class MinimumGreenLevelNumber(MyenergiEntity, NumberEntity):
     @property
     def native_step(self):
         return 1
+
+class TargetChargePercentSlider(MyenergiEntity, NumberEntity):
+    """Charge Target"""
+
+    def __init__(self, coordinator, device, config_entry):
+        super().__init__(
+            coordinator,
+            device,
+            config_entry,
+            {"attrs": {}, "category": ENTITY_CATEGORY_CONFIG},
+        )
+
+    @property
+    def unique_id(self):
+        """Return a unique ID for this entity."""
+        return (
+            f"{self.config_entry.entry_id}-{self.device.serial_number}-Charge-Target"
+        )
+
+    @property
+    def name(self):
+        """Return the name of the slider."""
+        return f"myenergi {self.device.name} Charge Target (%)"
+
+    @property
+    def native_value(self):
+     """Return the current charge target as a percentage of battery capacity."""
+     if self.device.battery_size: 
+        return int(round(self.device.charge_target / self.device.battery_size * 100))
+     return 0
+
+    async def async_set_native_value(self, value: float) -> None:
+     """Set a new charge target percentage (converted to Wh)."""
+     if self.device.battery_size:
+        target_wh = int((value / 100) * (self.device.battery_size * 1000))  
+        await self.device.set_charge_target(target_wh)
+        self.async_schedule_update_ha_state()
+
+    @property
+    def icon(self):
+        """Return the icon representing the slider."""
+        return "mdi:percent"
+
+    @property
+    def native_min_value(self):
+        return 0
+
+    @property
+    def native_max_value(self):
+        return 100
+
+    @property
+    def native_step(self):
+        return 5
