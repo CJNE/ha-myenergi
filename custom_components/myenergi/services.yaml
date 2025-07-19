@@ -39,7 +39,7 @@ myenergi_eddi_boost:
       selector:
         number:
           min: 1
-          max: 1440
+          max: 240
 myenergi_smart_boost:
   name: Smart boost
   description: Start smart boost
