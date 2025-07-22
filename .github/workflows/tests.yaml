@@ -96,7 +96,7 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4.2.2
-        
+
       - name: Run Codespell
         uses: codespell-project/actions-codespell@v2
         with:
