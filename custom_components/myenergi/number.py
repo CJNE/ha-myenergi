@@ -178,6 +178,7 @@ class MinimumGreenLevelNumber(MyenergiEntity, NumberEntity):
     def native_step(self):
         return 1
 
+
 class TargetChargePercentSlider(MyenergiEntity, NumberEntity):
     """Charge Target"""
 
@@ -192,9 +193,7 @@ class TargetChargePercentSlider(MyenergiEntity, NumberEntity):
     @property
     def unique_id(self):
         """Return a unique ID for this entity."""
-        return (
-            f"{self.config_entry.entry_id}-{self.device.serial_number}-Charge-Target"
-        )
+        return f"{self.config_entry.entry_id}-{self.device.serial_number}-Charge-Target"
 
     @property
     def name(self):
@@ -203,17 +202,19 @@ class TargetChargePercentSlider(MyenergiEntity, NumberEntity):
 
     @property
     def native_value(self):
-     """Return the current charge target as a percentage of battery capacity."""
-     if self.device.battery_size: 
-        return int(round(self.device.charge_target / self.device.battery_size * 100))
-     return 0
+        """Return the current charge target as a percentage of battery capacity."""
+        if self.device.battery_size:
+            return int(
+                round(self.device.charge_target / self.device.battery_size * 100)
+            )
+        return 0
 
     async def async_set_native_value(self, value: float) -> None:
-     """Set a new charge target percentage (converted to Wh)."""
-     if self.device.battery_size:
-        target_wh = int((value / 100) * (self.device.battery_size * 1000))  
-        await self.device.set_charge_target(target_wh)
-        self.async_schedule_update_ha_state()
+        """Set a new charge target percentage (converted to Wh)."""
+        if self.device.battery_size:
+            target_wh = int((value / 100) * (self.device.battery_size * 1000))
+            await self.device.set_charge_target(target_wh)
+            self.async_schedule_update_ha_state()
 
     @property
     def icon(self):
