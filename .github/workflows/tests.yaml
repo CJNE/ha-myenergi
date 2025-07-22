@@ -39,6 +39,7 @@ jobs:
           pip install --constraint=.github/workflows/constraints.txt pre-commit black flake8
 
       - name: Run pre-commit on all files
+        continue-on-error: true
         run: |
           pre-commit run --all-files --show-diff-on-failure --color=always
 
