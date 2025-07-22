@@ -435,7 +435,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     )
                 )
         elif device.kind == EDDI:
-            # Eddi specifc sensors
+            # Eddi specific sensors
             sensors.append(
                 MyenergiSensor(
                     coordinator,
