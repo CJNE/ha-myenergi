@@ -43,10 +43,10 @@ jobs:
         run: |
           pre-commit run --all-files --show-diff-on-failure --color=always
 
-      - name: Commit changes 
+      - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'chore: format code with Pre-commit'
+          commit_message: "chore: format code with Pre-commit"
   
   ruff-format:
     runs-on: ubuntu-latest
@@ -69,10 +69,10 @@ jobs:
       - name: Run Ruff check --fix
         run: ruff check --fix-only # auto-fix
       
-      - name: Commit changes # auto commit format changes.
+      - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'chore: format code with Ruff'
+          commit_message: "chore: format code with Ruff"
 
   ruff-check:
     runs-on: ubuntu-latest
