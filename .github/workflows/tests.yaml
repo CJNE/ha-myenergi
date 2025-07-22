@@ -62,13 +62,13 @@ jobs:
         with:
           args: "--version" # replace default "check" argument to do setup only.
           github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }} # optional to reduce api calls
-      
+
       - name: Run Ruff format
         run: ruff format # auto format
-      
+
       - name: Run Ruff check --fix
         run: ruff check --fix-only # auto-fix
-      
+
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -84,7 +84,7 @@ jobs:
         uses: actions/checkout@v4.2.2
         with:
           github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }} # optional to reduce api calls
-      
+
       - name: Run Ruff check
         uses: astral-sh/ruff-action@v3
 
@@ -110,7 +110,7 @@ jobs:
 
       - name: Hassfest validation
         uses: "home-assistant/actions/hassfest@master"
-  
+
   tests:
     runs-on: ubuntu-latest
     name: Run tests
