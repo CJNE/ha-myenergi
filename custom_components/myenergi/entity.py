@@ -67,7 +67,7 @@ class MyenergiEntity(CoordinatorEntity):
         self.schedule_update_ha_state()
 
     async def start_eddi_boost(self, target: str, time: float) -> None:
-        _LOGGER.debug("Start eddit boost called, time %s target %s", time, target)
+        _LOGGER.debug("Start eddi boost called, time %s target %s", time, target)
         """Start eddi boost"""
         await self.device.manual_boost(target, time)
         self.schedule_update_ha_state()
