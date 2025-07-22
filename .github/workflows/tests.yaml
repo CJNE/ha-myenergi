@@ -88,6 +88,21 @@ jobs:
       - name: Run Ruff check
         uses: astral-sh/ruff-action@v3
 
+  run-codespell:
+    runs-on: ubuntu-latest
+    name: Codespell
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4.2.2
+        
+      - name: Run Codespell
+        uses: codespell-project/actions-codespell@v2
+        with:
+          skip: de.json,fr.json,nb.json,sv.json # skip these files
+          ignore_words_list: hass,Myenergi # skip these words
+
   hacs:
     runs-on: ubuntu-latest
     name: HACS
