@@ -52,15 +52,19 @@ async def setup_mock_myenergi_config_entry(
     """Add a mock sunspec config entry to hass."""
     config_entry = config_entry or create_mock_myenergi_config_entry(hass, data)
     """Mock data from client.fetch_data()"""
-    with patch(
-        "pymyenergi.client.MyenergiClient.fetch_data",
-        return_value=load_fixture_json(client_data),
-    ), patch(
-        "pymyenergi.zappi.Zappi.fetch_history_data",
-        return_value=load_fixture_json("history_zappi"),
-    ), patch(
-        "pymyenergi.eddi.Eddi.fetch_history_data",
-        return_value=load_fixture_json("history_eddi"),
+    with (
+        patch(
+            "pymyenergi.client.MyenergiClient.fetch_data",
+            return_value=load_fixture_json(client_data),
+        ),
+        patch(
+            "pymyenergi.zappi.Zappi.fetch_history_data",
+            return_value=load_fixture_json("history_zappi"),
+        ),
+        patch(
+            "pymyenergi.eddi.Eddi.fetch_history_data",
+            return_value=load_fixture_json("history_eddi"),
+        ),
     ):
         await hass.config_entries.async_setup(config_entry.entry_id)
         await hass.async_block_till_done()

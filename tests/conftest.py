@@ -14,7 +14,8 @@ pytest_plugins = "pytest_homeassistant_custom_component"
 
 @pytest.fixture(name="auto_enable_custom_integrations", autouse=True)
 def auto_enable_custom_integrations(
-    hass: Any, enable_custom_integrations: Any  # noqa: F811
+    hass: Any,
+    enable_custom_integrations: Any,  # noqa: F811
 ) -> None:
     """Enable custom integrations defined in the test dir."""
 
@@ -25,8 +26,9 @@ def auto_enable_custom_integrations(
 @pytest.fixture(name="skip_notifications", autouse=True)
 def skip_notifications_fixture():
     """Skip notification calls."""
-    with patch("homeassistant.components.persistent_notification.async_create"), patch(
-        "homeassistant.components.persistent_notification.async_dismiss"
+    with (
+        patch("homeassistant.components.persistent_notification.async_create"),
+        patch("homeassistant.components.persistent_notification.async_dismiss"),
     ):
         yield
 
@@ -36,15 +38,19 @@ def skip_notifications_fixture():
 @pytest.fixture(name="bypass_get_data")
 def bypass_get_data_fixture():
     """Mock data from client.fetch_data()"""
-    with patch(
-        "pymyenergi.client.MyenergiClient.fetch_data",
-        return_value=load_fixture_json("client"),
-    ), patch(
-        "pymyenergi.zappi.Zappi.fetch_history_data",
-        return_value=load_fixture_json("history_zappi"),
-    ), patch(
-        "pymyenergi.eddi.Eddi.fetch_history_data",
-        return_value=load_fixture_json("history_eddi"),
+    with (
+        patch(
+            "pymyenergi.client.MyenergiClient.fetch_data",
+            return_value=load_fixture_json("client"),
+        ),
+        patch(
+            "pymyenergi.zappi.Zappi.fetch_history_data",
+            return_value=load_fixture_json("history_zappi"),
+        ),
+        patch(
+            "pymyenergi.eddi.Eddi.fetch_history_data",
+            return_value=load_fixture_json("history_eddi"),
+        ),
     ):
         yield
 
