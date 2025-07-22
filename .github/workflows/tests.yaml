@@ -16,7 +16,7 @@ env:
 
 jobs:
   pre-commit:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     name: Pre-commit
     steps:
       - name: Check out the repository
@@ -40,8 +40,47 @@ jobs:
         run: |
           pre-commit run --all-files --show-diff-on-failure --color=always
 
+      - name: Commit changes 
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: format code with Pre-commit'
+  
+  ruff-format:
+    runs-on: ubuntu-latest
+    name: Ruff format
+    steps:
+      - name: Setup Ruff
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: "--version" # replace default "check" argument to do setup only.
+          github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }} # optional to reduce api calls
+      
+      - name: Run Ruff format
+        run: ruff format # auto format
+      
+      - name: Run Ruff check --fix
+        run: ruff check --fix-only # auto-fix
+      
+      - name: Commit changes # auto commit format changes.
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: format code with Ruff'
+
+  ruff-check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }} # optional to reduce api calls
+      
+      - name: ruff check
+        uses: astral-sh/ruff-action@v3
+
   hacs:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     name: HACS
     steps:
       - name: Check out the repository
@@ -54,7 +93,7 @@ jobs:
           ignore: brands
 
   hassfest:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     name: Hassfest
     steps:
       - name: Check out the repository
@@ -62,20 +101,19 @@ jobs:
 
       - name: Hassfest validation
         uses: "home-assistant/actions/hassfest@master"
+  
   tests:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     name: Run tests
     strategy:
       fail-fast: false
-      matrix:
-        python-version: ["3.12", "3.13"]
     steps:
       - name: Check out code from GitHub
         uses: "actions/checkout@v4.2.2"
       - name: Setup Python ${{ env.DEFAULT_PYTHON }}
         uses: "actions/setup-python@v5.6.0"
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
       - name: Install requirements
         run: |
           pip install --constraint=.github/workflows/constraints.txt pip
