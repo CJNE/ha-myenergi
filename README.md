@@ -130,18 +130,21 @@ See the [myenergi support article](https://support.myenergi.com/hc/en-gb/article
 ## Commonly used helpers and automations
 
 ### Plugged in (binary sensor)
-Helpers > Create Helper > Template > Template a binary sensor 
+
+Helpers > Create Helper > Template > Template a binary sensor
+
 - Name: Zappi Plugged in
-- Template: ```{{ is_state('sensor.zappi_plug_status', ['Waiting for EV', 'EV Connected', 'Charging']) }}```
+- Template: `{{ is_state('sensor.zappi_plug_status', ['Waiting for EV', 'EV Connected', 'Charging']) }}`
 - Device class: Plug
 - Device: Myenergi Zappi
 
 ### Charging (binary sensor)
 
-Helpers > Create Helper > Template > Template a binary sensor 
+Helpers > Create Helper > Template > Template a binary sensor
+
 - Name: Charging
-- Template: ```{{ is_state('sensor.zappi_charger_status', 'Charging') or (
-is_state('sensor.zappi_charger_status', 'Boosting') and is_state('binary_sensor.zappi_plugged_in', 'on'))}}```
+- Template: `{{ is_state('sensor.zappi_charger_status', 'Charging') or (
+is_state('sensor.zappi_charger_status', 'Boosting') and is_state('binary_sensor.zappi_plugged_in', 'on'))}}`
 - Device class: Charging
 - Device: Myenergi Zappi
 
