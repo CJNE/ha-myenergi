@@ -31,6 +31,7 @@ ICON_POWER = "mdi:flash"
 ICON_HOME_BATTERY = "mdi:home-battery"
 ICON_TEMP = "mdi:thermometer"
 
+
 def create_meta(
     name,
     prop_name,
