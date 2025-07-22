@@ -18,6 +18,8 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     name: Pre-commit
+    strategy:
+      fail-fast: false
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4.2.2
@@ -48,6 +50,8 @@ jobs:
   ruff-format:
     runs-on: ubuntu-latest
     name: Ruff format
+    strategy:
+      fail-fast: false
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4.2.2
