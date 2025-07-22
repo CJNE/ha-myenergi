@@ -76,6 +76,7 @@ jobs:
 
   ruff-check:
     runs-on: ubuntu-latest
+    name: Ruff check
     strategy:
       fail-fast: false
     steps:
