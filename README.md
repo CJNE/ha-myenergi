@@ -157,6 +157,7 @@ is_state('sensor.zappi_charger_status', 'Boosting') and is_state('binary_sensor.
 ### Updating to the latest (beta) version
 
 go to:
+
 - `HACS` > `Myenergi`.
 - from the 3-dot menu, select `Redownload`.
 - slecht `Need a different version`.
