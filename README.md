@@ -154,6 +154,16 @@ is_state('sensor.zappi_charger_status', 'Boosting') and is_state('binary_sensor.
 2. Update the integration to the latest version and restart Home Assistant.
 3. Check the (closed) issues and [Community Forum](https://community.home-assistant.io/t/myenergi-zappi-eddi-harvi/908261)
 
+### Updating to the latest (beta) version
+
+go to:
+- `HACS` > `Myenergi`.
+- from the 3-dot menu, select `Redownload`.
+- slecht `Need a different version`.
+- Choose the latest (beta) version.
+
+### Updating API key
+
 If you need to change your API key for any reason, you will need to remove the device from "Integration entries", and re-add it again with the new API key.
 
 If the master device is changed or replaced, a new API key is needed.
