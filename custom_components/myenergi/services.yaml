@@ -45,9 +45,11 @@ myenergi_smart_boost:
   description: Start smart boost
   target:
     device:
-      model: Zappi
-    entity:
-      domain: select
+      selector:
+        device:
+          model: Zappi
+        entity:
+          domain: select
   fields:
     amount:
       name: Amount
@@ -68,23 +70,29 @@ myenergi_stop_boost:
   description: Stop boost
   target:
     device:
-      model: Zappi
-    entity:
-      domain: select
+      selector:
+        device:
+          model: Zappi
+        entity:
+          domain: select
 myenergi_unlock:
   name: Unlock
   description: Unlock
   target:
     device:
-      model: Zappi
-    entity:
-      domain: select
+      selector:
+        device:
+          model: Zappi
+        entity:
+          domain: select
 myenergi_libbi_charge_target:
   name: Charge target
   description: Set charge target for libbi
   target:
     device:
-      model: Libbi
+      selector:
+        device:
+          model: Libbi
   fields:
     chargetarget:
       name: Charge Target
