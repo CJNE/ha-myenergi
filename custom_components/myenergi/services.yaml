@@ -70,17 +70,21 @@ myenergi_stop_boost:
   description: Stop boost
   target:
     device:
-      model: Zappi
-    entity:
-      domain: select
+      selector:  
+        device:
+          model: Zappi
+        entity:
+          domain: select
 myenergi_unlock:
   name: Unlock
   description: Unlock
   target:
     device:
-      model: Zappi
-    entity:
-      domain: select
+      selector:
+        device:
+          model: Zappi
+        entity:
+          domain: select
 myenergi_libbi_charge_target:
   name: Charge target
   description: Set charge target for libbi
