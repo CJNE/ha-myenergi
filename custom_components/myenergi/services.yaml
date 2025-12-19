@@ -84,7 +84,9 @@ myenergi_libbi_charge_target:
   description: Set charge target for libbi
   target:
     device:
-      model: Libbi
+      selector:
+        device: 
+          model: Libbi
   fields:
     chargetarget:
       name: Charge Target
