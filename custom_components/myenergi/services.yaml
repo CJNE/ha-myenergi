@@ -45,7 +45,7 @@ myenergi_smart_boost:
   description: Start smart boost
   target:
     device:
-      selector:  
+      selector:
         device:
           model: Zappi
         entity:
