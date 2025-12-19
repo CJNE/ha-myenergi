@@ -85,7 +85,7 @@ myenergi_libbi_charge_target:
   target:
     device:
       selector:
-        device: 
+        device:
           model: Libbi
   fields:
     chargetarget:
