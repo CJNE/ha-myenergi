@@ -6,6 +6,7 @@ import traceback
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.selector import NumberSelector
 from homeassistant.helpers.selector import NumberSelectorConfig
 from pymyenergi.client import MyenergiClient
@@ -21,6 +22,8 @@ from .const import CONF_SCAN_INTERVAL
 from .const import CONF_USERNAME
 from .const import DOMAIN
 
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
