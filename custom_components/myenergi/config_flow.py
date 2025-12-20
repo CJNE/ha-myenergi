@@ -22,7 +22,6 @@ from .const import CONF_SCAN_INTERVAL
 from .const import CONF_USERNAME
 from .const import DOMAIN
 
-
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -59,7 +58,7 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        return MyenergiOptionsFlowHandler(config_entry)
+        return MyenergiOptionsFlowHandler()
 
     async def _show_config_form(self, user_input):  # pylint: disable=unused-argument
         """Show the configuration form to edit location data."""
@@ -112,13 +111,12 @@ class MyenergiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 class MyenergiOptionsFlowHandler(config_entries.OptionsFlow):
     """Config flow options handler for myenergi."""
 
-    def __init__(self, config_entry):
+    def __init__(self):
         """Initialize HACS options flow."""
-        self.config_entry = config_entry
-        self.options = dict(config_entry.options)
 
     async def async_step_init(self, user_input=None):  # pylint: disable=unused-argument
         """Manage the options."""
+        self.options = dict(self.config_entry.options)
         return await self.async_step_user()
 
     async def async_step_user(self, user_input=None):
