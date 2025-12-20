@@ -70,7 +70,7 @@ myenergi_stop_boost:
   description: Stop boost
   target:
     device:
-      selector:
+      selector:  
         device:
           model: Zappi
         entity:
