@@ -150,9 +150,26 @@ is_state('sensor.zappi_charger_status', 'Boosting') and is_state('binary_sensor.
 
 ## Troubleshooting
 
+Perform all of the following steps before submitting an issue:
+
+#### Pick up the phone
+
 1. Check the MyEnergi app first to ensure everything works in the MyEnergi eco system.
-2. Update the integration to the latest version and restart Home Assistant.
-3. Check the (closed) issues and [Community Forum](https://community.home-assistant.io/t/myenergi-zappi-eddi-harvi/908261)
+2. No support can be provided when Octopus is used. Maybe it works, but it can cause unexpected issues which cannot be fixed.
+
+#### Have you tried turning it off and on again?
+
+3. Update the integration to the latest (beta) version
+4. Restart Home Assistant.
+
+#### Have you tried forcing an unexpected reboot?
+
+5. Disconnect the Zappi from the car.
+6. Force a device reboot: https://support.myenergi.com/hc/en-gb/articles/26093410495121-How-do-I-Reboot-zappi
+
+#### If all else fails
+
+7. Check the (closed) issues and [Community Forum](https://community.home-assistant.io/t/myenergi-zappi-eddi-harvi/908261)
 
 ### Updating to the latest (beta) version
 
