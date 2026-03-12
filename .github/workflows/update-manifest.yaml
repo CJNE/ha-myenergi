@@ -1,0 +1,38 @@
+name: Update Manifest Version
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          # Fetch all history so we can push back to the branch
+          fetch-depth: 0
+          ref: ${{ github.event.release.target_commitish }}
+
+      - name: Update manifest.json
+        run: |
+          # 1. Get the tag name (e.g., v1.0.2)
+          VERSION=${{ github.event.release.tag_name }}
+          
+          # 2. Use jq to update the version field. 
+          # Update the path below to match your integration folder name!
+          MANIFEST_PATH="custom_components/myenergi/manifest.json"
+          
+          jq ".version = \"$VERSION\"" $MANIFEST_PATH > temp.json && mv temp.json $MANIFEST_PATH
+          
+          echo "Updated manifest to $VERSION"
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore: update manifest.json to ${{ github.event.release.tag_name }}"
+          file_pattern: 'custom_components/*/manifest.json'
