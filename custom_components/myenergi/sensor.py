@@ -763,6 +763,7 @@ class MyenergiSensor(MyenergiEntity, SensorEntity):
         """Return the state of the sensor."""
         value = operator.attrgetter(self.meta["prop_name"])(self.device)
         if value is not None:
+            self._attr_available = True
             return value
         else:
             self._attr_available = False
