@@ -8,6 +8,11 @@ from .entity import MyenergiEntity
 
 ENTITY_CATEGORY_CONFIG = EntityCategory.CONFIG
 
+# Libbi usable capacity is ~90.2% of reported mbc (accounts for hardware SoC reserve).
+# Confirmed: 10 kWh (mbc=10200) → 9200 Wh usable; 20 kWh (mbc=20400) → 18400 Wh usable.
+# Both ratios simplify to 92/102 (source: twonk/MyEnergi-App-Api + issue #727 data).
+LIBBI_USABLE_CAPACITY_FACTOR = 92 / 102
+
 
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup number platform."""
@@ -202,17 +207,17 @@ class TargetChargePercentSlider(MyenergiEntity, NumberEntity):
 
     @property
     def native_value(self):
-        """Return the current charge target as a percentage of battery capacity."""
-        if self.device.battery_size:
-            return int(
-                round(self.device.charge_target / self.device.battery_size * 100)
-            )
-        return 0
+        """Return the current charge target as a percentage of usable battery capacity."""
+        if self.device.battery_size and self.device.charge_target is not None:
+            usable_size = self.device.battery_size * LIBBI_USABLE_CAPACITY_FACTOR
+            return int(round(self.device.charge_target / usable_size * 100))
+        return None
 
     async def async_set_native_value(self, value: float) -> None:
-        """Set a new charge target percentage (converted to Wh)."""
+        """Set a new charge target percentage (converted to Wh using usable capacity)."""
         if self.device.battery_size:
-            target_wh = int((value / 100) * (self.device.battery_size * 1000))
+            usable_wh = self.device.battery_size * 1000 * LIBBI_USABLE_CAPACITY_FACTOR
+            target_wh = int(round((value / 100) * usable_wh))
             await self.device.set_charge_target(target_wh)
             self.async_schedule_update_ha_state()
 

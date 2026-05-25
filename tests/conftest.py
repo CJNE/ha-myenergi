@@ -166,3 +166,10 @@ def mock_zappi_unlock():
     """Return a mocked Zappi object."""
     with patch("pymyenergi.client.Zappi.unlock") as unlock:
         yield unlock
+
+
+@pytest.fixture
+def mock_libbi_set_charge_target():
+    """Return a mocked Libbi set_charge_target."""
+    with patch("pymyenergi.client.Libbi.set_charge_target") as set_charge_target:
+        yield set_charge_target
