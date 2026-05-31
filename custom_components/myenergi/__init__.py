@@ -70,10 +70,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             # await hass.config_entries.async_forward_entry_setups(entry, platform)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-    entry.add_update_listener(async_reload_entry)
-
-    # once we reconfigure the integration, we (possibly) need to use the new credentials
-    entry.async_on_unload(entry.add_update_listener(config_update_listener))
+    # Reload the entry when its options change (e.g. scan_interval). Register the
+    # listener through async_on_unload so the unsub handle is tracked and the
+    # listener is removed on unload — otherwise every setup stacks another copy
+    # and an options change fires the reload handler multiple times.
+    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
     return True
 
@@ -110,8 +111,11 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
             await self.client.refresh()
             await self.client.refresh_history(utc_today, 24, "hour")
         except Exception as exception:
-            _LOGGER.debug(exception)
-            raise UpdateFailed() from exception
+            # Attach the message so the cause (cloud throttling, auth failure,
+            # connectivity) is visible in the HA log. Previously this was logged
+            # only at DEBUG and re-raised as a bare UpdateFailed(), leaving the
+            # coordinator's failure reason invisible at default log levels.
+            raise UpdateFailed(f"myenergi update failed: {exception}") from exception
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -133,10 +137,13 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Reload config entry."""
-    await async_unload_entry(hass, entry)
-    await async_setup_entry(hass, entry)
+    """Reload config entry.
 
-
-async def config_update_listener(hass, entry):
-    """Handle options update."""
+    Delegate to the config-entries manager rather than calling unload+setup
+    directly. The manager serialises the unload/setup cycle and rebuilds the
+    coordinator (and its refresh scheduler) cleanly; the previous hand-rolled
+    approach could race on an options update and leave the entry loaded with a
+    coordinator whose polling loop never restarted, stranding all entities as
+    unavailable until a full Home Assistant restart.
+    """
+    await hass.config_entries.async_reload(entry.entry_id)
