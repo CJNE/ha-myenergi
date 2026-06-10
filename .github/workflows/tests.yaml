@@ -1,117 +1,38 @@
-name: Linting
+name: Tests
 
 on:
   push:
-    branches:
-      - main
-      - master
-      - dev
+    branches: [main]
+    paths:
+      - 'custom_components/myenergi/**'
+      - 'tests/**'
   pull_request:
-  schedule:
-    - cron: "0 0 * * *"
+    branches: [main]
+    paths:
+      - 'custom_components/myenergi/**'
+      - 'tests/**'
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0"
 
-env:
-  DEFAULT_PYTHON: 3.13
+permissions:
+  contents: read
 
 jobs:
-  pre-commit:
-    runs-on: ubuntu-latest
-    name: Pre-commit
-    strategy:
-      fail-fast: false
-    steps:
-      - name: Check out the repository
-        uses: actions/checkout@v6
-
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        uses: actions/setup-python@v6.2.0
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-
-      - name: Upgrade pip
-        run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
-          pip --version
-
-      - name: Install Python modules
-        run: |
-          pip install --constraint=.github/workflows/constraints.txt pre-commit black flake8
-
-      - name: Run pre-commit on all files
-        continue-on-error: true
-        run: |
-          pre-commit run --all-files --show-diff-on-failure --color=always
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: "chore: format code with Pre-commit"
-
-  ruff-format:
-    runs-on: ubuntu-latest
-    name: Ruff format
-    strategy:
-      fail-fast: false
-    steps:
-      - name: Check out the repository
-        uses: actions/checkout@v6
-
-      - name: Setup Ruff
-        uses: astral-sh/ruff-action@v3
-        with:
-          args: "--version" # replace default "check" argument to do setup only.
-          github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }} # optional to reduce api calls
-
-      - name: Run Ruff format
-        run: ruff format # auto format
-
-      - name: Run Ruff check --fix
-        run: ruff check --fix-only # auto-fix
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: "chore: format code with Ruff"
-
-  ruff-check:
-    runs-on: ubuntu-latest
-    name: Ruff check
-    strategy:
-      fail-fast: false
-    steps:
-      - name: Check out the repository
-        uses: actions/checkout@v6
-        with:
-          github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }} # optional to reduce api calls
-
-      - name: Run Ruff check
-        uses: astral-sh/ruff-action@v3
-
-  run-codespell:
-    runs-on: ubuntu-latest
-    name: Codespell
-    strategy:
-      fail-fast: false
-    steps:
-      - name: Check out the repository
-        uses: actions/checkout@v6
-
-      - name: Run Codespell
-        uses: codespell-project/actions-codespell@v2
-        with:
-          skip: de.json,fr.json,nb.json,sv.json # skip these files
-          ignore_words_list: hass,Myenergi # skip these words
-
   hacs:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.13", "3.14"]
+    
     name: HACS
     steps:
       - name: Check out the repository
         uses: "actions/checkout@v6"
 
       - name: HACS validation
-        uses: "hacs/action@22.5.0"
+        uses: "hacs/action@main"
         with:
           category: "integration"
           ignore: brands
@@ -132,21 +53,26 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - name: Check out code from GitHub
+      - name: Check out code
         uses: "actions/checkout@v6"
-      - name: Setup Python ${{ env.DEFAULT_PYTHON }}
+        
+      - name: Set up Python ${{ matrix.python-version }}
         uses: "actions/setup-python@v6.2.0"
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
+          python-version: ${{ matrix.python-version }}
+      
       - name: Install requirements
         run: |
           pip install --constraint=.github/workflows/constraints.txt pip
           pip install -r requirements_test.txt
+      
       - name: Tests suite
         run: |
-          pytest \
-            --timeout=9 \
-            --durations=10 \
-            -n auto \
-            -p no:sugar \
-            tests
+          pytest --cov=custom_components.myenergi --cov-report=xml --cov-report=term-missing tests/
+
+      - name: Upload coverage report
+        if: matrix.python-version == '3.14'
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: coverage.xml
