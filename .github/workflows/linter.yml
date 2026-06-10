@@ -88,3 +88,4 @@ jobs:
         uses: codespell-project/actions-codespell@v2
         with:
           ignore_words_list: hass
+          skip: de.json,fr.json,nb.json,sv.json
