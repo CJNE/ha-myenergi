@@ -83,14 +83,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      
+      - name: Run Codespell
+        uses: codespell-project/actions-codespell@v2
         with:
-          python-version: "3.14"
-
-      - name: Install codespell
-        run: pip install --upgrade codespell
-
-      - name: Run codespell
-        run: codespell tests
+          ignore_word_list: hass
