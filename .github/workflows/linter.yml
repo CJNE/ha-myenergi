@@ -1,0 +1,91 @@
+name: Linter
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ruff-fix:
+    name: Ruff Auto-fix
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - name: Install Ruff
+        run: pip install --upgrade ruff
+
+      - name: Run ruff check --fix
+        run: ruff check --fix custom_components/myenergi tests
+
+      - name: Run ruff format
+        run: ruff format custom_components/myenergi tests
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "style: 🎨 auto-fix ruff format and lint"
+            git push
+          fi
+
+  ruff:
+    name: Ruff
+    needs: ruff-fix
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # complete all jobs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - name: Install Ruff
+        run: pip install --upgrade ruff
+
+      - name: Ruff format check
+        run: ruff format --check custom_components/myenergi tests
+
+      - name: Ruff lint check
+        run: ruff check custom_components/myenergi tests
+
+  codespell:
+    name: CodeSpell
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # complete all jobs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      
+      - name: Run Codespell
+        uses: codespell-project/actions-codespell@v2
+        with:
+          ignore_words_list: hass
+          skip: de.json,fr.json,nb.json,sv.json
