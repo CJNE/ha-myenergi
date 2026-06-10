@@ -87,4 +87,4 @@ jobs:
       - name: Run Codespell
         uses: codespell-project/actions-codespell@v2
         with:
-          ignore_word_list: hass
+          ignore_words_list: hass
