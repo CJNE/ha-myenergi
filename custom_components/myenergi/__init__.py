@@ -94,7 +94,13 @@ class MyenergiDataUpdateCoordinator(DataUpdateCoordinator):
             )
         )
 
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=scan_interval)
+        super().__init__(
+            hass,
+            _LOGGER,
+            config_entry=entry,
+            name=DOMAIN,
+            update_interval=scan_interval,
+        )
 
     async def _async_update_data(self):
         """Update data via library."""
