@@ -65,6 +65,28 @@ It will create HA devices depending on what you have installed:
 
   - Power sensors for internal and external CT clamps (W)
 
+- Libbi
+  - With API Key only
+    - Battery discharge today (kWh)
+    - Battery size (kW)
+    - Frequency (Hz)
+    - Grid CT2
+    - Grid export today (kWh)
+    - Grid import today (kWh)
+    - Internal Load CT1
+    - Inverter size
+    - Operating Mode
+    - power ct dcpv (W)
+    - power ct internal load (W)
+    - SoC (State of Charge) (%)
+    - Solar generation today (kWh)
+    - Status
+    - Voltage (V)
+  - With App Credentials (assumed)
+    - Battery charge today (kWh)
+    - Charge from grid (kWh)
+    - Charge target (kWh)
+
 Common sensor entities may also include:
 
 - Serial number
