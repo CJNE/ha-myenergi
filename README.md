@@ -8,10 +8,7 @@
 [![Black][black-shield]][black]
 
 [![hacs][hacsbadge]][hacs]
-[![Project Maintenance][maintenance-shield]][user_profile]
-[![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
-[![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]](https://community.home-assistant.io/t/myenergi-zappi-eddi-harvi/908261)
 
 Myenergi custom component for [Home Assistant](https://home-assistant.io).
@@ -109,45 +106,21 @@ This Home Assistant integration talks to the myenergi API using the [pymyenergi 
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=CJNE&repository=ha-myenergi&category=integration)
 
-This is the recommended way to install.
-
 1. Search for myenergi in [HACS](https://hacs.xyz/).
 2. Install.
 3. Restart Home Assistant.
-4. In the HA UI, click Settings in the left nav bar, then click "Devices & Services". By default you should be viewing the Integrations tab. Click "+ Add Integration" button at bottom right and then search for "myenergi".
 
-## Manual Installation
+## Configuration
 
-1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
-2. If you do not have a `custom_components` directory (folder) there, you need to create it.
-3. In the `custom_components` directory (folder) create a new folder called `myenergi`.
-4. Download _all_ the files from the `custom_components/myenergi/` directory (folder) in this repository.
-5. Place the files you downloaded in the new directory (folder) you created.
-6. Restart Home Assistant.
-7. In the HA UI, click Settings in the left nav bar, then click "Devices & Services". By default you should be viewing the Integrations tab. Click "+ Add Integration" button at bottom right and then search for "myenergi".
-
-Using your HA configuration directory (folder) as a starting point you should now also have this:
-
-```text
-custom_components/myenergi/translations/en.json
-custom_components/myenergi/translations/fr.json
-custom_components/myenergi/translations/sv.json
-custom_components/myenergi/translations/nb.json
-custom_components/myenergi/__init__.py
-custom_components/myenergi/config_flow.py
-custom_components/myenergi/const.py
-custom_components/myenergi/entity.py
-custom_components/myenergi/manifest.json
-custom_components/myenergi/number.py
-custom_components/myenergi/select.py
-custom_components/myenergi/sensor.py
-custom_components/myenergi/services.yaml
-```
-
-## Configuration is done in the UI
-
-If you have trouble logging in you might need to request an API key from myenergi. You can generate one at your [myenergi account page](https://myaccount.myenergi.com).
+Request an API key from myenergi. You can generate one at your [myenergi account page](https://myaccount.myenergi.com).
 See the [myenergi support article](https://support.myenergi.com/hc/en-gb/articles/5069627351185-How-do-I-get-an-API-key-) for more information.
+
+1. Go to `Settings` > `Devices & Services` > `+ Add Integration` button at bottom right 
+2. Search for `myenergi` and select it.
+3. Enter the Serial numer (`12345678`) and API key.
+
+Ther serial number and API key can both be found under Products at 
+[myenergi account page](https://myaccount.myenergi.com)
 
 ## Commonly used helpers and automations
 
