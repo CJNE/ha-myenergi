@@ -29,7 +29,7 @@ jobs:
     name: HACS
     steps:
       - name: Check out the repository
-        uses: "actions/checkout@v6"
+        uses: "actions/checkout@v7"
 
       - name: HACS validation
         uses: "hacs/action@main"
@@ -42,7 +42,7 @@ jobs:
     name: Hassfest
     steps:
       - name: Check out the repository
-        uses: "actions/checkout@v6"
+        uses: "actions/checkout@v7"
 
       - name: Hassfest validation
         uses: "home-assistant/actions/hassfest@master"
@@ -54,7 +54,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Check out code
-        uses: "actions/checkout@v6"
+        uses: "actions/checkout@v7"
         
       - name: Set up Python ${{ matrix.python-version }}
         uses: "actions/setup-python@v6.2.0"
