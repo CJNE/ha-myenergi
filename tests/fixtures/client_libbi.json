@@ -1,0 +1,34 @@
+{
+  "keys": {
+    "H1234": [
+      { "key": "L20000001", "val": "Test Libbi 1" },
+      { "key": "siteName", "val": "Test Site" }
+    ]
+  },
+  "devices": [
+    {
+      "libbi": [
+        {
+          "sno": 20000001,
+          "dat": "09-09-2023",
+          "tim": "10:00:00",
+          "sta": 5,
+          "lmo": "BALANCE",
+          "frq": 50.0,
+          "vol": 2400,
+          "soc": 65,
+          "pri": 1,
+          "mbc": 20400,
+          "mic": 5000,
+          "gen": 0,
+          "grd": 0,
+          "che": 0.0
+        }
+      ]
+    },
+    {
+      "asn": "s8.myenergi.net",
+      "fwv": "3401S3077"
+    }
+  ]
+}

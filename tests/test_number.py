@@ -1,19 +1,22 @@
-"""Test myenergi sensor."""
+"""Test myenergi number entities."""
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, PropertyMock, patch
 
 from homeassistant.components.number import DOMAIN as NUMBER_DOMAIN
 from homeassistant.components.number import SERVICE_SET_VALUE
 from homeassistant.const import (
     ATTR_ENTITY_ID,
+    STATE_UNKNOWN,
 )
 from homeassistant.core import HomeAssistant
+from pymyenergi.libbi import Libbi
 
 from . import setup_mock_myenergi_config_entry
 
 TEST_ZAPPI_NUMBER_GREEN_LEVEL = "number.myenergi_test_zappi_1_minimum_green_level"
 TEST_EDDI_NUMBER_HEATER_PRIORITY = "number.myenergi_test_eddi_1_heater_priority"
 TEST_EDDI_NUMBER_DEVICE_PRIORITY = "number.myenergi_test_eddi_1_device_priority"
+TEST_LIBBI_NUMBER_CHARGE_TARGET = "number.myenergi_test_libbi_1_charge_target"
 
 
 async def test_number(hass: HomeAssistant, mock_zappi_set_green: MagicMock) -> None:
@@ -87,3 +90,90 @@ async def test_device_priority(
     await hass.async_block_till_done()
     assert mock_eddi_device.call_count == 1
     mock_eddi_device.assert_called_with(3)
+
+
+async def test_libbi_charge_target_reads_100_percent(hass: HomeAssistant) -> None:
+    """Verify charge target entity reads 100% when energyTarget = 18400 Wh (mbc=20400)."""
+    with patch.object(
+        Libbi, "charge_target", new_callable=PropertyMock, return_value=18.4
+    ):
+        await setup_mock_myenergi_config_entry(
+            hass, client_fixture="client_libbi"
+        )
+
+        entity_state = hass.states.get(TEST_LIBBI_NUMBER_CHARGE_TARGET)
+        assert entity_state
+        assert entity_state.state == "100"
+
+
+async def test_libbi_charge_target_reads_70_percent(hass: HomeAssistant) -> None:
+    """Verify charge target entity reads 70% when energyTarget = 12880 Wh (mbc=20400)."""
+    with patch.object(
+        Libbi, "charge_target", new_callable=PropertyMock, return_value=12.88
+    ):
+        await setup_mock_myenergi_config_entry(
+            hass, client_fixture="client_libbi"
+        )
+
+        entity_state = hass.states.get(TEST_LIBBI_NUMBER_CHARGE_TARGET)
+        assert entity_state
+        assert entity_state.state == "70"
+
+
+async def test_libbi_charge_target_no_credentials_shows_unknown(
+    hass: HomeAssistant,
+) -> None:
+    """Verify charge target entity shows unknown state when app credentials are absent.
+
+    MOCK_CONFIG has empty app_email/app_password, so the real Libbi.charge_target
+    property returns None without needing a mock.
+    """
+    await setup_mock_myenergi_config_entry(
+        hass, client_fixture="client_libbi"
+    )
+
+    entity_state = hass.states.get(TEST_LIBBI_NUMBER_CHARGE_TARGET)
+    assert entity_state
+    assert entity_state.state == STATE_UNKNOWN
+
+
+async def test_libbi_set_charge_target_70_percent(
+    hass: HomeAssistant, mock_libbi_set_charge_target: MagicMock
+) -> None:
+    """Verify setting 70% sends 12880 Wh to the API (mbc=20400, usable=18400 Wh)."""
+    with patch.object(
+        Libbi, "charge_target", new_callable=PropertyMock, return_value=18.4
+    ):
+        await setup_mock_myenergi_config_entry(
+            hass, client_fixture="client_libbi"
+        )
+
+    await hass.services.async_call(
+        NUMBER_DOMAIN,
+        SERVICE_SET_VALUE,
+        {ATTR_ENTITY_ID: TEST_LIBBI_NUMBER_CHARGE_TARGET, "value": "70"},
+        blocking=False,
+    )
+    await hass.async_block_till_done()
+    mock_libbi_set_charge_target.assert_called_once_with(12880)
+
+
+async def test_libbi_set_charge_target_100_percent(
+    hass: HomeAssistant, mock_libbi_set_charge_target: MagicMock
+) -> None:
+    """Verify setting 100% sends 18400 Wh to the API (mbc=20400, usable=18400 Wh)."""
+    with patch.object(
+        Libbi, "charge_target", new_callable=PropertyMock, return_value=18.4
+    ):
+        await setup_mock_myenergi_config_entry(
+            hass, client_fixture="client_libbi"
+        )
+
+    await hass.services.async_call(
+        NUMBER_DOMAIN,
+        SERVICE_SET_VALUE,
+        {ATTR_ENTITY_ID: TEST_LIBBI_NUMBER_CHARGE_TARGET, "value": "100"},
+        blocking=False,
+    )
+    await hass.async_block_till_done()
+    mock_libbi_set_charge_target.assert_called_once_with(18400)

@@ -40,7 +40,7 @@ async def test_sensor_power_import(hass: HomeAssistant) -> None:
 async def test_sensor_power_export(hass: HomeAssistant) -> None:
     """Verify device information includes expected details."""
 
-    await setup_mock_myenergi_config_entry(hass, {"client_data": "client_exporting"})
+    await setup_mock_myenergi_config_entry(hass, client_fixture="client_exporting")
 
     entity_state = hass.states.get(TEST_HUB_SENSOR_POWER_GRID_ENTITY_ID)
     entity_state_import = hass.states.get(TEST_HUB_SENSOR_POWER_IMPORT_ENTITY_ID)
