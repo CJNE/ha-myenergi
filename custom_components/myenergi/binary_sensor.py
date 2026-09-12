@@ -84,6 +84,32 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     },
                 )
             )
+            sensors.append(
+                MyenergiBinarySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    {
+                        "name": "Boosting Manual",
+                        "prop_name": "bsm",
+                        "icon": "mdi:ev-station",
+                        "attrs": {},
+                    },
+                )
+            )
+            sensors.append(
+                MyenergiBinarySensor(
+                    coordinator,
+                    device,
+                    entry,
+                    {
+                        "name": "Boosting Smart",
+                        "prop_name": "bss",
+                        "icon": "mdi:brain",
+                        "attrs": {},
+                    },
+                )
+            )
         if device.kind == EDDI:
             sensors.append(
                 MyenergiBinarySensor(
