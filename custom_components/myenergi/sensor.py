@@ -393,6 +393,38 @@ async def async_setup_entry(hass, entry, async_add_devices):
                     ),
                 )
             )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        "Smart boost amount",
+                        "smart_boost_amount",
+                        SensorDeviceClass.ENERGY,
+                        UnitOfEnergy.KILO_WATT_HOUR,
+                        None,
+                        "mdi:rocket-launch",
+                        SensorStateClass.MEASUREMENT,
+                    ),
+                )
+            )
+            sensors.append(
+                MyenergiSensor(
+                    coordinator,
+                    device,
+                    entry,
+                    create_meta(
+                        "Boost amount",
+                        "boost_amount",
+                        SensorDeviceClass.ENERGY,
+                        UnitOfEnergy.KILO_WATT_HOUR,
+                        None,
+                        "mdi:rocket-launch",
+                        SensorStateClass.MEASUREMENT,
+                    ),
+                )
+            )
 
             if device.ct4.name != "None":
                 sensors.append(
