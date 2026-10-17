@@ -185,12 +185,67 @@ async def test_zappi_charge_mode_waits_while_command_in_progress(
     assert hass.states.get(TEST_ZAPPI_SELECT_CHARGE_MODE).state == "Eco+"
 
 
-async def test_zappi_charge_mode_resent_immediately_on_failure(
+async def test_zappi_charge_mode_stale_failure_does_not_skip_wait(
     hass: HomeAssistant, mock_zappi_set_charge_mode: MagicMock
 ) -> None:
-    """cmt 253 means the command failed, so resend without waiting."""
+    """cmt 253 may be left over from an earlier command, so still wait."""
     entry = await setup_mock_myenergi_config_entry(hass)
     await _select_charge_mode(hass, "Eco+")
 
     await _poll(hass, entry, zmo=1, cmt=253)
-    assert mock_zappi_set_charge_mode.call_count == 2
+    assert mock_zappi_set_charge_mode.call_count == 1
+    assert hass.states.get(TEST_ZAPPI_SELECT_CHARGE_MODE).state == "Eco+"
+
+
+async def test_zappi_charge_mode_changed_elsewhere(
+    hass: HomeAssistant, mock_zappi_set_charge_mode: MagicMock, freezer
+) -> None:
+    """A third mode means it was changed elsewhere, so don't override it."""
+    entry = await setup_mock_myenergi_config_entry(hass)
+    await _select_charge_mode(hass, "Stopped")
+
+    freezer.tick(timedelta(seconds=60))
+    await _poll(hass, entry, zmo=3)
+    assert mock_zappi_set_charge_mode.call_count == 1
+    assert hass.states.get(TEST_ZAPPI_SELECT_CHARGE_MODE).state == "Eco+"
+
+
+async def test_zappi_charge_mode_failed_poll_is_not_confirmation(
+    hass: HomeAssistant, freezer
+) -> None:
+    """set_charge_mode writes zmo locally, which a failed poll leaves behind."""
+    entry = await setup_mock_myenergi_config_entry(hass)
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+    with patch(
+        "pymyenergi.connection.Connection.get", return_value={"status": 0}
+    ) as mock_get:
+        await _select_charge_mode(hass, "Stopped")
+        assert mock_get.call_count == 1
+
+        with patch("pymyenergi.client.MyenergiClient.refresh", side_effect=Exception):
+            await coordinator.async_refresh()
+            await hass.async_block_till_done()
+        assert not coordinator.last_update_success
+
+        freezer.tick(timedelta(seconds=60))
+        await _poll(hass, entry, zmo=1)
+        assert mock_get.call_count == 2
+        assert hass.states.get(TEST_ZAPPI_SELECT_CHARGE_MODE).state == "Stopped"
+
+
+async def test_zappi_charge_mode_new_selection_replaces_pending(
+    hass: HomeAssistant, mock_zappi_set_charge_mode: MagicMock, freezer
+) -> None:
+    """Superseded pending modes still count as not yet applied."""
+    entry = await setup_mock_myenergi_config_entry(hass)
+    await _select_charge_mode(hass, "Stopped")
+    await _select_charge_mode(hass, "Eco+")
+
+    freezer.tick(timedelta(seconds=10))
+    await _poll(hass, entry, zmo=4)
+    assert hass.states.get(TEST_ZAPPI_SELECT_CHARGE_MODE).state == "Eco+"
+
+    freezer.tick(timedelta(seconds=60))
+    await _poll(hass, entry, zmo=4)
+    mock_zappi_set_charge_mode.assert_called_with("Eco+")
+    assert mock_zappi_set_charge_mode.call_count == 3

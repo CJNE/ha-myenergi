@@ -27,12 +27,12 @@ ZAPPI_PHASE_SETTING = ["1", "3", "auto"]
 # keep showing it, and resend it if the zappi still hasn't applied it after
 # ZAPPI_MODE_RETRY_AFTER.
 ZAPPI_MODE_RETRY_AFTER = timedelta(seconds=30)
-# Stop waiting on a zappi that reports a command in progress for this long.
+# Stop waiting on a zappi that reports a command in progress this long after
+# the first send.
 ZAPPI_MODE_PENDING_TIMEOUT = timedelta(minutes=5)
 ZAPPI_MODE_MAX_ATTEMPTS = 3
-# cmt counts 1-10 while the zappi is processing a command, then 253 on failure.
+# cmt counts 1-10 while the zappi is processing a command.
 ZAPPI_CMT_PENDING = range(1, 11)
-ZAPPI_CMT_FAILED = 253
 
 ATTR_BOOST_AMOUNT = "amount"
 ATTR_BOOST_TIME = "time"
@@ -185,8 +185,12 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
         self._attr_translation_key = "phase_setting"
         self._attr_options = CHARGE_MODES[1:]
         self._pending_mode = None
+        # Modes a poll may still report while the pending mode is in flight
+        self._stale_modes = set()
+        self._pending_first_sent_at = None
         self._pending_sent_at = None
         self._pending_attempts = 0
+        self._resend_task = None
 
     @property
     def current_option(self):
@@ -206,16 +210,29 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
+        self._cancel_resend()
+        if self._pending_mode is None:
+            self._stale_modes = {self.device.charge_mode}
+        else:
+            self._stale_modes.add(self._pending_mode)
+        self._pending_mode = None
         await self.device.set_charge_mode(option)
         self._pending_mode = option
-        self._pending_sent_at = dt_util.utcnow()
+        self._pending_first_sent_at = self._pending_sent_at = dt_util.utcnow()
         self._pending_attempts = 1
         self.async_schedule_update_ha_state()
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Cancel any pending resend."""
+        self._cancel_resend()
+        await super().async_will_remove_from_hass()
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Confirm, hold or retry a pending charge mode on each poll."""
-        if self._pending_mode is not None:
+        # A failed poll leaves the locally written mode in place, which would
+        # look like a confirmation
+        if self._pending_mode is not None and self.coordinator.last_update_success:
             self._check_pending_mode()
         super()._handle_coordinator_update()
 
@@ -224,11 +241,20 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
         if reported == self._pending_mode:
             self._pending_mode = None
             return
+        if reported not in self._stale_modes:
+            _LOGGER.debug(
+                "%s charge mode changed to %s elsewhere, no longer waiting for %s",
+                self.device.name,
+                reported,
+                self._pending_mode,
+            )
+            self._pending_mode = None
+            return
+        now = dt_util.utcnow()
         cmt = self.device.data.get("cmt")
-        waited = dt_util.utcnow() - self._pending_sent_at
-        if cmt != ZAPPI_CMT_FAILED and (
-            waited < ZAPPI_MODE_RETRY_AFTER
-            or (cmt in ZAPPI_CMT_PENDING and waited < ZAPPI_MODE_PENDING_TIMEOUT)
+        if now - self._pending_sent_at < ZAPPI_MODE_RETRY_AFTER or (
+            cmt in ZAPPI_CMT_PENDING
+            and now - self._pending_first_sent_at < ZAPPI_MODE_PENDING_TIMEOUT
         ):
             return
         if self._pending_attempts >= ZAPPI_MODE_MAX_ATTEMPTS:
@@ -243,7 +269,7 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
             self._pending_mode = None
             return
         self._pending_attempts += 1
-        self._pending_sent_at = dt_util.utcnow()
+        self._pending_sent_at = now
         _LOGGER.debug(
             "%s reports charge mode %s (cmt %s), resending %s (attempt %s)",
             self.device.name,
@@ -252,7 +278,18 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
             self._pending_mode,
             self._pending_attempts,
         )
-        self.hass.async_create_task(self._async_resend_mode(self._pending_mode))
+        self._cancel_resend()
+        self._resend_task = self.config_entry.async_create_background_task(
+            self.hass,
+            self._async_resend_mode(self._pending_mode),
+            f"myenergi resend charge mode {self.device.serial_number}",
+        )
+
+    @callback
+    def _cancel_resend(self) -> None:
+        if self._resend_task is not None and not self._resend_task.done():
+            self._resend_task.cancel()
+        self._resend_task = None
 
     async def _async_resend_mode(self, mode: str) -> None:
         try:
