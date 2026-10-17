@@ -1,10 +1,13 @@
 """Test myenergi sensor."""
 
 import copy
+import logging
 from contextlib import contextmanager
 from datetime import timedelta
 from unittest.mock import MagicMock
 from unittest.mock import patch
+
+import pytest
 
 from custom_components.myenergi.const import DOMAIN
 
@@ -172,17 +175,52 @@ async def test_zappi_charge_mode_resent_when_not_applied(
     assert hass.states.get(TEST_ZAPPI_SELECT_CHARGE_MODE).state == "Fast"
 
 
+@pytest.mark.parametrize("cmt", [3, 11, 50, 252])
 async def test_zappi_charge_mode_waits_while_command_in_progress(
-    hass: HomeAssistant, mock_zappi_set_charge_mode: MagicMock, freezer
+    hass: HomeAssistant, mock_zappi_set_charge_mode: MagicMock, freezer, cmt: int
 ) -> None:
     """No resend while cmt shows the zappi processing a command."""
     entry = await setup_mock_myenergi_config_entry(hass)
     await _select_charge_mode(hass, "Eco+")
 
-    freezer.tick(timedelta(seconds=60))
-    await _poll(hass, entry, zmo=1, cmt=3)
+    freezer.tick(timedelta(minutes=9))
+    await _poll(hass, entry, zmo=1, cmt=cmt)
     assert mock_zappi_set_charge_mode.call_count == 1
     assert hass.states.get(TEST_ZAPPI_SELECT_CHARGE_MODE).state == "Eco+"
+
+
+async def test_zappi_charge_mode_resent_after_pending_timeout(
+    hass: HomeAssistant, mock_zappi_set_charge_mode: MagicMock, freezer
+) -> None:
+    """A command still in progress after the timeout is resent."""
+    entry = await setup_mock_myenergi_config_entry(hass)
+    await _select_charge_mode(hass, "Eco+")
+
+    freezer.tick(timedelta(minutes=10))
+    await _poll(hass, entry, zmo=1, cmt=120)
+    assert mock_zappi_set_charge_mode.call_count == 2
+    assert hass.states.get(TEST_ZAPPI_SELECT_CHARGE_MODE).state == "Eco+"
+
+
+async def test_zappi_charge_mode_logs_progress(
+    hass: HomeAssistant,
+    mock_zappi_set_charge_mode: MagicMock,
+    freezer,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Each step of a pending change is logged for debugging."""
+    caplog.set_level(logging.DEBUG, logger="custom_components.myenergi")
+    entry = await setup_mock_myenergi_config_entry(hass)
+    await _select_charge_mode(hass, "Eco+")
+    assert "charge mode Eco+ requested, reports Fast" in caplog.text
+
+    freezer.tick(timedelta(seconds=40))
+    await _poll(hass, entry, zmo=1, cmt=8)
+    assert "waiting for charge mode Eco+, reports Fast (cmt 8, 40s" in caplog.text
+
+    freezer.tick(timedelta(seconds=20))
+    await _poll(hass, entry, zmo=3)
+    assert "confirmed charge mode Eco+ after 60s (attempt 1, cmt 254)" in caplog.text
 
 
 async def test_zappi_charge_mode_stale_failure_does_not_skip_wait(

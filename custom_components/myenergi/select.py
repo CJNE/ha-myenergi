@@ -24,15 +24,16 @@ ZAPPI_PHASE_SETTING = ["1", "3", "auto"]
 # Mode commands are fire-and-forget: the API acknowledges them once queued and
 # the myenergi servers relay them to the zappi later, so polls taken in the
 # meantime still report the old mode. While a requested mode is unconfirmed we
-# keep showing it, and resend it if the zappi still hasn't applied it after
-# ZAPPI_MODE_RETRY_AFTER.
+# keep showing it, and resend it if the last command finished without the zappi
+# applying it, at least ZAPPI_MODE_RETRY_AFTER after the last send.
 ZAPPI_MODE_RETRY_AFTER = timedelta(seconds=30)
 # Stop waiting on a zappi that reports a command in progress this long after
-# the first send.
-ZAPPI_MODE_PENDING_TIMEOUT = timedelta(minutes=5)
+# the first send. myenergi say their servers keep retrying for up to 10 minutes.
+ZAPPI_MODE_PENDING_TIMEOUT = timedelta(minutes=10)
 ZAPPI_MODE_MAX_ATTEMPTS = 3
-# cmt counts 1-10 while the zappi is processing a command.
-ZAPPI_CMT_PENDING = range(1, 11)
+# cmt counts up from 1 while a command is in progress (it has been seen above
+# 50), then reads 253 on failure, 254 on success or 255 for no command.
+ZAPPI_CMT_PENDING = range(1, 253)
 
 ATTR_BOOST_AMOUNT = "amount"
 ATTR_BOOST_TIME = "time"
@@ -216,6 +217,13 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
         else:
             self._stale_modes.add(self._pending_mode)
         self._pending_mode = None
+        _LOGGER.debug(
+            "%s charge mode %s requested, reports %s (cmt %s)",
+            self.device.name,
+            option,
+            self.device.charge_mode,
+            self.device.data.get("cmt"),
+        )
         await self.device.set_charge_mode(option)
         self._pending_mode = option
         self._pending_first_sent_at = self._pending_sent_at = dt_util.utcnow()
@@ -238,7 +246,18 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
 
     def _check_pending_mode(self) -> None:
         reported = self.device.charge_mode
+        now = dt_util.utcnow()
+        cmt = self.device.data.get("cmt")
+        elapsed = int((now - self._pending_first_sent_at).total_seconds())
         if reported == self._pending_mode:
+            _LOGGER.debug(
+                "%s confirmed charge mode %s after %ss (attempt %s, cmt %s)",
+                self.device.name,
+                reported,
+                elapsed,
+                self._pending_attempts,
+                cmt,
+            )
             self._pending_mode = None
             return
         if reported not in self._stale_modes:
@@ -250,31 +269,41 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
             )
             self._pending_mode = None
             return
-        now = dt_util.utcnow()
-        cmt = self.device.data.get("cmt")
         if now - self._pending_sent_at < ZAPPI_MODE_RETRY_AFTER or (
             cmt in ZAPPI_CMT_PENDING
             and now - self._pending_first_sent_at < ZAPPI_MODE_PENDING_TIMEOUT
         ):
+            _LOGGER.debug(
+                "%s waiting for charge mode %s, reports %s (cmt %s, %ss, attempt %s)",
+                self.device.name,
+                self._pending_mode,
+                reported,
+                cmt,
+                elapsed,
+                self._pending_attempts,
+            )
             return
         if self._pending_attempts >= ZAPPI_MODE_MAX_ATTEMPTS:
             _LOGGER.warning(
-                "%s did not change charge mode to %s after %s attempts, "
-                "it still reports %s",
+                "%s did not change charge mode to %s after %s attempts and %ss, "
+                "it still reports %s (cmt %s)",
                 self.device.name,
                 self._pending_mode,
                 self._pending_attempts,
+                elapsed,
                 reported,
+                cmt,
             )
             self._pending_mode = None
             return
         self._pending_attempts += 1
         self._pending_sent_at = now
         _LOGGER.debug(
-            "%s reports charge mode %s (cmt %s), resending %s (attempt %s)",
+            "%s reports charge mode %s (cmt %s, %ss), resending %s (attempt %s)",
             self.device.name,
             reported,
             cmt,
+            elapsed,
             self._pending_mode,
             self._pending_attempts,
         )
