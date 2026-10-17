@@ -1,7 +1,12 @@
 """Sensor platform for myenergi."""
 
+import logging
+from datetime import timedelta
+
+import homeassistant.util.dt as dt_util
 import voluptuous as vol
 from homeassistant.components.select import SelectEntity
+from homeassistant.core import callback
 from homeassistant.helpers import entity_platform
 from pymyenergi.eddi import EDDI_MODES
 from pymyenergi.libbi import LIBBI_MODES
@@ -10,9 +15,24 @@ from pymyenergi.zappi import CHARGE_MODES
 from .const import DOMAIN
 from .entity import MyenergiEntity
 
+_LOGGER: logging.Logger = logging.getLogger(__package__)
+
 LIBBI_MODE_NAMES = {"STOP": "Stopped", "BALANCE": "Normal", "DRAIN": "Export"}
 
 ZAPPI_PHASE_SETTING = ["1", "3", "auto"]
+
+# Mode commands are fire-and-forget: the API acknowledges them once queued and
+# the myenergi servers relay them to the zappi later, so polls taken in the
+# meantime still report the old mode. While a requested mode is unconfirmed we
+# keep showing it, and resend it if the zappi still hasn't applied it after
+# ZAPPI_MODE_RETRY_AFTER.
+ZAPPI_MODE_RETRY_AFTER = timedelta(seconds=30)
+# Stop waiting on a zappi that reports a command in progress for this long.
+ZAPPI_MODE_PENDING_TIMEOUT = timedelta(minutes=5)
+ZAPPI_MODE_MAX_ATTEMPTS = 3
+# cmt counts 1-10 while the zappi is processing a command, then 253 on failure.
+ZAPPI_CMT_PENDING = range(1, 11)
+ZAPPI_CMT_FAILED = 253
 
 ATTR_BOOST_AMOUNT = "amount"
 ATTR_BOOST_TIME = "time"
@@ -164,16 +184,86 @@ class ZappiChargeModeSelect(MyenergiEntity, SelectEntity):
         self._attr_name = f"myenergi {self.device.name} Charge Mode"
         self._attr_translation_key = "phase_setting"
         self._attr_options = CHARGE_MODES[1:]
+        self._pending_mode = None
+        self._pending_sent_at = None
+        self._pending_attempts = 0
 
     @property
     def current_option(self):
         """Return the state of the sensor."""
+        if self._pending_mode is not None:
+            return self._pending_mode
         return self.device.charge_mode
+
+    @property
+    def extra_state_attributes(self):
+        """Return the state attributes."""
+        attrs = super().extra_state_attributes
+        if self._pending_mode is not None:
+            attrs["reported_charge_mode"] = self.device.charge_mode
+            attrs["charge_mode_attempts"] = self._pending_attempts
+        return attrs
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
         await self.device.set_charge_mode(option)
+        self._pending_mode = option
+        self._pending_sent_at = dt_util.utcnow()
+        self._pending_attempts = 1
         self.async_schedule_update_ha_state()
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Confirm, hold or retry a pending charge mode on each poll."""
+        if self._pending_mode is not None:
+            self._check_pending_mode()
+        super()._handle_coordinator_update()
+
+    def _check_pending_mode(self) -> None:
+        reported = self.device.charge_mode
+        if reported == self._pending_mode:
+            self._pending_mode = None
+            return
+        cmt = self.device.data.get("cmt")
+        waited = dt_util.utcnow() - self._pending_sent_at
+        if cmt != ZAPPI_CMT_FAILED and (
+            waited < ZAPPI_MODE_RETRY_AFTER
+            or (cmt in ZAPPI_CMT_PENDING and waited < ZAPPI_MODE_PENDING_TIMEOUT)
+        ):
+            return
+        if self._pending_attempts >= ZAPPI_MODE_MAX_ATTEMPTS:
+            _LOGGER.warning(
+                "%s did not change charge mode to %s after %s attempts, "
+                "it still reports %s",
+                self.device.name,
+                self._pending_mode,
+                self._pending_attempts,
+                reported,
+            )
+            self._pending_mode = None
+            return
+        self._pending_attempts += 1
+        self._pending_sent_at = dt_util.utcnow()
+        _LOGGER.debug(
+            "%s reports charge mode %s (cmt %s), resending %s (attempt %s)",
+            self.device.name,
+            reported,
+            cmt,
+            self._pending_mode,
+            self._pending_attempts,
+        )
+        self.hass.async_create_task(self._async_resend_mode(self._pending_mode))
+
+    async def _async_resend_mode(self, mode: str) -> None:
+        try:
+            await self.device.set_charge_mode(mode)
+        except Exception as exception:  # noqa: BLE001
+            _LOGGER.warning(
+                "Resending charge mode %s to %s failed: %s",
+                mode,
+                self.device.name,
+                exception,
+            )
 
 
 class LibbiOperatingModeSelect(MyenergiEntity, SelectEntity):
